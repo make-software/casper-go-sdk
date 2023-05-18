@@ -7,6 +7,8 @@ on:
 jobs:
   run-full-CI:
     runs-on: ubuntu-latest
+    environment:
+      name: CI
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4
@@ -22,7 +24,7 @@ jobs:
           key: ${{ runner.os }}-golang-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-golang-
-            
+
       - name: Setup GO environment
         run: |
           go mod vendor
