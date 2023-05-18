@@ -13,7 +13,6 @@ import (
 	"golang.org/x/crypto/blake2b"
 
 	"github.com/make-software/casper-go-sdk/casper"
-
 	"github.com/make-software/casper-go-sdk/types"
 	"github.com/make-software/casper-go-sdk/types/clvalue"
 	"github.com/make-software/casper-go-sdk/types/key"
