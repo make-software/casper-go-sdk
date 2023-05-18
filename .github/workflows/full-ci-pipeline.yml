@@ -4,17 +4,25 @@ on:
   pull_request:
     branches:
       - master
-  paths-ignore:
-    - "**/*.md"
 jobs:
   run-full-CI:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
+      - uses: actions/setup-go@v4
         with:
           go-version-file: 'go.mod'
 
+      - name: Setup Golang caches
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-golang-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-golang-
+            
       - name: Setup GO environment
         run: |
           go mod vendor
@@ -31,7 +39,7 @@ jobs:
         run: goimports-reviser ./...
 
       - name: Run linter
-        run: golangci-lint run --issues-exit-code
+        run: golangci-lint run
 
       # If there are any diffs from goimports or go generate, fail.
       - name: Verify no changes from goimports or vet or fmt.

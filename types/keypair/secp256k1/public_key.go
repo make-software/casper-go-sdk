@@ -1,9 +1,6 @@
 package secp256k1
 
 import (
-	"crypto/sha256"
-	"math/big"
-
 	"github.com/btcsuite/btcd/btcec"
 )
 
@@ -15,15 +12,14 @@ func (v PublicKey) Bytes() []byte {
 }
 
 func (v PublicKey) VerifySignature(message []byte, sig []byte) bool {
-	if len(sig) != 64 {
+	signature, err := btcec.ParseSignature(sig, btcec.S256())
+	if err != nil {
 		return false
 	}
 
-	signature := signatureFromBytes(sig)
-
 	key := btcec.PublicKey(v)
-	sum256 := sha256.Sum256(message)
-	return signature.Verify(sum256[:], &key)
+	verify := signature.Verify(message, &key)
+	return verify
 }
 
 func NewPublicKey(data []byte) (PublicKey, error) {
@@ -32,13 +28,4 @@ func NewPublicKey(data []byte) (PublicKey, error) {
 		return PublicKey{}, err
 	}
 	return PublicKey(*key), err
-}
-
-// Read Signature struct from R || S. Caller needs to ensure
-// that len(sigStr) == 64.
-func signatureFromBytes(sigStr []byte) *btcec.Signature {
-	return &btcec.Signature{
-		R: new(big.Int).SetBytes(sigStr[:32]),
-		S: new(big.Int).SetBytes(sigStr[32:64]),
-	}
 }
