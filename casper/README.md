@@ -1,0 +1,1 @@
+This package is a facade for popular interfaces from other internal packages. It is not intended to be complete. The main purpose of this package is to facilitate client usage. The package consists of files that provide aliases to exposed functions, constants, variables, or structures from internal packages.

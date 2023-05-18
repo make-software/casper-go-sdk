@@ -1,0 +1,8 @@
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "api_version": "1.4.15",
+    "era_summary": null
+  }
+}

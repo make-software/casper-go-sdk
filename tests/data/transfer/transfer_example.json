@@ -1,0 +1,10 @@
+{
+  "deploy_hash": "cc98594a8d1798a6dadc82cfaa6e3c92ffea9983f82af0fae2ac461415504adf",
+  "from": "account-hash-70a88a9ef9a7e783a33b7d1b5041b3ad7d8f7413197843ca291e966306d0fa9c",
+  "to": "account-hash-db5fd4ce31e448eafa70fa2d46d254b3bf5107322da49f2c4e457b5fbfae4f8e",
+  "source": "uref-dbd3d80ffdfc904a3472f54564354aec9b9f3a5770520dbc79a9a0bd6ea63b25-007",
+  "target": "uref-23b40e74e0f42de33a3fa823fab77cf58b4f69eb302f68a0071c36b11d480492-004",
+  "amount": "2845678925",
+  "gas": "0",
+  "id": 123456789012345
+}

@@ -1,0 +1,11 @@
+{
+  "account": "01d9bf2148748a85c89da5aad8ee0b0fc2d105fd39d41a4c796536354f0ae2900c",
+  "body_hash": "d53cf72d17278fd47d399013ca389c50d589352f1a12593c0b8e01872a641b50",
+  "chain_name": "casper-example",
+  "dependencies": [
+    "0101010101010101010101010101010101010101010101010101010101010101"
+  ],
+  "gas_price": 1,
+  "timestamp": "2020-11-17T00:39:24.072Z",
+  "ttl": "1h"
+}

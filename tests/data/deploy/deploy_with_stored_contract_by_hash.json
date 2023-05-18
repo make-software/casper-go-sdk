@@ -1,0 +1,87 @@
+{
+  "hash": "0001086946c963abfa2cb632d4cc1bf37895726c8e9ef1dda9cfe65fb39aa7fe",
+  "header": {
+    "ttl": "30m",
+    "account": "01a35887f3962a6a232e8e11fa7d4567b6866d68850974aad7289ef287676825f6",
+    "body_hash": "77391fdf3d6baf36dc485fc5e3677d70e210365c4cb3bfe6c735dee1fe3a20a2",
+    "gas_price": 1,
+    "timestamp": "2022-08-01T08:30:16.441Z",
+    "chain_name": "casper-test",
+    "dependencies": []
+  },
+  "payment": {
+    "ModuleBytes": {
+      "args": [
+        [
+          "amount",
+          {
+            "bytes": "0400943577",
+            "parsed": "2000000000",
+            "cl_type": "U512"
+          }
+        ]
+      ],
+      "module_bytes": ""
+    }
+  },
+  "session": {
+    "StoredContractByHash": {
+      "args": [
+        [
+          "recipient",
+          {
+            "bytes": "001e3de90818d5ad5298006eefaee309b6a45833355efedfba776a2003c408c8cd",
+            "parsed": {
+              "Account": "account-hash-1e3de90818d5ad5298006eefaee309b6a45833355efedfba776a2003c408c8cd"
+            },
+            "cl_type": "Key"
+          }
+        ],
+        [
+          "token_id",
+          {
+            "bytes": "00",
+            "parsed": null,
+            "cl_type": {
+              "Option": "String"
+            }
+          }
+        ],
+        [
+          "token_meta",
+          {
+            "bytes": "030000000600000069737375657242000000303161333538383766333936326136613233326538653131666137643435363762363836366436383835303937346161643732383965663238373637363832356636070000006e6574776f726b2b000000746e69433248583579673279446a4d514563556f316248613434783959645a565371794b6f78323153447a0600000073746174757306000000616374697665",
+            "parsed": [
+              {
+                "key": "issuer",
+                "value": "01a35887f3962a6a232e8e11fa7d4567b6866d68850974aad7289ef287676825f6"
+              },
+              {
+                "key": "network",
+                "value": "tniC2HX5yg2yDjMQEcUo1bHa44x9YdZVSqyKox21SDz"
+              },
+              {
+                "key": "status",
+                "value": "active"
+              }
+            ],
+            "cl_type": {
+              "Map": {
+                "key": "String",
+                "value": "String"
+              }
+            }
+          }
+        ]
+      ],
+      "hash": "d950b6fb1e487e054dff551ad1acd0106802bb482bf1e88630b6a1eec2de8ed9",
+      "entry_point": "mint"
+    }
+  },
+  "approvals": [
+    {
+      "signer": "01a35887f3962a6a232e8e11fa7d4567b6866d68850974aad7289ef287676825f6",
+      "signature": "01259a7ea01e96bdca18a0e5639bfe6712e785608a5596f7afa3faa8d08a87ef6e0fcfab073138db17cf3e59e01daf0225fa4cbe2924f5e33a051fa44a0cba2e0e"
+    }
+  ]
+}

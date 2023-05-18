@@ -1,0 +1,59 @@
+{
+  "hash": "0009ea4441f4700325d9c38b0b6df415537596e1204abe4f6a94b6996aebf2f1",
+  "header": {
+    "ttl": "1h",
+    "account": "018afa98ca4be12d613617f7339a2d576950a2f9a92102ca4d6508ee31b54d2c02",
+    "body_hash": "b05459ea95b60153da802e8173109e008237ba13d00ad7fab1f1d177abe7fe2b",
+    "gas_price": 1,
+    "timestamp": "2021-05-13T09:46:37.808Z",
+    "chain_name": "casper-test",
+    "dependencies": []
+  },
+  "payment": {
+    "ModuleBytes": {
+      "args": [
+        [
+          "amount",
+          {
+            "bytes": "0400c2eb0b",
+            "parsed": "200000000",
+            "cl_type": "U512"
+          }
+        ]
+      ],
+      "module_bytes": ""
+    }
+  },
+  "session": {
+    "StoredContractByName": {
+      "args": [
+        [
+          "target",
+          {
+            "bytes": "1f314445240e888c1f2f50483fb77f33b37cbd6932244b3aa917026b669237a1",
+            "parsed": "1f314445240e888c1f2f50483fb77f33b37cbd6932244b3aa917026b669237a1",
+            "cl_type": {
+              "ByteArray": 32
+            }
+          }
+        ],
+        [
+          "amount",
+          {
+            "bytes": "050010a5d4e8",
+            "parsed": "1000000000000",
+            "cl_type": "U512"
+          }
+        ]
+      ],
+      "name": "faucet",
+      "entry_point": "call_faucet"
+    }
+  },
+  "approvals": [
+    {
+      "signer": "018afa98ca4be12d613617f7339a2d576950a2f9a92102ca4d6508ee31b54d2c02",
+      "signature": "010344c512b11f8f4a64ec69db93ecfe6e7acd0643d5edf5c07426ed08efda30f069ca7c3073dd8d59c6cd21270eaf18b83e0150338c8a8f0ea952d02a6e142901"
+    }
+  ]
+}

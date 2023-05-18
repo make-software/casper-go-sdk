@@ -1,0 +1,128 @@
+{
+  "api_version": "1.4.10",
+  "deploy": {
+    "hash": "0009ea4441f4700325d9c38b0b6df415537596e1204abe4f6a94b6996aebf2f1",
+    "header": {
+      "account": "018afa98ca4be12d613617f7339a2d576950a2f9a92102ca4d6508ee31b54d2c02",
+      "timestamp": "2021-05-13T09:46:37.808Z",
+      "ttl": "1h",
+      "gas_price": 1,
+      "body_hash": "b05459ea95b60153da802e8173109e008237ba13d00ad7fab1f1d177abe7fe2b",
+      "dependencies": [],
+      "chain_name": "casper-test"
+    },
+    "payment": {
+      "ModuleBytes": {
+        "module_bytes": "",
+        "args": [
+          [
+            "amount",
+            {
+              "cl_type": "U512",
+              "bytes": "0400c2eb0b",
+              "parsed": "200000000"
+            }
+          ]
+        ]
+      }
+    },
+    "session": {
+      "StoredContractByName": {
+        "name": "faucet",
+        "entry_point": "call_faucet",
+        "args": [
+          [
+            "target",
+            {
+              "cl_type": {
+                "ByteArray": 32
+              },
+              "bytes": "1f314445240e888c1f2f50483fb77f33b37cbd6932244b3aa917026b669237a1",
+              "parsed": "1f314445240e888c1f2f50483fb77f33b37cbd6932244b3aa917026b669237a1"
+            }
+          ],
+          [
+            "amount",
+            {
+              "cl_type": "U512",
+              "bytes": "050010a5d4e8",
+              "parsed": "1000000000000"
+            }
+          ]
+        ]
+      }
+    },
+    "approvals": [
+      {
+        "signer": "018afa98ca4be12d613617f7339a2d576950a2f9a92102ca4d6508ee31b54d2c02",
+        "signature": "010344c512b11f8f4a64ec69db93ecfe6e7acd0643d5edf5c07426ed08efda30f069ca7c3073dd8d59c6cd21270eaf18b83e0150338c8a8f0ea952d02a6e142901"
+      }
+    ]
+  },
+  "execution_results": [
+    {
+      "block_hash": "3bd9814193e012d9b3979736b336af60d42a7c485c54b84e514f6fd7f4aaec64",
+      "result": {
+        "Failure": {
+          "effect": {
+            "operations": [
+              {
+                "key": "balance-b06a1ab0cfb52b5d4f9a08b68a5dbe78e999de0b0484c03e64f5c03897cf637b",
+                "kind": "Write"
+              },
+              {
+                "key": "hash-010c3fe81b7b862e50c77ef9a958a05bfa98444f26f96f23d37a13c96244cfb7",
+                "kind": "Read"
+              },
+              {
+                "key": "hash-8cf5e4acf51f54eb59291599187838dc3bc234089c46fc6ca8ad17e762ae4401",
+                "kind": "Read"
+              },
+              {
+                "key": "balance-8bcbcf17fce2fadb37599b3f01e1f278c0d3465d667de66b8c9f3d614687cd99",
+                "kind": "Write"
+              },
+              {
+                "key": "balance-98d945f5324f865243b7c02c0417ab6eac361c5c56602fd42ced834a1ba201b6",
+                "kind": "Read"
+              }
+            ],
+            "transforms": [
+              {
+                "key": "balance-98d945f5324f865243b7c02c0417ab6eac361c5c56602fd42ced834a1ba201b6",
+                "transform": "Identity"
+              },
+              {
+                "key": "balance-b06a1ab0cfb52b5d4f9a08b68a5dbe78e999de0b0484c03e64f5c03897cf637b",
+                "transform": {
+                  "WriteCLValue": {
+                    "cl_type": "U512",
+                    "bytes": "08f09a09bdd338c18a",
+                    "parsed": "9998335129799990000"
+                  }
+                }
+              },
+              {
+                "key": "hash-8cf5e4acf51f54eb59291599187838dc3bc234089c46fc6ca8ad17e762ae4401",
+                "transform": "Identity"
+              },
+              {
+                "key": "balance-8bcbcf17fce2fadb37599b3f01e1f278c0d3465d667de66b8c9f3d614687cd99",
+                "transform": {
+                  "AddUInt512": "200000000"
+                }
+              },
+              {
+                "key": "hash-010c3fe81b7b862e50c77ef9a958a05bfa98444f26f96f23d37a13c96244cfb7",
+                "transform": "Identity"
+              }
+            ]
+          },
+          "transfers": [],
+          "cost": "11406830",
+          "error_message": "User error: 1"
+        }
+      }
+    }
+  ]
+}

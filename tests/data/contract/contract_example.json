@@ -1,0 +1,343 @@
+{
+  "contract_package_hash": "contract-package-wasm998af6825d77da15485baf4bb89aeef3f1dfb4a78841d149574b0be694ce4821",
+  "contract_wasm_hash": "contract-wasm-51f929a18b867f2382c5bbbef14b816e7dc445d5650df9f92cde15add1dee5ee",
+  "named_keys": [
+    {
+      "name": "allowances",
+      "key": "uref-d389ff9040abcf12545a06f64a378e632d7575f96374cb937c44ff73358f83dd-007"
+    },
+    {
+      "name": "balances",
+      "key": "uref-cf344a8d5ffa724d414d82cd2728c9a24223aee9e83e3da66692e93ecd60ea4a-007"
+    },
+    {
+      "name": "meta",
+      "key": "uref-f03fbb225f572940e6c870a4bb4740cf78b045417cbd434c8bded5cf2b001f2b-007"
+    },
+    {
+      "name": "metadata",
+      "key": "uref-0f2171433359ba0572a325c6946406abcf44a0f8ffa7021c0dc0144477384328-007"
+    },
+    {
+      "name": "name",
+      "key": "uref-5a9e30efa14bf3618621f7fcd88a631637d036efc613a7cb3e77e384c2c10a3e-007"
+    },
+    {
+      "name": "next_tokenid",
+      "key": "uref-c0b578f3c4fdeed90a961b89d400c2d33c8c3211478d21473a2ac34e8ef2b258-007"
+    },
+    {
+      "name": "owned_indexes_by_token",
+      "key": "uref-7cf0f85d2fb2101c1fdf1f9167e115b4a551d3d76cfaa0fd0074f50ce6d73444-007"
+    },
+    {
+      "name": "owned_tokens_by_index",
+      "key": "uref-426a5b3fd6bdbff1bb85edee524b941245eebf0fbaa5a70884410a0c28b231b1-007"
+    },
+    {
+      "name": "owners",
+      "key": "uref-dfe312aa2220ff0699d11428d307502b6fa4a696910e7a9881032a91ebb445e0-007"
+    },
+    {
+      "name": "symbol",
+      "key": "uref-41e63bc42db9a6e1c4228ce12f7c541ef138c9b10cb77ea0e6e39798b7ed2c17-007"
+    },
+    {
+      "name": "total_supply",
+      "key": "uref-eb07b741598a909dd5c57ddafaa53453df11352fd90b91ca444f2528a8e1a52d-007"
+    }
+  ],
+  "entry_points": [
+    {
+      "name": "approve",
+      "args": [
+        {
+          "name": "spender",
+          "cl_type": "Key"
+        },
+        {
+          "name": "token_ids",
+          "cl_type": {
+            "List": "U256"
+          }
+        }
+      ],
+      "ret": "Unit",
+      "access": "Public",
+      "entry_point_type": "Contract"
+    },
+    {
+      "name": "balance_of",
+      "args": [
+        {
+          "name": "owner",
+          "cl_type": "Key"
+        }
+      ],
+      "ret": "U256",
+      "access": "Public",
+      "entry_point_type": "Contract"
+    },
+    {
+      "name": "burn",
+      "args": [
+        {
+          "name": "owner",
+          "cl_type": "Key"
+        },
+        {
+          "name": "token_ids",
+          "cl_type": {
+            "List": "U256"
+          }
+        }
+      ],
+      "ret": "Unit",
+      "access": "Public",
+      "entry_point_type": "Contract"
+    },
+    {
+      "name": "constructor",
+      "args": [
+        {
+          "name": "name",
+          "cl_type": "String"
+        },
+        {
+          "name": "symbol",
+          "cl_type": "String"
+        },
+        {
+          "name": "meta",
+          "cl_type": {
+            "Map": {
+              "key": "String",
+              "value": "String"
+            }
+          }
+        }
+      ],
+      "ret": "Unit",
+      "access": {
+        "Groups": [
+          "constructor"
+        ]
+      },
+      "entry_point_type": "Contract"
+    },
+    {
+      "name": "get_approved",
+      "args": [
+        {
+          "name": "owner",
+          "cl_type": "Key"
+        },
+        {
+          "name": "token_id",
+          "cl_type": "U256"
+        }
+      ],
+      "ret": {
+        "Option": "Key"
+      },
+      "access": "Public",
+      "entry_point_type": "Contract"
+    },
+    {
+      "name": "get_token_by_index",
+      "args": [
+        {
+          "name": "owner",
+          "cl_type": "Key"
+        },
+        {
+          "name": "index",
+          "cl_type": "U256"
+        }
+      ],
+      "ret": {
+        "Option": "U256"
+      },
+      "access": "Public",
+      "entry_point_type": "Contract"
+    },
+    {
+      "name": "meta",
+      "args": [],
+      "ret": {
+        "Map": {
+          "key": "String",
+          "value": "String"
+        }
+      },
+      "access": "Public",
+      "entry_point_type": "Contract"
+    },
+    {
+      "name": "mint",
+      "args": [
+        {
+          "name": "recipient",
+          "cl_type": "Key"
+        },
+        {
+          "name": "token_metas",
+          "cl_type": {
+            "List": {
+              "Map": {
+                "key": "String",
+                "value": "String"
+              }
+            }
+          }
+        }
+      ],
+      "ret": "Unit",
+      "access": "Public",
+      "entry_point_type": "Contract"
+    },
+    {
+      "name": "mint_copies",
+      "args": [
+        {
+          "name": "recipient",
+          "cl_type": "Key"
+        },
+        {
+          "name": "token_meta",
+          "cl_type": {
+            "Map": {
+              "key": "String",
+              "value": "String"
+            }
+          }
+        },
+        {
+          "name": "count",
+          "cl_type": "U32"
+        }
+      ],
+      "ret": "Unit",
+      "access": "Public",
+      "entry_point_type": "Contract"
+    },
+    {
+      "name": "name",
+      "args": [],
+      "ret": "String",
+      "access": "Public",
+      "entry_point_type": "Contract"
+    },
+    {
+      "name": "owner_of",
+      "args": [
+        {
+          "name": "token_id",
+          "cl_type": "U256"
+        }
+      ],
+      "ret": {
+        "Option": "Key"
+      },
+      "access": "Public",
+      "entry_point_type": "Contract"
+    },
+    {
+      "name": "symbol",
+      "args": [],
+      "ret": "String",
+      "access": "Public",
+      "entry_point_type": "Contract"
+    },
+    {
+      "name": "token_meta",
+      "args": [
+        {
+          "name": "token_id",
+          "cl_type": "U256"
+        }
+      ],
+      "ret": {
+        "Map": {
+          "key": "String",
+          "value": "String"
+        }
+      },
+      "access": "Public",
+      "entry_point_type": "Contract"
+    },
+    {
+      "name": "total_supply",
+      "args": [],
+      "ret": "U256",
+      "access": "Public",
+      "entry_point_type": "Contract"
+    },
+    {
+      "name": "transfer",
+      "args": [
+        {
+          "name": "recipient",
+          "cl_type": "Key"
+        },
+        {
+          "name": "token_ids",
+          "cl_type": {
+            "List": "U256"
+          }
+        }
+      ],
+      "ret": "Unit",
+      "access": "Public",
+      "entry_point_type": "Contract"
+    },
+    {
+      "name": "transfer_from",
+      "args": [
+        {
+          "name": "sender",
+          "cl_type": "Key"
+        },
+        {
+          "name": "recipient",
+          "cl_type": "Key"
+        },
+        {
+          "name": "token_ids",
+          "cl_type": {
+            "List": "U256"
+          }
+        }
+      ],
+      "ret": "Unit",
+      "access": "Public",
+      "entry_point_type": "Contract"
+    },
+    {
+      "name": "update_token_meta",
+      "args": [
+        {
+          "name": "token_id",
+          "cl_type": "U256"
+        },
+        {
+          "name": "token_meta",
+          "cl_type": {
+            "Map": {
+              "key": "String",
+              "value": "String"
+            }
+          }
+        }
+      ],
+      "ret": "Unit",
+      "access": {
+        "Groups": [
+          "admin_group"
+        ]
+      },
+      "entry_point_type": "Contract"
+    }
+  ],
+  "protocol_version": "1.4.8"
+}

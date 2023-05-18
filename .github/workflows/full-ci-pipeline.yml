@@ -1,0 +1,64 @@
+name: Full CI
+run-name: Checking code convention validation, run unit test and check coverage threshold
+on:
+  pull_request:
+    branches:
+      - master
+  paths-ignore:
+    - "**/*.md"
+jobs:
+  run-full-CI:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version-file: 'go.mod'
+
+      - name: Setup GO environment
+        run: |
+          go mod vendor
+          go install -v github.com/incu6us/goimports-reviser/v3@latest
+          go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.50.1
+
+      - name: Format
+        run: go fmt ./...
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Sort imports
+        run: goimports-reviser ./...
+
+      - name: Run linter
+        run: golangci-lint run --issues-exit-code
+
+      # If there are any diffs from goimports or go generate, fail.
+      - name: Verify no changes from goimports or vet or fmt.
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo 'To fix this check, run "goimports-reviser ./... && go vet ./... && go fmt ./..."'
+            git status # Show the files that failed to pass the check.
+            exit 1
+          fi
+
+      - name: Unit tests
+        run: |
+          sudo go test ./... -coverprofile coverage.out -coverpkg=./... -covermode count
+          sudo go tool cover -func coverage.out
+
+      - name: Quality Gate - Test coverage shall be above threshold
+        env:
+          TEST_COVERAGE_THRESHOLD: 0
+        run: |
+          echo "Quality Gate: checking test coverage is above threshold ..."
+          echo "Threshold             : $TESTCOVERAGE_THRESHOLD %"
+          totalCoverage=`go tool cover -func=coverage.out | grep total | grep -Eo '[0-9]+\.[0-9]+'`
+          echo "Current test coverage : $totalCoverage %"
+          if (( $(echo "$totalCoverage $TESTCOVERAGE_THRESHOLD" | awk '{print ($1 > $2)}') )); then
+              echo "OK"
+          else
+              echo "Current test coverage is below threshold. Please add more unit tests or adjust threshold to a lower value."
+              echo "Failed"
+              exit 1
+          fi

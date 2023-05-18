@@ -1,0 +1,15 @@
+{
+  "account_hash": "account-hash-ee83ab5d92e183e2e92c1290a5979e2b7f7fac146c215de8042e2945bbad9760",
+  "named_keys": [],
+  "main_purse": "uref-f9afcc62bf68b951db1218da55050fd7fd5fc3eaa0259ad6ae063c8d59ce70f9-007",
+  "associated_keys": [
+    {
+      "account_hash": "account-hash-ee83ab5d92e183e2e92c1290a5979e2b7f7fac146c215de8042e2945bbad9760",
+      "weight": 1
+    }
+  ],
+  "action_thresholds": {
+    "deployment": 1,
+    "key_management": 1
+  }
+}

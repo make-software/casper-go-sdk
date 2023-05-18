@@ -1,0 +1,12 @@
+{
+  "parent_hash": "309aed04b223cba7be15a2aef1f4d39e3378db37cbf13816129fdef69eb99e4d",
+  "state_root_hash": "9ebabdfce10b668f7f14f773414a452399e6b5b783e932693218232351af9105",
+  "body_hash": "14e7bee4ef23145356e335c65cf97cd1bb6c3ab30b9f29682894f015d39209ad",
+  "random_bit": false,
+  "accumulated_seed": "cf467551774122c2216f8820b9300682c7ed2954018d05dc63daf5af3272d46c",
+  "era_end": null,
+  "timestamp": "2023-02-06T20:48:46.080Z",
+  "era_id": 8002,
+  "height": 1502100,
+  "protocol_version": "1.4.12"
+}

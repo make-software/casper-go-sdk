@@ -1,0 +1,2 @@
+The purpose of this package is to provide functionality for working with public and private key cryptography in Casper. This includes generating keys, working with PEM files, and generating and verifying signatures using both the ed25519 and secp256k1 algorithms. However, for ease of use, this implementation is hidden behind the common PublicKey and PrivateKey structs.
+[(See documentation for more information.)](https://docs.casper.network/developers/dapps/signing-a-deploy/#public-key-cryptography) 

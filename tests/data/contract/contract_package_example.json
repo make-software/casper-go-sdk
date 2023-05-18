@@ -1,0 +1,23 @@
+{
+  "access_key": "uref-d83bf9c5454b799cd84fafe8c4cad11a0a7968696a258f89a86acea838afeaab-007",
+  "versions": [
+    {
+      "protocol_version_major": 1,
+      "contract_version": 1,
+      "contract_hash": "contract-ff2f649f127c033d744f80e7c3bcf0561c716d8f6d1dadc0cd79d8b2d309c020"
+    }
+  ],
+  "disabled_versions": [],
+  "groups": [
+    {
+      "group": "admin_group",
+      "keys": [
+        "uref-4fe926f73e4bbb3e8f036336b081af6b8db85462c8e0ebdb61d12bab432e8696-007"
+      ]
+    },
+    {
+      "group": "constructor",
+      "keys": []
+    }
+  ]
+}
