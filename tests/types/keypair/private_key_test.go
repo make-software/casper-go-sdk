@@ -27,6 +27,7 @@ func Test_SECPKey_CreateAndValidateSignature(t *testing.T) {
 	privateKeyData, err := keypair.GeneratePrivateKey(keypair.SECP256K1)
 	require.NoError(t, err)
 	signature, err := privateKeyData.Sign(secretMessage)
+	require.NoError(t, err)
 	err = privateKeyData.PublicKey().VerifySignature(secretMessage, signature)
 	assert.NoError(t, err)
 }

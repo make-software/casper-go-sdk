@@ -1,8 +1,6 @@
 package secp256k1
 
 import (
-	"math/big"
-
 	"github.com/btcsuite/btcd/btcec"
 )
 
@@ -30,13 +28,4 @@ func NewPublicKey(data []byte) (PublicKey, error) {
 		return PublicKey{}, err
 	}
 	return PublicKey(*key), err
-}
-
-// Read Signature struct from R || S. Caller needs to ensure
-// that len(sigStr) == 64.
-func signatureFromBytes(sigStr []byte) *btcec.Signature {
-	return &btcec.Signature{
-		R: new(big.Int).SetBytes(sigStr[:32]),
-		S: new(big.Int).SetBytes(sigStr[32:64]),
-	}
 }
