@@ -1,8 +1,7 @@
 # Casper Go SDK
 
-[![GitHub version](https://badge.fury.io/gh/make-software%2Fcasper-go-sdk.svg)](https://badge.fury.io/gh/make-software%2Fcasper-go-sdk) 
-
-![build-and-test workflow](https://github.com/make-software/casper-go-sdk/actions/workflows/full-ci-pipeline.yml/badge.svg)
+[![GitHub version](https://badge.fury.io/gh/make-software%2Fcasper-go-sdk.svg)](https://badge.fury.io/gh/make-software%2Fcasper-go-sdk)
+[![Full CI](https://github.com/make-software/casper-go-sdk/actions/workflows/full-ci-pipeline.yml/badge.svg?event=pull_request)](https://github.com/make-software/casper-go-sdk/actions/workflows/full-ci-pipeline.yml)
 
 The Casper Go SDK provides a convenient way to interact with the Casper Network using the Go.
 
