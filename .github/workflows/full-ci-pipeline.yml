@@ -59,7 +59,7 @@ jobs:
 
       - name: Quality Gate - Test coverage shall be above threshold
         env:
-          TEST_COVERAGE_THRESHOLD: ${{ env.TEST_COVERAGE_THRESHOLD }}
+          TEST_COVERAGE_THRESHOLD: ${{ vars.TEST_COVERAGE_THRESHOLD }}
         run: |
           echo "Quality Gate: checking test coverage is above threshold ..."
           echo "Threshold             : $TEST_COVERAGE_THRESHOLD %"
