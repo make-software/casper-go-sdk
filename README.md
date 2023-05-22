@@ -1,6 +1,6 @@
 # Casper Go SDK
 
-[![GitHub version](https://badge.fury.io/gh/make-software%2Fcasper-go-sdk.svg)](https://badge.fury.io/gh/make-software%2Fcasper-go-sdk) 
+[![Quality check](https://github.com/make-software/casper-go-sdk/actions/workflows/quality-check.yml/badge.svg)](https://github.com/make-software/casper-go-sdk/actions/workflows/quality-check.yml)
 
 ![build-and-test workflow](https://github.com/make-software/casper-go-sdk/actions/workflows/full-ci-pipeline.yml/badge.svg)
 

@@ -25,7 +25,7 @@ type ExecutableDeployItem struct {
 	ModuleBytes                   *ModuleBytes                   `json:"ModuleBytes,omitempty"`
 	StoredContractByHash          *StoredContractByHash          `json:"StoredContractByHash,omitempty"`
 	StoredContractByName          *StoredContractByName          `json:"StoredContractByName,omitempty"`
-	StoredVersionContractByHash   *StoredVersionedContractByHash `json:"StoredVersionedContractByHash,omitempty"`
+	StoredVersionedContractByHash *StoredVersionedContractByHash `json:"StoredVersionedContractByHash,omitempty"`
 	StoredVersionedContractByName *StoredVersionedContractByName `json:"StoredVersionedContractByName,omitempty"`
 	Transfer                      *TransferDeployItem            `json:"Transfer,omitempty"`
 }
@@ -49,8 +49,8 @@ func (e ExecutableDeployItem) Bytes() ([]byte, error) {
 			return nil, err
 		}
 		return append([]byte{byte(ExecutableDeployItemTypeStoredContractByName)}, bytes...), nil
-	} else if e.StoredVersionContractByHash != nil {
-		bytes, err := e.StoredVersionContractByHash.Bytes()
+	} else if e.StoredVersionedContractByHash != nil {
+		bytes, err := e.StoredVersionedContractByHash.Bytes()
 		if err != nil {
 			return nil, err
 		}
