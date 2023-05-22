@@ -25,7 +25,7 @@ type ExecutableDeployItem struct {
 	ModuleBytes                   *ModuleBytes                   `json:"ModuleBytes,omitempty"`
 	StoredContractByHash          *StoredContractByHash          `json:"StoredContractByHash,omitempty"`
 	StoredContractByName          *StoredContractByName          `json:"StoredContractByName,omitempty"`
-	StoredVersionContractByHash   *StoredVersionContractByHash   `json:"StoredVersionContractByHash,omitempty"`
+	StoredVersionContractByHash   *StoredVersionedContractByHash `json:"StoredVersionedContractByHash,omitempty"`
 	StoredVersionedContractByName *StoredVersionedContractByName `json:"StoredVersionedContractByName,omitempty"`
 	Transfer                      *TransferDeployItem            `json:"Transfer,omitempty"`
 }
@@ -124,9 +124,9 @@ func (m StoredContractByName) Bytes() ([]byte, error) {
 	), nil
 }
 
-// StoredVersionContractByHash is a `Deploy` item to call an entry point in a contract. The contract is referenced
+// StoredVersionedContractByHash is a `Deploy` item to call an entry point in a contract. The contract is referenced
 // by a contract package hash and a version number.
-type StoredVersionContractByHash struct {
+type StoredVersionedContractByHash struct {
 	// Hash of the contract.
 	Hash key.ContractHash `json:"hash"`
 	// Entry point or method of the contract to call.
@@ -135,7 +135,7 @@ type StoredVersionContractByHash struct {
 	Args       *Args   `json:"args"`
 }
 
-func (m StoredVersionContractByHash) Bytes() ([]byte, error) {
+func (m StoredVersionedContractByHash) Bytes() ([]byte, error) {
 	option := clvalue.Option{}
 	if m.Version != nil || *m.Version != "" {
 		option.Inner = clvalue.NewCLString(*m.Version)

@@ -54,7 +54,7 @@ type (
 	StoredContractByHash          = types.StoredContractByHash
 	StoredContractByName          = types.StoredContractByName
 	StoredValue                   = types.StoredValue
-	StoredVersionContractByHash   = types.StoredVersionContractByHash
+	StoredVersionedContractByHash = types.StoredVersionedContractByHash
 	StoredVersionedContractByName = types.StoredVersionedContractByName
 )
 

@@ -69,6 +69,9 @@ type (
 	DeployProcessedEvent struct {
 		DeployProcessed DeployProcessed `json:"DeployProcessed"`
 	}
+	DeployAcceptedEvent struct {
+		DeployAccepted types.Deploy `json:"DeployAccepted"`
+	}
 )
 
 func (d *RawEvent) ParseAsAPIVersionEvent() (APIVersionEvent, error) {

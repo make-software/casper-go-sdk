@@ -1,14 +1,12 @@
-name: Full CI
+name: Quality check
 run-name: Checking code convention validation, run unit test and check coverage threshold
 on:
   pull_request:
     branches:
       - master
 jobs:
-  run-full-CI:
+  quality-check:
     runs-on: ubuntu-latest
-    environment:
-      name: CI
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4
