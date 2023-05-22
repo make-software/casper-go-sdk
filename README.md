@@ -3,7 +3,7 @@
 [![GitHub version](https://badge.fury.io/gh/make-software%2Fcasper-go-sdk.svg)](https://badge.fury.io/gh/make-software%2Fcasper-go-sdk)
 [![Full CI](https://github.com/make-software/casper-go-sdk/actions/workflows/full-ci-pipeline.yml/badge.svg?event=pull_request)](https://github.com/make-software/casper-go-sdk/actions/workflows/full-ci-pipeline.yml)
 
-The Casper Go SDK provides a convenient way to interact with the Casper Network using the Go.
+The Casper Go SDK provides a convenient way to interact with the Casper Network using Go.
 
 ## Get started
 
@@ -15,7 +15,7 @@ go get github.com/make-software/casper-go-sdk
 
 ### RPC client
 
-Package rpc provides access to the exported methods of RPC Client and data structures where serialized response.
+Package rpc provides access to the exported methods of RPC Client and data structures where the response is serialized.
 [See more details here](rpc/README.md)
 
 Example:
@@ -44,7 +44,7 @@ func main() {
 
 ### SSE
 
-SSE package provide basic functionality to work with Casper events that streamed by SSE server.
+The SSE package provides basic functionality to work with Casper events that streamed by SSE server.
 [See more details here](sse/README.md)
 
 Example:
@@ -85,7 +85,7 @@ SDK implements base functionality that allows to work with native Casper types.
 * Identifiers, hashes and related functions [details](types/key/README.md)
 * Cryptography public and private keys functionality [details](types/keypair/README.md)
 
-Example how to construct deploy and push it to the network:
+Example of how to construct a deploy and push it to the network:
 ```go
 package main
 
@@ -131,7 +131,7 @@ func main() {
 
 ## Advanced usage
 
-It is crucial to have a clear understanding of the concept in order to avoid common mistakes or misuse of functionality. The SDK consists of several packages that have strict dependencies.
+It is crucial to have a clear understanding of the SDK structure and its functionalities in order to avoid common mistakes or misuse of functionality. The SDK consists of several packages that have strict dependencies.
 
 If we were to present the packages in different layers, the structure would be as follows (in ascending order, from low to high):
 
@@ -140,7 +140,7 @@ If we were to present the packages in different layers, the structure would be a
 3. `clvalue`
 4. `types`
 5. Services `rpc` and `sse`
-6. Higher level is a Facade to popular interfaces `casper`
+6. The highest level is a facade that provides popular interfaces through the `casper` package
 
 The Dependency tree can help to visualise:
 
@@ -157,7 +157,7 @@ Links to package documentation and examples:
 
 ### Lint and test
 
-Install go tools:
+To install necessary Go tools, use the following commands:
 ```shell
 go install -v github.com/incu6us/goimports-reviser/v3@latest
 go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.50.1
@@ -175,3 +175,13 @@ Run tests:
 ```shell
 go test ./...
 ```
+
+## Get Involved
+
+We hope you find this SDK to be a useful tool for interacting with the Casper Network using Go. We've strived to make it as intuitive and user-friendly as possible, but we understand that there's always room for improvement.
+
+Should you have any questions, issues, or suggestions, please don't hesitate to open an issue in our [GitHub repository](https://github.com/make-software/casper-go-sdk/issues). If you are interested in contributing to the Casper Go SDK, we would be thrilled to welcome you to our community. Please check out the [CONTRIBUTING.md](CONTRIBUTING.md) guide for more information.
+
+Remember, the power of blockchain networks is in their communities. Every question you ask, issue you open, or contribution you make, helps to improve the Casper Go SDK and benefits the entire Casper ecosystem.
+
+Thank you for your interest in our project, and we look forward to building the future of the Casper Network together!
