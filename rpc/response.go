@@ -60,6 +60,13 @@ type StateGetItemResult struct {
 	MerkleProof json.RawMessage `json:"merkle_proof"`
 }
 
+type StateGetDictionaryResult struct {
+	ApiVersion    string            `json:"api_version"`
+	DictionaryKey string            `json:"dictionary_key"`
+	StoredValue   types.StoredValue `json:"stored_value"`
+	MerkleProof   json.RawMessage   `json:"merkle_proof"`
+}
+
 type QueryGlobalStateResult struct {
 	ApiVersion  string            `json:"api_version"`
 	BlockHeader types.BlockHeader `json:"block_header,omitempty"`

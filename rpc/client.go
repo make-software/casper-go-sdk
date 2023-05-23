@@ -48,7 +48,7 @@ type ClientInformational interface {
 	// GetDictionaryItem returns an item from a Dictionary.
 	// Every dictionary has a seed URef, findable by using a dictionary_identifier.
 	// The address of a stored value is the blake2b hash of the seed URef and the byte representation of the dictionary key.
-	GetDictionaryItem(ctx context.Context, stateRootHash, uref, key string) (StateGetItemResult, error)
+	GetDictionaryItem(ctx context.Context, stateRootHash, uref, key string) (StateGetDictionaryResult, error)
 	// GetStateItem allows to get item from the global state
 	// Deprecated: use QueryGlobalStateByStateHash instead
 	GetStateItem(ctx context.Context, stateRootHash, key string, path []string) (StateGetItemResult, error)

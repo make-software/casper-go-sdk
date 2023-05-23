@@ -55,9 +55,8 @@ func (c *client) QueryGlobalStateByStateHash(ctx context.Context, stateRootHash,
 	}), &result)
 }
 
-// TODO: To Cover by the test
-func (c *client) GetDictionaryItem(ctx context.Context, stateRootHash, uref, key string) (StateGetItemResult, error) {
-	var result StateGetItemResult
+func (c *client) GetDictionaryItem(ctx context.Context, stateRootHash, uref, key string) (StateGetDictionaryResult, error) {
+	var result StateGetDictionaryResult
 	return result, c.processRequest(ctx, MethodGetDictionaryItem,
 		NewParamStateDictionaryItem(stateRootHash, uref, key), &result)
 }

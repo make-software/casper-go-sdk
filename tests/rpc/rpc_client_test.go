@@ -49,6 +49,19 @@ func Test_DefaultClient_GetStateItem_GetAccount(t *testing.T) {
 	assert.Equal(t, hash, result.StoredValue.Account.AccountHash.ToPrefixedString())
 }
 
+func Test_DefaultClient_StateGetDictionaryItem_GetCValueUI64(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_dictionary_item_ui64.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	stateRootHash := "0808080808080808080808080808080808080808080808080808080808080808"
+	uref := "uref-09480c3248ef76b603d386f3f4f8a5f87f597d4eaffd475433f861af187ab5db-007"
+	result, err := client.GetDictionaryItem(context.Background(), stateRootHash, uref, "a_unique_entry_identifier")
+	require.NoError(t, err)
+	value, err := result.StoredValue.CLValue.Value()
+	require.NoError(t, err)
+	assert.Equal(t, 1, int(value.UI64.Value()))
+}
+
 func Test_DefaultClient_QueryGlobalStateByBlock_GetAccount(t *testing.T) {
 	server := SetupServer(t, "../data/rpc_response/query_global_state_era.json")
 	defer server.Close()
