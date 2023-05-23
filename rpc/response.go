@@ -38,6 +38,11 @@ type ChainGetBlockTransfersResult struct {
 	Transfers []types.Transfer `json:"transfers"`
 }
 
+type ChainGetEraSummaryResult struct {
+	Version    string           `json:"api_version"`
+	EraSummary types.EraSummary `json:"era_summary"`
+}
+
 type InfoGetDeployResult struct {
 	ApiVersion       string                        `json:"api_version"`
 	Deploy           types.Deploy                  `json:"deploy"`

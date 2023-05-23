@@ -1,6 +1,7 @@
 package types
 
 import (
+	"github.com/make-software/casper-go-sdk/types/clvalue"
 	"github.com/make-software/casper-go-sdk/types/keypair"
 )
 
@@ -20,7 +21,7 @@ type ValidatorAllocation struct {
 	// Public key of the validator
 	ValidatorPublicKey keypair.PublicKey `json:"validator_public_key"`
 	// Amount allocated as a reward.
-	Amount uint64 `json:"amount,string"`
+	Amount clvalue.UInt512 `json:"amount"`
 }
 
 type DelegatorAllocation struct {
@@ -29,5 +30,5 @@ type DelegatorAllocation struct {
 	// Public key of the validator
 	ValidatorPublicKey keypair.PublicKey `json:"validator_public_key"`
 	// Amount allocated as a reward.
-	Amount uint64 `json:"amount,string"`
+	Amount clvalue.UInt512 `json:"amount"`
 }

@@ -101,6 +101,21 @@ func (c *client) GetBlockTransfersByHeight(ctx context.Context, height uint64) (
 	return result, c.processRequest(ctx, MethodGetBlockTransfers, NewParamBlockByHeight(height), &result)
 }
 
+func (c *client) GetEraSummaryLatest(ctx context.Context) (ChainGetEraSummaryResult, error) {
+	var result ChainGetEraSummaryResult
+	return result, c.processRequest(ctx, MethodGetEraSummary, nil, &result)
+}
+
+func (c *client) GetEraSummaryByHash(ctx context.Context, blockHash string) (ChainGetEraSummaryResult, error) {
+	var result ChainGetEraSummaryResult
+	return result, c.processRequest(ctx, MethodGetEraSummary, NewParamBlockByHash(blockHash), &result)
+}
+
+func (c *client) GetEraSummaryByHeight(ctx context.Context, height uint64) (ChainGetEraSummaryResult, error) {
+	var result ChainGetEraSummaryResult
+	return result, c.processRequest(ctx, MethodGetEraSummary, NewParamBlockByHeight(height), &result)
+}
+
 func (c *client) GetAuctionInfoLatest(ctx context.Context) (StateGetAuctionInfoResult, error) {
 	var result StateGetAuctionInfoResult
 	return result, c.processRequest(ctx, MethodGetAuctionInfo, nil, &result)

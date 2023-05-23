@@ -35,6 +35,7 @@ const (
 	MethodGetEraInfo        Method = "chain_get_era_info_by_switch_block"
 	MethodGetBlock          Method = "chain_get_block"
 	MethodGetBlockTransfers Method = "chain_get_block_transfers"
+	MethodGetEraSummary     Method = "chain_get_era_summary"
 	MethodGetAuctionInfo    Method = "state_get_auction_info"
 	MethodGetStateRootHash  Method = "chain_get_state_root_hash"
 	MethodGetStatus         Method = "info_get_status"

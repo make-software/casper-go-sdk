@@ -150,6 +150,33 @@ func Test_DefaultClient_GetBlockTransfersByHeight(t *testing.T) {
 	assert.NotEmpty(t, result.BlockHash)
 }
 
+func Test_DefaultClient_GetEraSummaryLatest(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_era_info_summary.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	result, err := client.GetEraSummaryLatest(context.Background())
+	require.NoError(t, err)
+	assert.NotEmpty(t, result.EraSummary.StoredValue.EraInfo.SeigniorageAllocations)
+}
+
+func Test_DefaultClient_GetEraSummaryLatest_byHash(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_era_info_summary.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	result, err := client.GetEraSummaryByHash(context.Background(), "9bfa58709058935882a095ca6adf844b72a2ddf0f49b8575ef1ceda987452fb8")
+	require.NoError(t, err)
+	assert.NotEmpty(t, result.EraSummary.StoredValue.EraInfo.SeigniorageAllocations)
+}
+
+func Test_DefaultClient_GetEraSummaryLatest_byHeight(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_era_info_summary.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	result, err := client.GetEraSummaryByHeight(context.Background(), 1412462)
+	require.NoError(t, err)
+	assert.NotEmpty(t, result.EraSummary.StoredValue.EraInfo.SeigniorageAllocations)
+}
+
 func Test_DefaultClient_GetAuctionInfoLatest(t *testing.T) {
 	server := SetupServer(t, "../data/rpc_response/get_auction_info.json")
 	defer server.Close()

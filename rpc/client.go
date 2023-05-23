@@ -66,6 +66,13 @@ type ClientInformational interface {
 	// GetBlockTransfersByHeight returns all native transfers within a given Block from a network the requested block height.
 	GetBlockTransfersByHeight(ctx context.Context, height uint64) (ChainGetBlockTransfersResult, error)
 
+	// GetEraSummaryLatest returns the era summary at a latest Block.
+	GetEraSummaryLatest(ctx context.Context) (ChainGetEraSummaryResult, error)
+	// GetEraSummaryByHash returns the era summary at a Block by hash.
+	GetEraSummaryByHash(ctx context.Context, blockHash string) (ChainGetEraSummaryResult, error)
+	// GetEraSummaryByHeight returns the era summary at a Block by height.
+	GetEraSummaryByHeight(ctx context.Context, height uint64) (ChainGetEraSummaryResult, error)
+
 	// GetStateRootHashLatest returns a state root hash of the latest Block.
 	GetStateRootHashLatest(ctx context.Context) (ChainGetStateRootHashResult, error)
 	// GetStateRootHashByHash returns a state root hash of the latest Block the requested block hash.
@@ -89,8 +96,6 @@ type ClientTransactional interface {
 }
 
 // Client interface represent full RPC client that includes all possible queries.
-//
-//go:generate mockgen -destination=../tests/mocks/rpc_client_mock.go -package=mocks -source=./client.go Client
 type Client interface {
 	ClientPOS
 	ClientInformational
