@@ -28,7 +28,7 @@ func (a Args) Bytes() ([]byte, error) {
 		result = append(result, clvalue.NewCLString(name).Bytes()...)
 		valueBytes, err := clvalue.ToBytesWithType(val)
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 		result = append(result, valueBytes...)
 	}
@@ -51,24 +51,69 @@ func (a Args) Find(name string) (*Argument, error) {
 
 func (a *Args) AddArgument(name string, value clvalue.CLValue) *Args {
 	pair := PairArgument{}
-	pair[0] = &argumentData{name: &name}
-	pair[1] = &argumentData{value: &value}
+	pair[0] = &Argument{name: &name}
+	pair[1] = &Argument{value: &value}
 	*a = append(*a, pair)
 	return a
 }
 
-type argumentData struct {
+type PairArgument [2]*Argument
+
+func (r PairArgument) Name() (string, error) {
+	return r[0].Name()
+}
+
+func (r PairArgument) Value() (clvalue.CLValue, error) {
+	return r.Argument().Value()
+}
+
+func (r PairArgument) Argument() *Argument {
+	return r[1]
+}
+
+type Argument struct {
 	rawData json.RawMessage
 	name    *string
 	value   *clvalue.CLValue
 }
 
-func (a *argumentData) UnmarshalJSON(bytes []byte) error {
+func (a *Argument) Value() (clvalue.CLValue, error) {
+	if a.value != nil {
+		return *a.value, nil
+	}
+	return ArgsFromRawJson(a.rawData)
+}
+
+func (a *Argument) Parsed() (json.RawMessage, error) {
+	var rawData rawArg
+	if a.rawData == nil {
+		return json.RawMessage{}, nil
+	}
+	err := json.Unmarshal(a.rawData, &rawData)
+	if err != nil {
+		return nil, err
+	}
+	return rawData.Parsed, nil
+}
+
+func (a *Argument) Bytes() (HexBytes, error) {
+	var rawData rawArg
+	if a.value != nil {
+		return clvalue.ToBytesWithType(*a.value)
+	}
+	err := json.Unmarshal(a.rawData, &rawData)
+	if err != nil {
+		return nil, err
+	}
+	return rawData.Bytes, nil
+}
+
+func (a *Argument) UnmarshalJSON(bytes []byte) error {
 	a.rawData = bytes
 	return nil
 }
 
-func (a argumentData) MarshalJSON() ([]byte, error) {
+func (a *Argument) MarshalJSON() ([]byte, error) {
 	if a.rawData != nil {
 		return a.rawData, nil
 	}
@@ -77,7 +122,7 @@ func (a argumentData) MarshalJSON() ([]byte, error) {
 	}
 	typeName, err := json.Marshal(a.value.Type)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	argData := rawArg{
 		CLType: typeName,
@@ -86,7 +131,7 @@ func (a argumentData) MarshalJSON() ([]byte, error) {
 	return json.Marshal(argData)
 }
 
-func (a *argumentData) Name() (string, error) {
+func (a *Argument) Name() (string, error) {
 	if a.name != nil {
 		return *a.name, nil
 	}
@@ -95,65 +140,6 @@ func (a *argumentData) Name() (string, error) {
 		return "", err
 	}
 	return *a.name, nil
-}
-
-func (a *argumentData) Value() (clvalue.CLValue, error) {
-	if a.value != nil {
-		return *a.value, nil
-	}
-	var err error
-	value, err := a.Argument().Value()
-	if err != nil {
-		return clvalue.CLValue{}, err
-	}
-
-	a.value = &value
-
-	return *a.value, nil
-}
-
-func (a *argumentData) Argument() *Argument {
-	return &Argument{a.rawData}
-}
-
-type PairArgument [2]*argumentData
-
-func (r PairArgument) Name() (string, error) {
-	return r[0].Name()
-}
-
-func (r PairArgument) Value() (clvalue.CLValue, error) {
-	return r[1].Value()
-}
-
-func (r PairArgument) Argument() *Argument {
-	return r[1].Argument()
-}
-
-type Argument struct {
-	json.RawMessage
-}
-
-func (a Argument) Value() (clvalue.CLValue, error) {
-	return ArgsFromRawJson(a.RawMessage)
-}
-
-func (a Argument) Parsed() (json.RawMessage, error) {
-	var rawData rawArg
-	err := json.Unmarshal(a.RawMessage, &rawData)
-	if err != nil {
-		return nil, err
-	}
-	return rawData.Parsed, nil
-}
-
-func (a Argument) Bytes() (HexBytes, error) {
-	var rawData rawArg
-	err := json.Unmarshal(a.RawMessage, &rawData)
-	if err != nil {
-		return nil, err
-	}
-	return rawData.Bytes, nil
 }
 
 // rawArg is a type used in deploy input arguments. And it can also be returned as a

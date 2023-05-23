@@ -21,3 +21,7 @@ func (h *HexBytes) UnmarshalJSON(bytes []byte) error {
 	*h, err = hex.DecodeString(hexString)
 	return err
 }
+
+func (h HexBytes) String() string {
+	return hex.EncodeToString(h)
+}
