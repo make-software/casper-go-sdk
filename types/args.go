@@ -102,8 +102,14 @@ func (a *argumentData) Value() (clvalue.CLValue, error) {
 		return *a.value, nil
 	}
 	var err error
-	*a.value, err = a.Argument().Value()
-	return *a.value, err
+	value, err := a.Argument().Value()
+	if err != nil {
+		return clvalue.CLValue{}, err
+	}
+
+	a.value = &value
+
+	return *a.value, nil
 }
 
 func (a *argumentData) Argument() *Argument {
@@ -132,7 +138,6 @@ func (a Argument) Value() (clvalue.CLValue, error) {
 	return ArgsFromRawJson(a.RawMessage)
 }
 
-// TODO: Temporary soulution, to remove
 func (a Argument) Parsed() (json.RawMessage, error) {
 	var rawData rawArg
 	err := json.Unmarshal(a.RawMessage, &rawData)
@@ -142,7 +147,6 @@ func (a Argument) Parsed() (json.RawMessage, error) {
 	return rawData.Parsed, nil
 }
 
-// TODO: Temporary soulution, to remove
 func (a Argument) Bytes() (HexBytes, error) {
 	var rawData rawArg
 	err := json.Unmarshal(a.RawMessage, &rawData)
