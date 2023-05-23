@@ -1,0 +1,18 @@
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "api_version": "1.4.13",
+    "changes": [
+      {
+        "public_key": "01d9bf2148748a85c89da5aad8ee0b0fc2d105fd39d41a4c796536354f0ae2900c",
+        "status_changes": [
+          {
+            "era_id": 1,
+            "validator_change": "Added"
+          }
+        ]
+      }
+    ]
+  }
+}

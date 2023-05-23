@@ -6,6 +6,7 @@ import (
 
 	"github.com/make-software/casper-go-sdk/types"
 	"github.com/make-software/casper-go-sdk/types/key"
+	"github.com/make-software/casper-go-sdk/types/keypair"
 )
 
 // RpcResponse is a wrapper struct for an RPC Response. For a successful response the Result property
@@ -93,6 +94,36 @@ type NodePeer struct {
 type ChainGetStateRootHashResult struct {
 	Version       string   `json:"api_version"`
 	StateRootHash key.Hash `json:"state_root_hash"`
+}
+
+type ValidatorState string
+
+const (
+	// ValidatorStateAdded means that the validator has been added to the set.
+	ValidatorStateAdded ValidatorState = "Added"
+	// ValidatorStateRemoved means that the validator has been removed from the set.
+	ValidatorStateRemoved ValidatorState = "Removed"
+	// ValidatorStateBanned means that the validator has been banned in the current era.
+	ValidatorStateBanned ValidatorState = "Banned"
+	// ValidatorStateCannotPropose means that the validator cannot propose a Block.
+	ValidatorStateCannotPropose ValidatorState = "CannotPropose"
+	// ValidatorStateSeenAsFaulty means that the validator has performed questionable activity.
+	ValidatorStateSeenAsFaulty ValidatorState = "SeenAsFaulty"
+)
+
+type StatusChanges struct {
+	EraID          uint64         `json:"era_id"`
+	ValidatorState ValidatorState `json:"validator_change"`
+}
+
+type ValidatorChanges struct {
+	PublicKey     keypair.PublicKey `json:"public_key"`
+	StatusChanges []StatusChanges   `json:"status_changes"`
+}
+
+type InfoGetValidatorChangesResult struct {
+	APIVersion string             `json:"api_version"`
+	Changes    []ValidatorChanges `json:"changes"`
 }
 
 type InfoGetStatusResult struct {

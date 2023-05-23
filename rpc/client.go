@@ -35,6 +35,10 @@ type ClientPOS interface {
 	// Only the last Block in an era, known as a switch block, will contain an era_summary.
 	// Querying by block hash.
 	GetEraInfoByBlockHash(ctx context.Context, hash string) (ChainGetEraInfoResult, error)
+
+	// GetValidatorChangesInfo returns status changes of active validators. Listed changes occurred during the EraId
+	// contained within the response itself. A validator may show more than one change in a single era.
+	GetValidatorChangesInfo(ctx context.Context) (InfoGetValidatorChangesResult, error)
 }
 
 // ClientInformational contains methods that return information from a node on a Casper network.

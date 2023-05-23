@@ -170,6 +170,11 @@ func (c *client) GetStateRootHashByHeight(ctx context.Context, height uint64) (C
 	return result, c.processRequest(ctx, MethodGetStateRootHash, NewParamBlockByHeight(height), &result)
 }
 
+func (c *client) GetValidatorChangesInfo(ctx context.Context) (InfoGetValidatorChangesResult, error) {
+	var result InfoGetValidatorChangesResult
+	return result, c.processRequest(ctx, MethodGetValidatorChanges, nil, &result)
+}
+
 func (c *client) GetStatus(ctx context.Context) (InfoGetStatusResult, error) {
 	var result InfoGetStatusResult
 	return result, c.processRequest(ctx, MethodGetStatus, nil, &result)

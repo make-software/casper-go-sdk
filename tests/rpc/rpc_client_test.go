@@ -11,6 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/make-software/casper-go-sdk/casper"
+	"github.com/make-software/casper-go-sdk/rpc"
 )
 
 func SetupServer(t *testing.T, filePath string) *httptest.Server {
@@ -153,6 +154,15 @@ func Test_DefaultClient_GetEraInfoByBlockHash(t *testing.T) {
 	)
 	require.NoError(t, err)
 	assert.Equal(t, "5dafbccc05cd3eb765ef9471a141877d8ffae306fb79c75fa4db46ab98bca370", result.EraSummary.BlockHash.ToHex())
+}
+
+func Test_DefaultClient_GetValidatorChanges(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_validator_changes.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	res, err := client.GetValidatorChangesInfo(context.Background())
+	require.NoError(t, err)
+	assert.Equal(t, rpc.ValidatorStateAdded, res.Changes[0].StatusChanges[0].ValidatorState)
 }
 
 func Test_DefaultClient_GetBlockLatest(t *testing.T) {
