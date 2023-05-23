@@ -41,6 +41,20 @@ func (c *client) GetStateItem(ctx context.Context, stateRootHash, key string, pa
 	}, &result)
 }
 
+func (c *client) QueryGlobalStateByBlockHash(ctx context.Context, blockHash, key string, path []string) (QueryGlobalStateResult, error) {
+	var result QueryGlobalStateResult
+	return result, c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, ParamQueryGlobalStateID{
+		BlockHash: blockHash,
+	}), &result)
+}
+
+func (c *client) QueryGlobalStateByStateHash(ctx context.Context, stateRootHash, key string, path []string) (QueryGlobalStateResult, error) {
+	var result QueryGlobalStateResult
+	return result, c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, ParamQueryGlobalStateID{
+		StateRootHash: stateRootHash,
+	}), &result)
+}
+
 // TODO: To Cover by the test
 func (c *client) GetDictionaryItem(ctx context.Context, stateRootHash, uref, key string) (StateGetItemResult, error) {
 	var result StateGetItemResult

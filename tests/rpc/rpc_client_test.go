@@ -49,6 +49,29 @@ func Test_DefaultClient_GetStateItem_GetAccount(t *testing.T) {
 	assert.Equal(t, hash, result.StoredValue.Account.AccountHash.ToPrefixedString())
 }
 
+func Test_DefaultClient_QueryGlobalStateByBlock_GetAccount(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/query_global_state_era.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	blockHash := "bf06bdb1616050cea5862333d1f4787718f1011c95574ba92378419eefeeee59"
+	accountKey := "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c"
+	res, err := client.QueryGlobalStateByBlockHash(context.Background(), blockHash, accountKey, nil)
+	require.NoError(t, err)
+	assert.NotEmpty(t, res.BlockHeader.BodyHash)
+	assert.NotEmpty(t, res.StoredValue.Account.AccountHash)
+}
+
+func Test_DefaultClient_QueryGlobalStateByStateRoot_GetAccount(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/query_global_state_era.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	stateRootHash := "bf06bdb1616050cea5862333d1f4787718f1011c95574ba92378419eefeeee59"
+	accountKey := "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c"
+	res, err := client.QueryGlobalStateByBlockHash(context.Background(), stateRootHash, accountKey, nil)
+	require.NoError(t, err)
+	assert.NotEmpty(t, res.StoredValue.Account.AccountHash)
+}
+
 func Test_DefaultClient_GetStateBalance(t *testing.T) {
 	server := SetupServer(t, "../data/rpc_response/get_account_balance.json")
 	defer server.Close()

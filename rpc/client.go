@@ -49,8 +49,14 @@ type ClientInformational interface {
 	// Every dictionary has a seed URef, findable by using a dictionary_identifier.
 	// The address of a stored value is the blake2b hash of the seed URef and the byte representation of the dictionary key.
 	GetDictionaryItem(ctx context.Context, stateRootHash, uref, key string) (StateGetItemResult, error)
-	// TODO: No Documentation about this method in the Casper specification
+	// GetStateItem allows to get item from the global state
+	// Deprecated: use QueryGlobalStateByStateHash instead
 	GetStateItem(ctx context.Context, stateRootHash, key string, path []string) (StateGetItemResult, error)
+
+	// QueryGlobalStateByBlockHash allows for you to query for a value stored under certain keys in global state.
+	QueryGlobalStateByBlockHash(ctx context.Context, blockHash, key string, path []string) (QueryGlobalStateResult, error)
+	// QueryGlobalStateByStateHash allows for you to query for a value stored under certain keys in global state.
+	QueryGlobalStateByStateHash(ctx context.Context, stateRootHash, key string, path []string) (QueryGlobalStateResult, error)
 
 	// GetBlockLatest returns the latest types.Block from the network.
 	GetBlockLatest(ctx context.Context) (ChainGetBlockResult, error)
@@ -82,7 +88,6 @@ type ClientInformational interface {
 
 	// GetStatus return the current status of a node on a Casper network.
 	// The responses return information specific to the queried node, and as such, will vary.
-	//TODO: maybe move to separate interface NodeInfoClient
 	GetStatus(ctx context.Context) (InfoGetStatusResult, error)
 	// GetPeers return a list of peers connected to the node on a Casper network.
 	// The responses return information specific to the queried node, and as such, will vary.

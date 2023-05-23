@@ -30,6 +30,7 @@ type Method string
 const (
 	MethodGetDeploy         Method = "info_get_deploy"
 	MethodGetStateItem      Method = "state_get_item"
+	MethodQueryGlobalState  Method = "query_global_state"
 	MethodGetDictionaryItem Method = "state_get_dictionary_item"
 	MethodGetStateBalance   Method = "state_get_balance"
 	MethodGetEraInfo        Method = "chain_get_era_info_by_switch_block"
@@ -67,6 +68,15 @@ type ParamStateRootHash struct {
 	StateRootHash string   `json:"state_root_hash"`
 	Key           string   `json:"key"`
 	Path          []string `json:"path,omitempty"`
+}
+
+func NewQueryGlobalStateParam(key string, path []string, id ParamQueryGlobalStateID) []interface{} {
+	return []interface{}{key, path, id}
+}
+
+type ParamQueryGlobalStateID struct {
+	StateRootHash string `json:"StateRootHash,omitempty"`
+	BlockHash     string `json:"BlockHash,omitempty"`
 }
 
 type PutDeployRequest struct {

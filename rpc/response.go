@@ -60,6 +60,14 @@ type StateGetItemResult struct {
 	MerkleProof json.RawMessage `json:"merkle_proof"`
 }
 
+type QueryGlobalStateResult struct {
+	ApiVersion  string            `json:"api_version"`
+	BlockHeader types.BlockHeader `json:"block_header,omitempty"`
+	StoredValue types.StoredValue `json:"stored_value"`
+	//MerkleProof is a construction created using a merkle trie that allows verification of the associated hashes.
+	MerkleProof json.RawMessage `json:"merkle_proof"`
+}
+
 type InfoGetPeerResult struct {
 	ApiVersion string     `json:"api_version"`
 	Peers      []NodePeer `json:"peers"`
