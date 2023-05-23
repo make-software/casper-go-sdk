@@ -33,6 +33,7 @@ const (
 	MethodQueryGlobalState  Method = "query_global_state"
 	MethodGetDictionaryItem Method = "state_get_dictionary_item"
 	MethodGetStateBalance   Method = "state_get_balance"
+	MethodGetStateAccount   Method = "state_get_account_info"
 	MethodGetEraInfo        Method = "chain_get_era_info_by_switch_block"
 	MethodGetBlock          Method = "chain_get_block"
 	MethodGetBlockTransfers Method = "chain_get_block_transfers"

@@ -80,9 +80,32 @@ func Test_DefaultClient_QueryGlobalStateByStateRoot_GetAccount(t *testing.T) {
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
 	stateRootHash := "bf06bdb1616050cea5862333d1f4787718f1011c95574ba92378419eefeeee59"
 	accountKey := "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c"
-	res, err := client.QueryGlobalStateByBlockHash(context.Background(), stateRootHash, accountKey, nil)
+	res, err := client.QueryGlobalStateByStateHash(context.Background(), stateRootHash, accountKey, nil)
 	require.NoError(t, err)
 	assert.NotEmpty(t, res.StoredValue.Account.AccountHash)
+}
+
+func Test_DefaultClient_GetAccountInfoByBlochHash(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_account_info.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	pubKey, err := casper.NewPublicKey("01018525deae6091abccab6704a0fa44e12c495eec9e8fe6929862e1b75580e715")
+	require.NoError(t, err)
+	blockHash := "bf06bdb1616050cea5862333d1f4787718f1011c95574ba92378419eefeeee59"
+	res, err := client.GetAccountInfoByBlochHash(context.Background(), blockHash, pubKey)
+	require.NoError(t, err)
+	assert.Equal(t, "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c", res.Account.AccountHash.ToPrefixedString())
+}
+
+func Test_DefaultClient_GetAccountInfoByBlochHeight(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_account_info.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	pubKey, err := casper.NewPublicKey("01018525deae6091abccab6704a0fa44e12c495eec9e8fe6929862e1b75580e715")
+	require.NoError(t, err)
+	res, err := client.GetAccountInfoByBlochHeight(context.Background(), 185, pubKey)
+	require.NoError(t, err)
+	assert.Equal(t, "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c", res.Account.AccountHash.ToPrefixedString())
 }
 
 func Test_DefaultClient_GetStateBalance(t *testing.T) {

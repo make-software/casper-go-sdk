@@ -27,6 +27,11 @@ type StateGetBalanceResult struct {
 	BalanceValue uint64 `json:"balance_value,string"`
 }
 
+type StateGetAccountInfo struct {
+	ApiVersion string        `json:"api_version"`
+	Account    types.Account `json:"account"`
+}
+
 type ChainGetBlockResult struct {
 	Version string      `json:"version"`
 	Block   types.Block `json:"block"`

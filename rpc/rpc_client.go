@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/make-software/casper-go-sdk/types"
+	"github.com/make-software/casper-go-sdk/types/keypair"
 )
 
 var ErrResultUnmarshal = errors.New("failed to unmarshal rpc result")
@@ -53,6 +54,16 @@ func (c *client) QueryGlobalStateByStateHash(ctx context.Context, stateRootHash,
 	return result, c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, ParamQueryGlobalStateID{
 		StateRootHash: stateRootHash,
 	}), &result)
+}
+
+func (c *client) GetAccountInfoByBlochHash(ctx context.Context, blockHash string, pub keypair.PublicKey) (StateGetAccountInfo, error) {
+	var result StateGetAccountInfo
+	return result, c.processRequest(ctx, MethodGetStateAccount, []interface{}{pub.String(), NewParamBlockByHash(blockHash)}, &result)
+}
+
+func (c *client) GetAccountInfoByBlochHeight(ctx context.Context, blockHeight uint64, pub keypair.PublicKey) (StateGetAccountInfo, error) {
+	var result StateGetAccountInfo
+	return result, c.processRequest(ctx, MethodGetStateAccount, []interface{}{pub.String(), NewParamBlockByHeight(blockHeight)}, &result)
 }
 
 func (c *client) GetDictionaryItem(ctx context.Context, stateRootHash, uref, key string) (StateGetDictionaryResult, error) {
