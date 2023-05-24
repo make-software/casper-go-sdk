@@ -1,6 +1,7 @@
 package secp256k1
 
 import (
+	"crypto/sha256"
 	"errors"
 	"os"
 
@@ -16,11 +17,13 @@ func (v PrivateKey) PublicKeyBytes() []byte {
 }
 
 func (v PrivateKey) Sign(mes []byte) ([]byte, error) {
-	val, err := v.key.Sign(mes)
+	hash := sha256.Sum256(mes)
+	sig, err := v.key.Sign(hash[:])
 	if err != nil {
 		return nil, err
 	}
-	return val.Serialize(), nil
+
+	return serializeSig(sig), nil
 }
 
 func NewPrivateKeyFromPemFile(path string) (PrivateKey, error) {
@@ -40,4 +43,16 @@ func NewPrivateKeyFromPem(content []byte) (PrivateKey, error) {
 	return PrivateKey{
 		key: private,
 	}, nil
+}
+
+// Serialize signature to R || S.
+// R, S are padded to 32 bytes respectively.
+func serializeSig(sig *btcec.Signature) []byte {
+	rBytes := sig.R.Bytes()
+	sBytes := sig.S.Bytes()
+	sigBytes := make([]byte, 64)
+	// 0 pad the byte arrays from the left if they aren't big enough.
+	copy(sigBytes[32-len(rBytes):32], rBytes)
+	copy(sigBytes[64-len(sBytes):64], sBytes)
+	return sigBytes
 }

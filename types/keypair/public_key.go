@@ -117,9 +117,6 @@ func (v PublicKey) VerifySignature(message []byte, sig []byte) error {
 		return ErrEmptySignature
 	}
 
-	// Trim first byte with algorithm data
-	sig = sig[1:]
-
 	if v.key.VerifySignature(message, sig) {
 		return nil
 	}

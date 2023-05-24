@@ -70,7 +70,7 @@ func Test_MakeDeploy(t *testing.T) {
       "approvals": [
         {
           "signer": "0146c64d0506c486f2b19f9cf73479fba550f33227b6ec1c12e58b437d2680e96d",
-          "signature": "011ab325948bda6029b566263dcdc4837fa7487bc6e177a9480be72dc5a6dd06578fc39d2189ecaaa4d8c802bd3f7e09a591903cd29b2bac866576cbdfb2dbee0c"
+          "signature": "1ab325948bda6029b566263dcdc4837fa7487bc6e177a9480be72dc5a6dd06578fc39d2189ecaaa4d8c802bd3f7e09a591903cd29b2bac866576cbdfb2dbee0c"
         }
       ]
     }`
