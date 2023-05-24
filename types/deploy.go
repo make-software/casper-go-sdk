@@ -104,7 +104,7 @@ func (d *Deploy) SignDeploy(keys keypair.PrivateKey) error {
 	}
 	approval := Approval{
 		Signer:    keys.PublicKey(),
-		Signature: signature,
+		Signature: append(keys.SignPrefix(), signature...),
 	}
 
 	if d.Approvals == nil {

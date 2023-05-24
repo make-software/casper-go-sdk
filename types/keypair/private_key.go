@@ -26,6 +26,10 @@ func (v PrivateKey) Sign(mes []byte) ([]byte, error) {
 	return v.priv.Sign(mes)
 }
 
+func (v PrivateKey) SignPrefix() []byte {
+	return []byte{v.alg.Byte()}
+}
+
 func NewPrivateKeyED25518(path string) (PrivateKey, error) {
 	return NewPrivateKeyFromFile(path, ED25519)
 }

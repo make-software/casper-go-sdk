@@ -24,3 +24,7 @@ var KeySettings = map[keyAlgorithm]KeyAlgorithmSetting{
 func (a keyAlgorithm) String() string {
 	return KeySettings[a].name
 }
+
+func (a keyAlgorithm) Byte() byte {
+	return byte(a)
+}
