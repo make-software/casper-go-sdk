@@ -118,3 +118,24 @@ func (c *CLValue) GetKey() (*key.Key, error) {
 	}
 	return c.Key, nil
 }
+
+func NewCLKey(data key.Key) CLValue {
+	return CLValue{
+		Type: cltype.Key,
+		Key:  &data,
+	}
+}
+
+func NewCLUref(data key.URef) CLValue {
+	return CLValue{
+		Type: cltype.Uref,
+		Uref: &data,
+	}
+}
+
+func NewCLPublicKey(data keypair.PublicKey) CLValue {
+	return CLValue{
+		Type:      cltype.PublicKey,
+		PublicKey: &data,
+	}
+}
