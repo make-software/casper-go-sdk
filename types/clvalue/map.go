@@ -34,9 +34,7 @@ func (m *Map) Map() map[string]CLValue {
 
 func (m *Map) Data() []Tuple2 {
 	result := make([]Tuple2, len(m.data))
-	for k, v := range m.data {
-		result[k] = v
-	}
+	copy(result, m.data)
 	return result
 }
 
