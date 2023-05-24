@@ -23,11 +23,11 @@ func (v PrivateKey) PublicKey() PublicKey {
 }
 
 func (v PrivateKey) Sign(mes []byte) ([]byte, error) {
-	return v.priv.Sign(mes)
-}
-
-func (v PrivateKey) SignPrefix() []byte {
-	return []byte{v.alg.Byte()}
+	sign, err := v.priv.Sign(mes)
+	if err != nil {
+		return nil, err
+	}
+	return append([]byte{v.alg.Byte()}, sign...), nil
 }
 
 func NewPrivateKeyED25518(path string) (PrivateKey, error) {
