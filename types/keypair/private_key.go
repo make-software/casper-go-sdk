@@ -27,7 +27,7 @@ func (v PrivateKey) Sign(mes []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return append([]byte{byte(v.alg)}, sign...), nil
+	return append([]byte{v.alg.Byte()}, sign...), nil
 }
 
 func NewPrivateKeyED25518(path string) (PrivateKey, error) {
