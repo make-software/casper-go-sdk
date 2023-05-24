@@ -32,6 +32,12 @@ func (m *Map) Map() map[string]CLValue {
 	return result
 }
 
+func (m *Map) Data() []Tuple2 {
+	result := make([]Tuple2, len(m.data))
+	copy(result, m.data)
+	return result
+}
+
 func (m *Map) String() string {
 	b := new(bytes.Buffer)
 	for key, value := range m.indexedData {
