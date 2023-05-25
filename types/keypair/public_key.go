@@ -112,6 +112,7 @@ func (v PublicKey) Equals(target PublicKey) bool {
 	return v.String() == target.String()
 }
 
+// VerifySignature verifies message using Casper compatible cryptographic signature, including the algorithm tag prefix
 func (v PublicKey) VerifySignature(message []byte, sig []byte) error {
 	if len(sig) <= 1 {
 		return ErrEmptySignature
@@ -120,6 +121,16 @@ func (v PublicKey) VerifySignature(message []byte, sig []byte) error {
 	// Trim first byte with algorithm data
 	sig = sig[1:]
 
+	if v.key.VerifySignature(message, sig) {
+		return nil
+	}
+
+	return ErrInvalidSignature
+}
+
+// VerifyRawSignature verifies message using raw signature
+// Deprecated: won't work with Casper node, use VerifySignature method to achieve compatibility
+func (v PublicKey) VerifyRawSignature(message []byte, sig []byte) error {
 	if v.key.VerifySignature(message, sig) {
 		return nil
 	}
