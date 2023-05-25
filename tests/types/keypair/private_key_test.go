@@ -31,3 +31,13 @@ func Test_SECPKey_CreateAndValidateSignature(t *testing.T) {
 	err = privateKeyData.PublicKey().VerifySignature(secretMessage, signature)
 	assert.NoError(t, err)
 }
+
+func Test_SECPKey_CreateAndValidateRawSignature(t *testing.T) {
+	secretMessage := []byte("Enigmatic Shadows Concealing Ancient Whispers")
+	privateKeyData, err := keypair.GeneratePrivateKey(keypair.SECP256K1)
+	require.NoError(t, err)
+	signature, err := privateKeyData.RawSign(secretMessage)
+	require.NoError(t, err)
+	err = privateKeyData.PublicKey().VerifyRawSignature(secretMessage, signature)
+	assert.NoError(t, err)
+}

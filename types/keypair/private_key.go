@@ -22,12 +22,19 @@ func (v PrivateKey) PublicKey() PublicKey {
 	return v.pub
 }
 
+// Sign creates a Casper compatible cryptographic signature, including the algorithm tag prefix
 func (v PrivateKey) Sign(mes []byte) ([]byte, error) {
 	sign, err := v.priv.Sign(mes)
 	if err != nil {
 		return nil, err
 	}
 	return append([]byte{v.alg.Byte()}, sign...), nil
+}
+
+// RawSign returns raw bytes of signature to sign off chain data
+// Deprecated: won't work with Casper node, use Sign method instead
+func (v PrivateKey) RawSign(mes []byte) ([]byte, error) {
+	return v.priv.Sign(mes)
 }
 
 func NewPrivateKeyED25518(path string) (PrivateKey, error) {
