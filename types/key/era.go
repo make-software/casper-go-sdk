@@ -40,11 +40,11 @@ func NewEra(val uint64) *Era {
 }
 
 func NewEraFromString(source string) (res Era, err error) {
-	intVal, err := strconv.Atoi(source)
+	val, err := strconv.ParseUint(source, 10, 64)
 	if err != nil {
 		return res, err
 	}
-	return Era(uint32(intVal)), nil
+	return Era(val), nil
 }
 
 func NewEraFromBuffer(buf *bytes.Buffer) (*Era, error) {

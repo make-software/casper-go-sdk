@@ -13,7 +13,6 @@ type LogTestTransport struct {
 
 func (l *LogTestTransport) RoundTrip(request *http.Request) (*http.Response, error) {
 	log.Printf("Request URL: %s", request.URL.String())
-	log.Printf("Request Headers: %v", request.Header)
 	log.Printf("Request Context: %v", request.Context())
 	bodyBytes, err := io.ReadAll(request.Body)
 	defer request.Body.Close()
