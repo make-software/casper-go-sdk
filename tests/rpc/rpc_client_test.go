@@ -11,6 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/make-software/casper-go-sdk/casper"
+	"github.com/make-software/casper-go-sdk/rpc"
 )
 
 func SetupServer(t *testing.T, filePath string) *httptest.Server {
@@ -47,6 +48,65 @@ func Test_DefaultClient_GetStateItem_GetAccount(t *testing.T) {
 	)
 	require.NoError(t, err)
 	assert.Equal(t, hash, result.StoredValue.Account.AccountHash.ToPrefixedString())
+}
+
+func Test_DefaultClient_StateGetDictionaryItem_GetCValueUI64(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_dictionary_item_ui64.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	stateRootHash := "0808080808080808080808080808080808080808080808080808080808080808"
+	uref := "uref-09480c3248ef76b603d386f3f4f8a5f87f597d4eaffd475433f861af187ab5db-007"
+	result, err := client.GetDictionaryItem(context.Background(), stateRootHash, uref, "a_unique_entry_identifier")
+	require.NoError(t, err)
+	value, err := result.StoredValue.CLValue.Value()
+	require.NoError(t, err)
+	assert.Equal(t, 1, int(value.UI64.Value()))
+}
+
+func Test_DefaultClient_QueryGlobalStateByBlock_GetAccount(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/query_global_state_era.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	blockHash := "bf06bdb1616050cea5862333d1f4787718f1011c95574ba92378419eefeeee59"
+	accountKey := "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c"
+	res, err := client.QueryGlobalStateByBlockHash(context.Background(), blockHash, accountKey, nil)
+	require.NoError(t, err)
+	assert.NotEmpty(t, res.BlockHeader.BodyHash)
+	assert.NotEmpty(t, res.StoredValue.Account.AccountHash)
+}
+
+func Test_DefaultClient_QueryGlobalStateByStateRoot_GetAccount(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/query_global_state_era.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	stateRootHash := "bf06bdb1616050cea5862333d1f4787718f1011c95574ba92378419eefeeee59"
+	accountKey := "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c"
+	res, err := client.QueryGlobalStateByStateHash(context.Background(), stateRootHash, accountKey, nil)
+	require.NoError(t, err)
+	assert.NotEmpty(t, res.StoredValue.Account.AccountHash)
+}
+
+func Test_DefaultClient_GetAccountInfoByBlochHash(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_account_info.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	pubKey, err := casper.NewPublicKey("01018525deae6091abccab6704a0fa44e12c495eec9e8fe6929862e1b75580e715")
+	require.NoError(t, err)
+	blockHash := "bf06bdb1616050cea5862333d1f4787718f1011c95574ba92378419eefeeee59"
+	res, err := client.GetAccountInfoByBlochHash(context.Background(), blockHash, pubKey)
+	require.NoError(t, err)
+	assert.Equal(t, "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c", res.Account.AccountHash.ToPrefixedString())
+}
+
+func Test_DefaultClient_GetAccountInfoByBlochHeight(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_account_info.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	pubKey, err := casper.NewPublicKey("01018525deae6091abccab6704a0fa44e12c495eec9e8fe6929862e1b75580e715")
+	require.NoError(t, err)
+	res, err := client.GetAccountInfoByBlochHeight(context.Background(), 185, pubKey)
+	require.NoError(t, err)
+	assert.Equal(t, "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c", res.Account.AccountHash.ToPrefixedString())
 }
 
 func Test_DefaultClient_GetStateBalance(t *testing.T) {
@@ -94,6 +154,15 @@ func Test_DefaultClient_GetEraInfoByBlockHash(t *testing.T) {
 	)
 	require.NoError(t, err)
 	assert.Equal(t, "5dafbccc05cd3eb765ef9471a141877d8ffae306fb79c75fa4db46ab98bca370", result.EraSummary.BlockHash.ToHex())
+}
+
+func Test_DefaultClient_GetValidatorChanges(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_validator_changes.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	res, err := client.GetValidatorChangesInfo(context.Background())
+	require.NoError(t, err)
+	assert.Equal(t, rpc.ValidatorStateAdded, res.Changes[0].StatusChanges[0].ValidatorState)
 }
 
 func Test_DefaultClient_GetBlockLatest(t *testing.T) {
@@ -148,6 +217,33 @@ func Test_DefaultClient_GetBlockTransfersByHeight(t *testing.T) {
 	result, err := client.GetBlockTransfersByHeight(context.Background(), 1412462)
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.BlockHash)
+}
+
+func Test_DefaultClient_GetEraSummaryLatest(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_era_info_summary.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	result, err := client.GetEraSummaryLatest(context.Background())
+	require.NoError(t, err)
+	assert.NotEmpty(t, result.EraSummary.StoredValue.EraInfo.SeigniorageAllocations)
+}
+
+func Test_DefaultClient_GetEraSummaryLatest_byHash(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_era_info_summary.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	result, err := client.GetEraSummaryByHash(context.Background(), "9bfa58709058935882a095ca6adf844b72a2ddf0f49b8575ef1ceda987452fb8")
+	require.NoError(t, err)
+	assert.NotEmpty(t, result.EraSummary.StoredValue.EraInfo.SeigniorageAllocations)
+}
+
+func Test_DefaultClient_GetEraSummaryLatest_byHeight(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_era_info_summary.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	result, err := client.GetEraSummaryByHeight(context.Background(), 1412462)
+	require.NoError(t, err)
+	assert.NotEmpty(t, result.EraSummary.StoredValue.EraInfo.SeigniorageAllocations)
 }
 
 func Test_DefaultClient_GetAuctionInfoLatest(t *testing.T) {

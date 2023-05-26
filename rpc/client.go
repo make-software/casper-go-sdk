@@ -9,6 +9,7 @@ import (
 	"context"
 
 	"github.com/make-software/casper-go-sdk/types"
+	"github.com/make-software/casper-go-sdk/types/keypair"
 )
 
 // ClientPOS contains methods pertain to the Proof-of-Stake functionality of a Casper network.
@@ -34,6 +35,10 @@ type ClientPOS interface {
 	// Only the last Block in an era, known as a switch block, will contain an era_summary.
 	// Querying by block hash.
 	GetEraInfoByBlockHash(ctx context.Context, hash string) (ChainGetEraInfoResult, error)
+
+	// GetValidatorChangesInfo returns status changes of active validators. Listed changes occurred during the EraId
+	// contained within the response itself. A validator may show more than one change in a single era.
+	GetValidatorChangesInfo(ctx context.Context) (InfoGetValidatorChangesResult, error)
 }
 
 // ClientInformational contains methods that return information from a node on a Casper network.
@@ -48,9 +53,22 @@ type ClientInformational interface {
 	// GetDictionaryItem returns an item from a Dictionary.
 	// Every dictionary has a seed URef, findable by using a dictionary_identifier.
 	// The address of a stored value is the blake2b hash of the seed URef and the byte representation of the dictionary key.
-	GetDictionaryItem(ctx context.Context, stateRootHash, uref, key string) (StateGetItemResult, error)
-	// TODO: No Documentation about this method in the Casper specification
+	GetDictionaryItem(ctx context.Context, stateRootHash, uref, key string) (StateGetDictionaryResult, error)
+	// GetStateItem allows to get item from the global state
+	// Deprecated: use QueryGlobalStateByStateHash instead
 	GetStateItem(ctx context.Context, stateRootHash, key string, path []string) (StateGetItemResult, error)
+
+	// QueryGlobalStateByBlockHash allows for you to query for a value stored under certain keys in global state.
+	QueryGlobalStateByBlockHash(ctx context.Context, blockHash, key string, path []string) (QueryGlobalStateResult, error)
+	// QueryGlobalStateByStateHash allows for you to query for a value stored under certain keys in global state.
+	QueryGlobalStateByStateHash(ctx context.Context, stateRootHash, key string, path []string) (QueryGlobalStateResult, error)
+
+	// GetAccountInfoByBlochHash returns a JSON representation of an Account from the network.
+	// The blockHash must refer to a  Block after the Account's creation, or the method will return an empty response.
+	GetAccountInfoByBlochHash(ctx context.Context, blockHash string, pub keypair.PublicKey) (StateGetAccountInfo, error)
+	// GetAccountInfoByBlochHeight returns a JSON representation of an Account from the network.
+	// The blockHeight must refer to a Block after the Account's creation, or the method will return an empty response.
+	GetAccountInfoByBlochHeight(ctx context.Context, blockHeight uint64, pub keypair.PublicKey) (StateGetAccountInfo, error)
 
 	// GetBlockLatest returns the latest types.Block from the network.
 	GetBlockLatest(ctx context.Context) (ChainGetBlockResult, error)
@@ -66,6 +84,13 @@ type ClientInformational interface {
 	// GetBlockTransfersByHeight returns all native transfers within a given Block from a network the requested block height.
 	GetBlockTransfersByHeight(ctx context.Context, height uint64) (ChainGetBlockTransfersResult, error)
 
+	// GetEraSummaryLatest returns the era summary at a latest Block.
+	GetEraSummaryLatest(ctx context.Context) (ChainGetEraSummaryResult, error)
+	// GetEraSummaryByHash returns the era summary at a Block by hash.
+	GetEraSummaryByHash(ctx context.Context, blockHash string) (ChainGetEraSummaryResult, error)
+	// GetEraSummaryByHeight returns the era summary at a Block by height.
+	GetEraSummaryByHeight(ctx context.Context, height uint64) (ChainGetEraSummaryResult, error)
+
 	// GetStateRootHashLatest returns a state root hash of the latest Block.
 	GetStateRootHashLatest(ctx context.Context) (ChainGetStateRootHashResult, error)
 	// GetStateRootHashByHash returns a state root hash of the latest Block the requested block hash.
@@ -75,7 +100,6 @@ type ClientInformational interface {
 
 	// GetStatus return the current status of a node on a Casper network.
 	// The responses return information specific to the queried node, and as such, will vary.
-	//TODO: maybe move to separate interface NodeInfoClient
 	GetStatus(ctx context.Context) (InfoGetStatusResult, error)
 	// GetPeers return a list of peers connected to the node on a Casper network.
 	// The responses return information specific to the queried node, and as such, will vary.
@@ -89,8 +113,6 @@ type ClientTransactional interface {
 }
 
 // Client interface represent full RPC client that includes all possible queries.
-//
-//go:generate mockgen -destination=../tests/mocks/rpc_client_mock.go -package=mocks -source=./client.go Client
 type Client interface {
 	ClientPOS
 	ClientInformational

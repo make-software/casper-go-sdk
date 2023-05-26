@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/make-software/casper-go-sdk/types"
+	"github.com/make-software/casper-go-sdk/types/keypair"
 )
 
 var ErrResultUnmarshal = errors.New("failed to unmarshal rpc result")
@@ -41,9 +42,32 @@ func (c *client) GetStateItem(ctx context.Context, stateRootHash, key string, pa
 	}, &result)
 }
 
-// TODO: To Cover by the test
-func (c *client) GetDictionaryItem(ctx context.Context, stateRootHash, uref, key string) (StateGetItemResult, error) {
-	var result StateGetItemResult
+func (c *client) QueryGlobalStateByBlockHash(ctx context.Context, blockHash, key string, path []string) (QueryGlobalStateResult, error) {
+	var result QueryGlobalStateResult
+	return result, c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, ParamQueryGlobalStateID{
+		BlockHash: blockHash,
+	}), &result)
+}
+
+func (c *client) QueryGlobalStateByStateHash(ctx context.Context, stateRootHash, key string, path []string) (QueryGlobalStateResult, error) {
+	var result QueryGlobalStateResult
+	return result, c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, ParamQueryGlobalStateID{
+		StateRootHash: stateRootHash,
+	}), &result)
+}
+
+func (c *client) GetAccountInfoByBlochHash(ctx context.Context, blockHash string, pub keypair.PublicKey) (StateGetAccountInfo, error) {
+	var result StateGetAccountInfo
+	return result, c.processRequest(ctx, MethodGetStateAccount, []interface{}{pub.String(), NewParamBlockByHash(blockHash)}, &result)
+}
+
+func (c *client) GetAccountInfoByBlochHeight(ctx context.Context, blockHeight uint64, pub keypair.PublicKey) (StateGetAccountInfo, error) {
+	var result StateGetAccountInfo
+	return result, c.processRequest(ctx, MethodGetStateAccount, []interface{}{pub.String(), NewParamBlockByHeight(blockHeight)}, &result)
+}
+
+func (c *client) GetDictionaryItem(ctx context.Context, stateRootHash, uref, key string) (StateGetDictionaryResult, error) {
+	var result StateGetDictionaryResult
 	return result, c.processRequest(ctx, MethodGetDictionaryItem,
 		NewParamStateDictionaryItem(stateRootHash, uref, key), &result)
 }
@@ -101,6 +125,21 @@ func (c *client) GetBlockTransfersByHeight(ctx context.Context, height uint64) (
 	return result, c.processRequest(ctx, MethodGetBlockTransfers, NewParamBlockByHeight(height), &result)
 }
 
+func (c *client) GetEraSummaryLatest(ctx context.Context) (ChainGetEraSummaryResult, error) {
+	var result ChainGetEraSummaryResult
+	return result, c.processRequest(ctx, MethodGetEraSummary, nil, &result)
+}
+
+func (c *client) GetEraSummaryByHash(ctx context.Context, blockHash string) (ChainGetEraSummaryResult, error) {
+	var result ChainGetEraSummaryResult
+	return result, c.processRequest(ctx, MethodGetEraSummary, NewParamBlockByHash(blockHash), &result)
+}
+
+func (c *client) GetEraSummaryByHeight(ctx context.Context, height uint64) (ChainGetEraSummaryResult, error) {
+	var result ChainGetEraSummaryResult
+	return result, c.processRequest(ctx, MethodGetEraSummary, NewParamBlockByHeight(height), &result)
+}
+
 func (c *client) GetAuctionInfoLatest(ctx context.Context) (StateGetAuctionInfoResult, error) {
 	var result StateGetAuctionInfoResult
 	return result, c.processRequest(ctx, MethodGetAuctionInfo, nil, &result)
@@ -129,6 +168,11 @@ func (c *client) GetStateRootHashByHash(ctx context.Context, blockHash string) (
 func (c *client) GetStateRootHashByHeight(ctx context.Context, height uint64) (ChainGetStateRootHashResult, error) {
 	var result ChainGetStateRootHashResult
 	return result, c.processRequest(ctx, MethodGetStateRootHash, NewParamBlockByHeight(height), &result)
+}
+
+func (c *client) GetValidatorChangesInfo(ctx context.Context) (InfoGetValidatorChangesResult, error) {
+	var result InfoGetValidatorChangesResult
+	return result, c.processRequest(ctx, MethodGetValidatorChanges, nil, &result)
 }
 
 func (c *client) GetStatus(ctx context.Context) (InfoGetStatusResult, error) {

@@ -28,18 +28,22 @@ func GetReqIdCtx(ctx context.Context) int {
 type Method string
 
 const (
-	MethodGetDeploy         Method = "info_get_deploy"
-	MethodGetStateItem      Method = "state_get_item"
-	MethodGetDictionaryItem Method = "state_get_dictionary_item"
-	MethodGetStateBalance   Method = "state_get_balance"
-	MethodGetEraInfo        Method = "chain_get_era_info_by_switch_block"
-	MethodGetBlock          Method = "chain_get_block"
-	MethodGetBlockTransfers Method = "chain_get_block_transfers"
-	MethodGetAuctionInfo    Method = "state_get_auction_info"
-	MethodGetStateRootHash  Method = "chain_get_state_root_hash"
-	MethodGetStatus         Method = "info_get_status"
-	MethodGetPeers          Method = "info_get_peers"
-	MethodPutDeploy         Method = "account_put_deploy"
+	MethodGetDeploy           Method = "info_get_deploy"
+	MethodGetStateItem        Method = "state_get_item"
+	MethodQueryGlobalState    Method = "query_global_state"
+	MethodGetDictionaryItem   Method = "state_get_dictionary_item"
+	MethodGetStateBalance     Method = "state_get_balance"
+	MethodGetStateAccount     Method = "state_get_account_info"
+	MethodGetEraInfo          Method = "chain_get_era_info_by_switch_block"
+	MethodGetBlock            Method = "chain_get_block"
+	MethodGetBlockTransfers   Method = "chain_get_block_transfers"
+	MethodGetEraSummary       Method = "chain_get_era_summary"
+	MethodGetAuctionInfo      Method = "state_get_auction_info"
+	MethodGetValidatorChanges Method = "info_get_validator_changes"
+	MethodGetStateRootHash    Method = "chain_get_state_root_hash"
+	MethodGetStatus           Method = "info_get_status"
+	MethodGetPeers            Method = "info_get_peers"
+	MethodPutDeploy           Method = "account_put_deploy"
 )
 
 // RpcRequest is a wrapper struct for an RPC call method that can be serialized to JSON.
@@ -66,6 +70,15 @@ type ParamStateRootHash struct {
 	StateRootHash string   `json:"state_root_hash"`
 	Key           string   `json:"key"`
 	Path          []string `json:"path,omitempty"`
+}
+
+func NewQueryGlobalStateParam(key string, path []string, id ParamQueryGlobalStateID) []interface{} {
+	return []interface{}{key, path, id}
+}
+
+type ParamQueryGlobalStateID struct {
+	StateRootHash string `json:"StateRootHash,omitempty"`
+	BlockHash     string `json:"BlockHash,omitempty"`
 }
 
 type PutDeployRequest struct {
