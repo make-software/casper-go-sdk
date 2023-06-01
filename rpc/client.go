@@ -47,21 +47,25 @@ type ClientPOS interface {
 type ClientInformational interface {
 	// GetAccountBalance returns a purse's balance from a network.
 	// The request takes in the formatted representation of a purse URef as a parameter.
-	GetAccountBalance(ctx context.Context, stateRootHash, purseURef string) (StateGetBalanceResult, error)
+	// If the param stateRootHash is nil, the client will make an additional RPC call to retrieve the latest stateRootHash.
+	GetAccountBalance(ctx context.Context, stateRootHash *string, purseURef string) (StateGetBalanceResult, error)
 	// GetDeploy retrieves a Deploy from a network. It requires a deploy_hash to query the Deploy.
 	GetDeploy(ctx context.Context, hash string) (InfoGetDeployResult, error)
 	// GetDictionaryItem returns an item from a Dictionary.
 	// Every dictionary has a seed URef, findable by using a dictionary_identifier.
 	// The address of a stored value is the blake2b hash of the seed URef and the byte representation of the dictionary key.
-	GetDictionaryItem(ctx context.Context, stateRootHash, uref, key string) (StateGetDictionaryResult, error)
+	// If the param stateRootHash is nil, the client will make an additional RPC call to retrieve the latest stateRootHash.
+	GetDictionaryItem(ctx context.Context, stateRootHash *string, uref, key string) (StateGetDictionaryResult, error)
 	// GetStateItem allows to get item from the global state
+	// If the param stateRootHash is nil, the client will make an additional RPC call to retrieve the latest stateRootHash.
 	// Deprecated: use QueryGlobalStateByStateHash instead
-	GetStateItem(ctx context.Context, stateRootHash, key string, path []string) (StateGetItemResult, error)
+	GetStateItem(ctx context.Context, stateRootHash *string, key string, path []string) (StateGetItemResult, error)
 
 	// QueryGlobalStateByBlockHash allows for you to query for a value stored under certain keys in global state.
 	QueryGlobalStateByBlockHash(ctx context.Context, blockHash, key string, path []string) (QueryGlobalStateResult, error)
 	// QueryGlobalStateByStateHash allows for you to query for a value stored under certain keys in global state.
-	QueryGlobalStateByStateHash(ctx context.Context, stateRootHash, key string, path []string) (QueryGlobalStateResult, error)
+	// If the param stateRootHash is nil, the client will make an additional RPC call to retrieve the latest stateRootHash.
+	QueryGlobalStateByStateHash(ctx context.Context, stateRootHash *string, key string, path []string) (QueryGlobalStateResult, error)
 
 	// GetAccountInfoByBlochHash returns a JSON representation of an Account from the network.
 	// The blockHash must refer to a  Block after the Account's creation, or the method will return an empty response.
@@ -94,7 +98,7 @@ type ClientInformational interface {
 	// GetStateRootHashLatest returns a state root hash of the latest Block.
 	GetStateRootHashLatest(ctx context.Context) (ChainGetStateRootHashResult, error)
 	// GetStateRootHashByHash returns a state root hash of the latest Block the requested block hash.
-	GetStateRootHashByHash(ctx context.Context, stateRootHash string) (ChainGetStateRootHashResult, error)
+	GetStateRootHashByHash(ctx context.Context, blockHash string) (ChainGetStateRootHashResult, error)
 	// GetStateRootHashByHeight returns a state root hash of the latest Block the requested block height.
 	GetStateRootHashByHeight(ctx context.Context, height uint64) (ChainGetStateRootHashResult, error)
 
