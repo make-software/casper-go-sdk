@@ -30,7 +30,7 @@ import (
 )
 
 func main() {
-	handler := casper.NewRPCHandler("https://casper-node-proxy.dev.make.services/rpc", http.DefaultClient)
+	handler := casper.NewRPCHandler("http://<Node Address>:7777/rpc", http.DefaultClient)
 	client := casper.NewRPCClient(handler)
 	deployHash := "62972eddc6fdc03b7ec53e52f7da7e24f01add9a74d68e3e21d924051c43f126"
 	deploy, err := client.GetDeploy(context.Background(), deployHash)
@@ -58,7 +58,7 @@ import (
 )
 
 func main() {
-	client := sse.NewClient("https://casper-node-proxy.dev.make.services/events/main")
+	client := sse.NewClient("http://<Node Address>:9999/events/main")
 	defer client.Stop()
 	client.RegisterHandler(
 		sse.DeployProcessedEventType,
@@ -105,7 +105,7 @@ func main() {
 	amount := big.NewInt(100000000)
 	session := casper.ExecutableDeployItem{
 		ModuleBytes: &casper.ModuleBytes{
-			ModuleBytes: hex.EncodeToString([]byte("<<<Contract Wasm>>>")),
+			ModuleBytes: hex.EncodeToString([]byte("<Contract WASM>")),
 			Args: (&casper.Args{}).
 				AddArgument("target", clvalue.NewCLByteArray(accountPublicKey.AccountHash().Bytes())).
 				AddArgument("amount", *clvalue.NewCLUInt512(amount)),
@@ -116,11 +116,11 @@ func main() {
 
 	deployHeader := casper.DefaultHeader()
 	deployHeader.Account = accountPublicKey
-	deployHeader.ChainName = "test-net"
+	deployHeader.ChainName = "casper-test"
 
 	newDeploy, err := casper.MakeDeploy(deployHeader, payment, session)
 
-	handler := casper.NewRPCHandler("https://casper-node-proxy.dev.make.services/rpc", http.DefaultClient)
+	handler := casper.NewRPCHandler("http://<Node Address>:7777/rpc", http.DefaultClient)
 	client := casper.NewRPCClient(handler)
 	result, err := client.PutDeploy(context.Background(), *newDeploy)
 	
