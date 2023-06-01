@@ -33,10 +33,18 @@ func (c *client) GetDeploy(ctx context.Context, hash string) (InfoGetDeployResul
 	}, &result)
 }
 
-func (c *client) GetStateItem(ctx context.Context, stateRootHash, key string, path []string) (StateGetItemResult, error) {
+func (c *client) GetStateItem(ctx context.Context, stateRootHash *string, key string, path []string) (StateGetItemResult, error) {
+	if stateRootHash == nil {
+		latestHashResult, err := c.GetStateRootHashLatest(ctx)
+		if err != nil {
+			return StateGetItemResult{}, err
+		}
+		latestHashString := latestHashResult.StateRootHash.String()
+		stateRootHash = &latestHashString
+	}
 	var result StateGetItemResult
 	return result, c.processRequest(ctx, MethodGetStateItem, ParamStateRootHash{
-		StateRootHash: stateRootHash,
+		StateRootHash: *stateRootHash,
 		Key:           key,
 		Path:          path,
 	}, &result)
@@ -49,10 +57,18 @@ func (c *client) QueryGlobalStateByBlockHash(ctx context.Context, blockHash, key
 	}), &result)
 }
 
-func (c *client) QueryGlobalStateByStateHash(ctx context.Context, stateRootHash, key string, path []string) (QueryGlobalStateResult, error) {
+func (c *client) QueryGlobalStateByStateHash(ctx context.Context, stateRootHash *string, key string, path []string) (QueryGlobalStateResult, error) {
+	if stateRootHash == nil {
+		latestHashResult, err := c.GetStateRootHashLatest(ctx)
+		if err != nil {
+			return QueryGlobalStateResult{}, err
+		}
+		latestHashString := latestHashResult.StateRootHash.String()
+		stateRootHash = &latestHashString
+	}
 	var result QueryGlobalStateResult
 	return result, c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, ParamQueryGlobalStateID{
-		StateRootHash: stateRootHash,
+		StateRootHash: *stateRootHash,
 	}), &result)
 }
 
@@ -66,16 +82,32 @@ func (c *client) GetAccountInfoByBlochHeight(ctx context.Context, blockHeight ui
 	return result, c.processRequest(ctx, MethodGetStateAccount, []interface{}{pub.String(), NewParamBlockByHeight(blockHeight)}, &result)
 }
 
-func (c *client) GetDictionaryItem(ctx context.Context, stateRootHash, uref, key string) (StateGetDictionaryResult, error) {
+func (c *client) GetDictionaryItem(ctx context.Context, stateRootHash *string, uref, key string) (StateGetDictionaryResult, error) {
+	if stateRootHash == nil {
+		latestHashResult, err := c.GetStateRootHashLatest(ctx)
+		if err != nil {
+			return StateGetDictionaryResult{}, err
+		}
+		latestHashString := latestHashResult.StateRootHash.String()
+		stateRootHash = &latestHashString
+	}
 	var result StateGetDictionaryResult
 	return result, c.processRequest(ctx, MethodGetDictionaryItem,
-		NewParamStateDictionaryItem(stateRootHash, uref, key), &result)
+		NewParamStateDictionaryItem(*stateRootHash, uref, key), &result)
 }
 
-func (c *client) GetAccountBalance(ctx context.Context, stateRootHash, purseURef string) (StateGetBalanceResult, error) {
+func (c *client) GetAccountBalance(ctx context.Context, stateRootHash *string, purseURef string) (StateGetBalanceResult, error) {
+	if stateRootHash == nil {
+		latestHashResult, err := c.GetStateRootHashLatest(ctx)
+		if err != nil {
+			return StateGetBalanceResult{}, err
+		}
+		latestHashString := latestHashResult.StateRootHash.String()
+		stateRootHash = &latestHashString
+	}
 	var result StateGetBalanceResult
 	return result, c.processRequest(ctx, MethodGetStateBalance, map[string]string{
-		"state_root_hash": stateRootHash,
+		"state_root_hash": *stateRootHash,
 		"purse_uref":      purseURef,
 	}, &result)
 }
