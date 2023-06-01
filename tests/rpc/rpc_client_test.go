@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -16,6 +17,17 @@ import (
 
 func SetupServer(t *testing.T, filePath string) *httptest.Server {
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		decoder := json.NewDecoder(req.Body)
+		var requestParams rpc.RpcRequest
+		err := decoder.Decode(&requestParams)
+		require.NoError(t, err)
+		if requestParams.Method == rpc.MethodGetStateRootHash {
+			fixture, err := os.ReadFile("../data/rpc_response/get_root_state_hash.json")
+			require.NoError(t, err)
+			_, err = rw.Write(fixture)
+			require.NoError(t, err)
+			return
+		}
 		fixture, err := os.ReadFile(filePath)
 		require.NoError(t, err)
 		_, err = rw.Write(fixture)
@@ -40,9 +52,25 @@ func Test_DefaultClient_GetStateItem_GetAccount(t *testing.T) {
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
 
 	hash := "account-hash-bf06bdb1616050cea5862333d1f4787718f1011c95574ba92378419eefeeee59"
+	stateRootHash := "fb9c42717769d72442ff17a5ff1574b4bc1c83aedf5992b14e4d071423f86240"
 	result, err := client.GetStateItem(
 		context.Background(),
-		"fb9c42717769d72442ff17a5ff1574b4bc1c83aedf5992b14e4d071423f86240",
+		&stateRootHash,
+		hash,
+		[]string{},
+	)
+	require.NoError(t, err)
+	assert.Equal(t, hash, result.StoredValue.Account.AccountHash.ToPrefixedString())
+}
+
+func Test_DefaultClient_GetStateItem_GetAccount_WithEmptyStateRootHash(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_state_item_account.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	hash := "account-hash-bf06bdb1616050cea5862333d1f4787718f1011c95574ba92378419eefeeee59"
+	result, err := client.GetStateItem(
+		context.Background(),
+		nil,
 		hash,
 		[]string{},
 	)
@@ -56,7 +84,19 @@ func Test_DefaultClient_StateGetDictionaryItem_GetCValueUI64(t *testing.T) {
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
 	stateRootHash := "0808080808080808080808080808080808080808080808080808080808080808"
 	uref := "uref-09480c3248ef76b603d386f3f4f8a5f87f597d4eaffd475433f861af187ab5db-007"
-	result, err := client.GetDictionaryItem(context.Background(), stateRootHash, uref, "a_unique_entry_identifier")
+	result, err := client.GetDictionaryItem(context.Background(), &stateRootHash, uref, "a_unique_entry_identifier")
+	require.NoError(t, err)
+	value, err := result.StoredValue.CLValue.Value()
+	require.NoError(t, err)
+	assert.Equal(t, 1, int(value.UI64.Value()))
+}
+
+func Test_DefaultClient_StateGetDictionaryItem_GetCValueUI64_WithEmptyStateRootHash(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_dictionary_item_ui64.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	uref := "uref-09480c3248ef76b603d386f3f4f8a5f87f597d4eaffd475433f861af187ab5db-007"
+	result, err := client.GetDictionaryItem(context.Background(), nil, uref, "a_unique_entry_identifier")
 	require.NoError(t, err)
 	value, err := result.StoredValue.CLValue.Value()
 	require.NoError(t, err)
@@ -81,7 +121,17 @@ func Test_DefaultClient_QueryGlobalStateByStateRoot_GetAccount(t *testing.T) {
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
 	stateRootHash := "bf06bdb1616050cea5862333d1f4787718f1011c95574ba92378419eefeeee59"
 	accountKey := "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c"
-	res, err := client.QueryGlobalStateByStateHash(context.Background(), stateRootHash, accountKey, nil)
+	res, err := client.QueryGlobalStateByStateHash(context.Background(), &stateRootHash, accountKey, nil)
+	require.NoError(t, err)
+	assert.NotEmpty(t, res.StoredValue.Account.AccountHash)
+}
+
+func Test_DefaultClient_QueryGlobalStateByStateRoot_GetAccount_WithEmptyStateRootHash(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/query_global_state_era.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	accountKey := "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c"
+	res, err := client.QueryGlobalStateByStateHash(context.Background(), nil, accountKey, nil)
 	require.NoError(t, err)
 	assert.NotEmpty(t, res.StoredValue.Account.AccountHash)
 }
@@ -113,9 +163,23 @@ func Test_DefaultClient_GetStateBalance(t *testing.T) {
 	server := SetupServer(t, "../data/rpc_response/get_account_balance.json")
 	defer server.Close()
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	hash := "fb9c42717769d72442ff17a5ff1574b4bc1c83aedf5992b14e4d071423f86240"
 	result, err := client.GetAccountBalance(
 		context.Background(),
-		"fb9c42717769d72442ff17a5ff1574b4bc1c83aedf5992b14e4d071423f86240",
+		&hash,
+		"uref-7b12008bb757ee32caefb3f7a1f77d9f659ee7a4e21ad4950c4e0294000492eb-007",
+	)
+	require.NoError(t, err)
+	assert.NotEmpty(t, result.BalanceValue)
+}
+
+func Test_DefaultClient_GetStateBalance_WithEmptyStateRootHash(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_account_balance.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	result, err := client.GetAccountBalance(
+		context.Background(),
+		nil,
 		"uref-7b12008bb757ee32caefb3f7a1f77d9f659ee7a4e21ad4950c4e0294000492eb-007",
 	)
 	require.NoError(t, err)
