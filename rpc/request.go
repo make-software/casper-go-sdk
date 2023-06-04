@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/make-software/casper-go-sdk/types"
+	"github.com/make-software/casper-go-sdk/types/keypair"
 )
 
 var ApiVersion = "2.0"
@@ -72,13 +73,24 @@ type ParamStateRootHash struct {
 	Path          []string `json:"path,omitempty"`
 }
 
-func NewQueryGlobalStateParam(key string, path []string, id ParamQueryGlobalStateID) []interface{} {
-	return []interface{}{key, path, id}
+type ParamQueryGlobalState struct {
+	StateIdentifier ParamQueryGlobalStateID `json:"state_identifier"`
+	Key             string                  `json:"key"`
+	Path            []string                `json:"path,omitempty"`
 }
 
 type ParamQueryGlobalStateID struct {
 	StateRootHash string `json:"StateRootHash,omitempty"`
 	BlockHash     string `json:"BlockHash,omitempty"`
+}
+
+func NewQueryGlobalStateParam(key string, path []string, id ParamQueryGlobalStateID) ParamQueryGlobalState {
+	return ParamQueryGlobalState{StateIdentifier: id, Key: key, Path: path}
+}
+
+type ParamGetAccountInfoBalance struct {
+	PublicKey keypair.PublicKey `json:"public_key"`
+	ParamBlockIdentifier
 }
 
 type PutDeployRequest struct {

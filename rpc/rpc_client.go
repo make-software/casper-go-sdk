@@ -74,12 +74,12 @@ func (c *client) QueryGlobalStateByStateHash(ctx context.Context, stateRootHash 
 
 func (c *client) GetAccountInfoByBlochHash(ctx context.Context, blockHash string, pub keypair.PublicKey) (StateGetAccountInfo, error) {
 	var result StateGetAccountInfo
-	return result, c.processRequest(ctx, MethodGetStateAccount, []interface{}{pub.String(), NewParamBlockByHash(blockHash)}, &result)
+	return result, c.processRequest(ctx, MethodGetStateAccount, ParamGetAccountInfoBalance{PublicKey: pub, ParamBlockIdentifier: NewParamBlockByHash(blockHash)}, &result)
 }
 
 func (c *client) GetAccountInfoByBlochHeight(ctx context.Context, blockHeight uint64, pub keypair.PublicKey) (StateGetAccountInfo, error) {
 	var result StateGetAccountInfo
-	return result, c.processRequest(ctx, MethodGetStateAccount, []interface{}{pub.String(), NewParamBlockByHeight(blockHeight)}, &result)
+	return result, c.processRequest(ctx, MethodGetStateAccount, ParamGetAccountInfoBalance{PublicKey: pub, ParamBlockIdentifier: NewParamBlockByHeight(blockHeight)}, &result)
 }
 
 func (c *client) GetDictionaryItem(ctx context.Context, stateRootHash *string, uref, key string) (StateGetDictionaryResult, error) {
@@ -92,8 +92,7 @@ func (c *client) GetDictionaryItem(ctx context.Context, stateRootHash *string, u
 		stateRootHash = &latestHashString
 	}
 	var result StateGetDictionaryResult
-	return result, c.processRequest(ctx, MethodGetDictionaryItem,
-		NewParamStateDictionaryItem(*stateRootHash, uref, key), &result)
+	return result, c.processRequest(ctx, MethodGetDictionaryItem, NewParamStateDictionaryItem(*stateRootHash, uref, key), &result)
 }
 
 func (c *client) GetAccountBalance(ctx context.Context, stateRootHash *string, purseURef string) (StateGetBalanceResult, error) {
