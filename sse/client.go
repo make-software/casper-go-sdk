@@ -51,7 +51,7 @@ func (p *Client) Start(ctx context.Context, lastEventID int) error {
 	groupErrs.Go(func() error {
 		return p.Streamer.FillStream(ctx, lastEventID, p.EventStream, p.streamErrors)
 	})
-	for i := 1; i < p.WorkersCount; i++ {
+	for i := 0; i < p.WorkersCount; i++ {
 		newCtx := context.WithValue(ctx, CtxWorkerIDKey, i)
 		groupErrs.Go(func() error {
 			return p.Consumer.Run(newCtx, p.EventStream, p.consumerErrors)
