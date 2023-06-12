@@ -34,5 +34,21 @@ func Test_HttpConnection_request(t *testing.T) {
 		return nil
 	})
 	assert.Error(t, client.Start(context.Background(), 123))
+}
 
+func Test_withOneWorker_shouldProcessRequest(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		_, err := writer.Write(json.RawMessage(`data: {"ApiVersion":"1.0.0"}`))
+		require.NoError(t, err)
+	}))
+
+	client := sse.NewClient(server.URL)
+	client.WorkersCount = 1
+	var result bool
+	client.RegisterHandler(sse.APIVersionEventType, func(ctx context.Context, event sse.RawEvent) error {
+		result = true
+		return nil
+	})
+	assert.Error(t, client.Start(context.Background(), 0))
+	assert.True(t, result)
 }
