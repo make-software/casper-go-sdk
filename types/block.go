@@ -1,9 +1,6 @@
 package types
 
 import (
-	"encoding/json"
-	"errors"
-
 	"github.com/make-software/casper-go-sdk/types/key"
 	"github.com/make-software/casper-go-sdk/types/keypair"
 )
@@ -44,34 +41,4 @@ type Proof struct {
 	PublicKey keypair.PublicKey `json:"public_key"`
 	// Validator signature
 	Signature HexBytes `json:"signature"`
-}
-
-type Proposer struct {
-	source json.RawMessage
-}
-
-func (p Proposer) IsSystem() bool {
-	s := string(p.source)
-	return s == `"00"`
-}
-
-func (p Proposer) PublicKey() (keypair.PublicKey, error) {
-	if p.IsSystem() {
-		return keypair.PublicKey{}, errors.New("system proposer doesn't have a PublicKey")
-	}
-	var result keypair.PublicKey
-	err := json.Unmarshal(p.source, &result)
-	return result, err
-}
-
-func (p Proposer) MarshalJSON() ([]byte, error) {
-	if p.source == nil {
-		return []byte(`""`), nil
-	}
-	return p.source, nil
-}
-
-func (p *Proposer) UnmarshalJSON(bytes []byte) error {
-	p.source = bytes
-	return nil
 }
