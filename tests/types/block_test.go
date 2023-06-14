@@ -60,6 +60,8 @@ func Test_BlockSwitch_WithSystemProposal_IsSystem_ShouldReturnTrue(t *testing.T)
 	assert.True(t, block.Body.Proposer.IsSystem())
 	_, err = block.Body.Proposer.PublicKey()
 	assert.Error(t, err)
+	pubKey := block.Body.Proposer.PublicKeyOptional()
+	assert.Nil(t, pubKey)
 }
 
 func Test_BlockProposal_PublicKey_ShouldWorkForNormalBlock(t *testing.T) {
@@ -73,4 +75,6 @@ func Test_BlockProposal_PublicKey_ShouldWorkForNormalBlock(t *testing.T) {
 	result, err := block.Body.Proposer.PublicKey()
 	assert.NoError(t, err)
 	assert.Equal(t, "019e7b8bdec03ba83be4f5443d9f7f9111c77fec984ce9bb5bb7eb3da1e689c02d", result.String())
+	pubKey := block.Body.Proposer.PublicKeyOptional()
+	assert.Equal(t, "019e7b8bdec03ba83be4f5443d9f7f9111c77fec984ce9bb5bb7eb3da1e689c02d", pubKey.String())
 }

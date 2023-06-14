@@ -37,6 +37,10 @@ func (p Proposer) PublicKey() (keypair.PublicKey, error) {
 	return *p.publicKey, nil
 }
 
+func (p Proposer) PublicKeyOptional() *keypair.PublicKey {
+	return p.publicKey
+}
+
 func (p Proposer) MarshalJSON() ([]byte, error) {
 	if p.isSystem {
 		return []byte(`"00"`), nil
