@@ -1,0 +1,50 @@
+{
+  "hash": "e07b9e01ba4e93a632e07be48541aa8f3827e43c07dbf647c6c878866a45b7b7",
+  "header": {
+    "account": "01d330e3e706815cfa30df46f9183fd6984597f6dd8e026365fd71a8702bc3fb94",
+    "timestamp": "2021-09-09T04:38:16.063Z",
+    "ttl": "30m",
+    "gas_price": 1,
+    "body_hash": "3b88d9461f8f16e6975db372fffaa4198bbd5f818fb95c262eecdf3d22b77918",
+    "dependencies": [],
+    "chain_name": "casper-test"
+  },
+  "payment": {
+    "ModuleBytes": {
+      "module_bytes": "",
+      "args": [
+        [
+          "amount",
+          {
+            "cl_type": "U512",
+            "bytes": "04005ed0b2",
+            "parsed": "3000000000"
+          }
+        ]
+      ]
+    }
+  },
+  "session": {
+    "StoredVersionedContractByHash": {
+      "hash": "8ff7a1c49017400013dcf78305343fa07c31b04292b7928845ed59764e1ee512",
+      "version": 2,
+      "entry_point": "get_message",
+      "args": [
+        [
+          "amount",
+          {
+            "cl_type": "U256",
+            "bytes": "0400f90295",
+            "parsed": "2500000000"
+          }
+        ]
+      ]
+    }
+  },
+  "approvals": [
+    {
+      "signer": "01d330e3e706815cfa30df46f9183fd6984597f6dd8e026365fd71a8702bc3fb94",
+      "signature": "01b2fccab6e34b2c584e21fd2e7da22c8c048ff4aea3c818728c399a4ec625973d0f8b8f2a2202a0899b6362d3f6a4e26d80976523c7587095bee1b1f260a93e07"
+    }
+  ]
+}

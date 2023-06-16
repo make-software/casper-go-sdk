@@ -2,7 +2,9 @@ package types
 
 import (
 	"encoding/hex"
+	"encoding/json"
 	"math/big"
+	"strconv"
 
 	"github.com/make-software/casper-go-sdk/types/clvalue"
 	"github.com/make-software/casper-go-sdk/types/key"
@@ -130,15 +132,20 @@ type StoredVersionedContractByHash struct {
 	// Hash of the contract.
 	Hash key.ContractHash `json:"hash"`
 	// Entry point or method of the contract to call.
-	EntryPoint string  `json:"entry_point"`
-	Version    *string `json:"version,omitempty"`
-	Args       *Args   `json:"args"`
+	EntryPoint string       `json:"entry_point"`
+	Version    *json.Number `json:"version,omitempty"`
+	Args       *Args        `json:"args"`
 }
 
 func (m StoredVersionedContractByHash) Bytes() ([]byte, error) {
 	option := clvalue.Option{}
-	if m.Version != nil || *m.Version != "" {
-		option.Inner = clvalue.NewCLString(*m.Version)
+	if m.Version != nil || m.Version.String() != "" {
+		verVal, err := strconv.ParseUint(m.Version.String(), 10, 32)
+		if err != nil {
+			return nil, err
+		}
+
+		option.Inner = clvalue.NewCLUInt32(uint32(verVal))
 	}
 	argBytes, err := m.Args.Bytes()
 	if err != nil {
@@ -157,15 +164,20 @@ type StoredVersionedContractByName struct {
 	// Name of a named key in the caller account that stores the contract package hash.
 	Name string `json:"name"`
 	// Entry point or method of the contract to call.
-	EntryPoint string  `json:"entry_point"`
-	Version    *string `json:"version,omitempty"`
-	Args       *Args   `json:"args"`
+	EntryPoint string       `json:"entry_point"`
+	Version    *json.Number `json:"version,omitempty"`
+	Args       *Args        `json:"args"`
 }
 
 func (m StoredVersionedContractByName) Bytes() ([]byte, error) {
 	option := clvalue.Option{}
 	if m.Version != nil || *m.Version != "" {
-		option.Inner = clvalue.NewCLString(*m.Version)
+		verVal, err := strconv.ParseUint(m.Version.String(), 10, 32)
+		if err != nil {
+			return nil, err
+		}
+
+		option.Inner = clvalue.NewCLUInt32(uint32(verVal))
 	}
 	argBytes, err := m.Args.Bytes()
 	if err != nil {
