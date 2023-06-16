@@ -33,7 +33,7 @@ func Test_ExecutableItem_MarshalUnmarshal_ShouldBeSameResult(t *testing.T) {
 		},
 		{
 			"item with stored versioned contract by name",
-			`{"StoredVersionedContractByName": {"name": "lWJWKdZUEudSakJzw1tn","version": "Some(1632552656)","entry_point": "S1cXRT3E1jyFlWBAIVQ8","args": [["testName", "testVal"]]}}`,
+			`{"StoredVersionedContractByName": {"name": "lWJWKdZUEudSakJzw1tn","version": 1632552656, "entry_point": "S1cXRT3E1jyFlWBAIVQ8","args": [["testName", "testVal"]]}}`,
 		},
 		{
 			"item with stored transfer",

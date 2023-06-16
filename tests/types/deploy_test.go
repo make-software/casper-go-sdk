@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/make-software/casper-go-sdk/types"
 )
@@ -23,18 +24,22 @@ func Test_Deploy_MarshalUnmarshal_ShouldBeSameResult(t *testing.T) {
 			"deploy with StoredContractByHash",
 			"../data/deploy/deploy_with_stored_contract_by_hash.json",
 		},
+		{
+			"deploy with StoredContractByHash with version",
+			"../data/deploy/deploy_with_stored_contract_by_hash_with_version.json",
+		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			data, err := os.ReadFile(test.fixturePath)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 
 			var deploy types.Deploy
 			err = json.Unmarshal(data, &deploy)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 
 			result, err := json.Marshal(deploy)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.JSONEq(t, string(data), string(result), test.name)
 		})
 	}
