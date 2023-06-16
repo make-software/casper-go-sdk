@@ -3,6 +3,7 @@ package clvalue
 import (
 	"bytes"
 	"encoding/binary"
+	"errors"
 	"fmt"
 
 	"github.com/make-software/casper-go-sdk/types/clvalue/cltype"
@@ -24,7 +25,7 @@ func (v *UInt32) Value() uint32 {
 	return uint32(*v)
 }
 
-func NewUint32FromBytes(source []byte) *UInt32 {
+func NewUint32FromBytes(source []byte) (*UInt32, error) {
 	buf := bytes.NewBuffer(source)
 	return NewUint32FromBuffer(buf)
 }
@@ -37,14 +38,21 @@ func NewCLUInt32(val uint32) *CLValue {
 	return &res
 }
 
-func NewUint32FromBuffer(buffer *bytes.Buffer) *UInt32 {
+func NewUint32FromBuffer(buffer *bytes.Buffer) (*UInt32, error) {
+	if buffer.Len() < cltype.Int32ByteSize {
+		return nil, errors.New("buffer size is too small")
+	}
 	buf := buffer.Next(cltype.Int32ByteSize)
 	val := UInt32(binary.LittleEndian.Uint32(buf))
-	return &val
+	return &val, nil
 }
 
-func TrimByteSize(buf *bytes.Buffer) (size uint32) {
-	return NewUint32FromBuffer(buf).Value()
+func TrimByteSize(buf *bytes.Buffer) (size uint32, err error) {
+	buffer, err := NewUint32FromBuffer(buf)
+	if err != nil {
+		return 0, err
+	}
+	return buffer.Value(), nil
 }
 
 func SizeToBytes(val int) []byte {

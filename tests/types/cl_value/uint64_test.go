@@ -18,8 +18,16 @@ func Test_UInt64_ToString(t *testing.T) {
 
 func Test_NewUInt64FromBuffer_maxValue(t *testing.T) {
 	maxInBytes := clvalue.NewCLUInt64(math.MaxUint64).Bytes()
-	res := clvalue.NewUint64FromBytes(maxInBytes)
+	res, err := clvalue.NewUint64FromBytes(maxInBytes)
+	require.NoError(t, err)
 	assert.Equal(t, uint64(math.MaxUint64), res.Value())
+}
+
+func Test_NewUInt64IncompleteFormat_ShouldRaiseError(t *testing.T) {
+	src, err := hex.DecodeString("0700")
+	require.NoError(t, err)
+	_, err = clvalue.NewUint64FromBytes(src)
+	assert.Error(t, err)
 }
 
 func Test_FromBytesByType_UInt64(t *testing.T) {

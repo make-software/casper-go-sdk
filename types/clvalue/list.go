@@ -56,7 +56,11 @@ func NewListFromBytes(source []byte, clType *cltype.List) (*List, error) {
 }
 
 func NewListFromBuffer(buf *bytes.Buffer, clType *cltype.List) (*List, error) {
-	listSize := int(TrimByteSize(buf))
+	size, err := TrimByteSize(buf)
+	if err != nil {
+		return nil, err
+	}
+	listSize := int(size)
 	elements := make([]CLValue, 0)
 	for i := 0; i < listSize; i += 1 {
 		one, err := FromBufferByType(buf, clType.ElementsType)
