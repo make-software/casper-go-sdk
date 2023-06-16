@@ -12,23 +12,32 @@ import (
 )
 
 func Test_ResultBool_ToString(t *testing.T) {
-	assert.Equal(t, "(Result: Bool)", cltype.NewResultType(cltype.Bool).String())
+	assert.Equal(t, "(Result: Ok(String), Err(String)", cltype.NewResultType(cltype.String, cltype.String).String())
 }
 
 func Test_ResultBool_FromJson(t *testing.T) {
-	res, err := cltype.FromRawJson(json.RawMessage(`{"Result": "Bool"}`))
+	res, err := cltype.FromRawJson(json.RawMessage(`{"Result":{"ok":"String","err":"String"}}`))
 	require.NoError(t, err)
-	assert.Equal(t, "(Result: Bool)", res.String())
+	assert.Equal(t, "(Result: Ok(String), Err(String)", res.String())
 }
 
 func Test_ResultBool_ToBytes(t *testing.T) {
-	assert.Equal(t, "1000", hex.EncodeToString(cltype.NewResultType(cltype.Bool).Bytes()))
+	assert.Equal(t, "100a0a", hex.EncodeToString(cltype.NewResultType(cltype.String, cltype.String).Bytes()))
 }
 
 func Test_ResultBool_FromBytes(t *testing.T) {
-	inBytes, err := hex.DecodeString("1000")
+	inBytes, err := hex.DecodeString("100a0a")
 	require.NoError(t, err)
 	res, err := cltype.FromBytes(inBytes)
 	require.NoError(t, err)
-	assert.Equal(t, cltype.NewResultType(cltype.Bool), res)
+	assert.Equal(t, cltype.NewResultType(cltype.String, cltype.String), res)
+}
+
+func Test_ResultFromRawJson_InvalidJsonFormat_ExceptError(t *testing.T) {
+	_, err := cltype.FromRawJson(json.RawMessage(`{"Result": "String"}`))
+	assert.ErrorIs(t, cltype.ErrInvalidResultJsonFormat, err)
+	_, err = cltype.FromRawJson(json.RawMessage(`{"Result":{"err":"String"}}`))
+	assert.ErrorIs(t, cltype.ErrInvalidResultJsonFormat, err)
+	_, err = cltype.FromRawJson(json.RawMessage(`{"Result":{"ok":"String"}}`))
+	assert.ErrorIs(t, cltype.ErrInvalidResultJsonFormat, err)
 }
