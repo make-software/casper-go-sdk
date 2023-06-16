@@ -28,8 +28,8 @@ func (v *Result) Value() CLValue {
 	return v.Inner
 }
 
-func NewCLResult(innerType cltype.CLType, value CLValue, isSuccess bool) CLValue {
-	resultType := cltype.NewResultType(innerType)
+func NewCLResult(innerOk, innerErr cltype.CLType, value CLValue, isSuccess bool) CLValue {
+	resultType := cltype.NewResultType(innerOk, innerErr)
 	return CLValue{
 		Type: resultType,
 		Result: &Result{
@@ -52,11 +52,19 @@ func NewResultFromBuffer(buf *bytes.Buffer, clType *cltype.Result) (*Result, err
 		return nil, err
 	}
 	val.IsSuccess = isSuccess == 1
-	inner, err := FromBufferByType(buf, clType.Inner)
-	if err != nil {
-		return nil, err
+	if val.IsSuccess {
+		inner, err := FromBufferByType(buf, clType.InnerOk)
+		if err != nil {
+			return nil, err
+		}
+		val.Inner = inner
+	} else {
+		inner, err := FromBufferByType(buf, clType.InnerErr)
+		if err != nil {
+			return nil, err
+		}
+		val.Inner = inner
 	}
-	val.Inner = inner
 
 	return &val, nil
 }
