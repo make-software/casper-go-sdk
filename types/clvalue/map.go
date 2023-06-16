@@ -105,7 +105,10 @@ func NewMapFromBuffer(buffer *bytes.Buffer, mapType *cltype.Map) (*Map, error) {
 	var KeyVal CLValue
 	var ValVal CLValue
 	var err error
-	size := TrimByteSize(buffer)
+	size, err := TrimByteSize(buffer)
+	if err != nil {
+		return nil, err
+	}
 	for i := uint32(0); i < size; i++ {
 		if KeyVal, err = FromBufferByType(buffer, mapType.Key); err != nil {
 			return nil, err

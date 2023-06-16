@@ -25,13 +25,16 @@ func NewCLString(val string) *CLValue {
 	return &res
 }
 
-func NewStringFromBytes(src []byte) *String {
+func NewStringFromBytes(src []byte) (*String, error) {
 	buf := bytes.NewBuffer(src)
 	return NewStringFromBuffer(buf)
 }
 
-func NewStringFromBuffer(buffer *bytes.Buffer) *String {
-	size := TrimByteSize(buffer)
+func NewStringFromBuffer(buffer *bytes.Buffer) (*String, error) {
+	size, err := TrimByteSize(buffer)
+	if err != nil {
+		return nil, err
+	}
 	v := String(buffer.Next(int(size)))
-	return &v
+	return &v, nil
 }
