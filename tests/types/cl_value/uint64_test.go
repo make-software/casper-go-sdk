@@ -24,7 +24,7 @@ func Test_NewUInt64FromBuffer_maxValue(t *testing.T) {
 }
 
 func Test_NewUInt64IncompleteFormat_ShouldRaiseError(t *testing.T) {
-	src, err := hex.DecodeString("0700")
+	src, err := hex.DecodeString("07000000")
 	require.NoError(t, err)
 	_, err = clvalue.NewUint64FromBytes(src)
 	assert.Error(t, err)
