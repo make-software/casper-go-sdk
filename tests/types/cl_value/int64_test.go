@@ -1,6 +1,7 @@
 package cl_value
 
 import (
+	"encoding/hex"
 	"math"
 	"testing"
 
@@ -17,8 +18,16 @@ func Test_Int64_ToString(t *testing.T) {
 
 func Test_NewInt64FromBuffer_maxValue(t *testing.T) {
 	maxInBytes := clvalue.NewCLInt64(math.MaxInt64).Bytes()
-	res := clvalue.NewInt64FromBytes(maxInBytes)
+	res, err := clvalue.NewInt64FromBytes(maxInBytes)
+	require.NoError(t, err)
 	assert.Equal(t, int64(math.MaxInt64), res.Value())
+}
+
+func Test_NewInt64FromBufferIncompleteFormat_ShouldRaiseError(t *testing.T) {
+	src, err := hex.DecodeString("07000000")
+	require.NoError(t, err)
+	_, err = clvalue.NewInt64FromBytes(src)
+	assert.Error(t, err)
 }
 
 func Test_FromBytesByType_Int64(t *testing.T) {
