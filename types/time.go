@@ -36,6 +36,9 @@ type Duration time.Duration
 
 func (d Duration) MarshalJSON() ([]byte, error) {
 	s := time.Duration(d).String()
+	if s == "24h0m0s" {
+		s = "1day"
+	}
 	if strings.HasSuffix(s, "h0m0s") {
 		s = strings.TrimSuffix(s, "0m0s")
 	}
@@ -51,7 +54,10 @@ func (d *Duration) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &dataString); err != nil {
 		return err
 	}
-
+	dataString = strings.ReplaceAll(dataString, " ", "")
+	if dataString == "1day" {
+		dataString = "24h"
+	}
 	duration, err := time.ParseDuration(dataString)
 	if err != nil {
 		return err
