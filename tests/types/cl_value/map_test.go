@@ -1,6 +1,8 @@
 package cl_value
 
 import (
+	"bytes"
+	"encoding/hex"
 	"math/big"
 	"testing"
 
@@ -62,4 +64,12 @@ func Test_Map_ToData(t *testing.T) {
 		"uref-7b12008bb757ee32caefb3f7a1f77d9f659ee7a4e21ad4950c4e0294000492eb-007",
 		result[1].Inner1.Key.URef.String(),
 	)
+}
+
+func Test_NewMapFromBuffer_IncompleteFormat_ShouldRaiseError(t *testing.T) {
+	source := "0000"
+	inBytes, err := hex.DecodeString(source)
+	require.NoError(t, err)
+	_, err = clvalue.NewMapFromBuffer(bytes.NewBuffer(inBytes), cltype.NewMap(cltype.String, cltype.String))
+	assert.Error(t, err)
 }

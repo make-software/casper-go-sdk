@@ -3,6 +3,7 @@ package clvalue
 import (
 	"bytes"
 	"encoding/binary"
+	"errors"
 	"fmt"
 
 	"github.com/make-software/casper-go-sdk/types/clvalue/cltype"
@@ -32,12 +33,15 @@ func NewCLInt64(val int64) *CLValue {
 	return &res
 }
 
-func NewInt64FromBytes(source []byte) *Int64 {
+func NewInt64FromBytes(source []byte) (*Int64, error) {
 	return NewInt64FromBuffer(bytes.NewBuffer(source))
 }
 
-func NewInt64FromBuffer(buf *bytes.Buffer) *Int64 {
+func NewInt64FromBuffer(buf *bytes.Buffer) (*Int64, error) {
+	if buf.Len() < cltype.Int32ByteSize {
+		return nil, errors.New("buffer size is too small")
+	}
 	byteSlice := buf.Next(cltype.Int64ByteSize)
 	val := Int64(int64(binary.LittleEndian.Uint64(byteSlice)))
-	return &val
+	return &val, nil
 }

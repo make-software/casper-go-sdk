@@ -204,3 +204,39 @@ func Test_Session_ToBytesSerialization(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, expectedHex, hex.EncodeToString(bytes))
 }
+
+func Test_BodyHashCalculate_WithStoredVersionedContract(t *testing.T) {
+	expectedHash := "3b88d9461f8f16e6975db372fffaa4198bbd5f818fb95c262eecdf3d22b77918"
+
+	paymentArgs := &types.Args{}
+	paymentArgs.AddArgument("amount", *clvalue.NewCLUInt512(big.NewInt(3000000000)))
+	payment := types.ExecutableDeployItem{
+		ModuleBytes: &types.ModuleBytes{
+			ModuleBytes: "",
+			Args:        paymentArgs,
+		},
+	}
+	paymentBytes, err := payment.Bytes()
+	require.NoError(t, err)
+
+	sessionArgs := &types.Args{}
+	sessionArgs.AddArgument("amount", *clvalue.NewCLUInt256(big.NewInt(2500000000)))
+	contractHash, err := key.NewContract("8ff7a1c49017400013dcf78305343fa07c31b04292b7928845ed59764e1ee512")
+	require.NoError(t, err)
+	varVal := json.Number("2")
+	session := types.ExecutableDeployItem{
+		StoredVersionedContractByHash: &types.StoredVersionedContractByHash{
+			Hash:       contractHash,
+			EntryPoint: "get_message",
+			Version:    &varVal,
+			Args:       sessionArgs,
+		},
+	}
+
+	sessionBytes, err := session.Bytes()
+	require.NoError(t, err)
+
+	serializedBody := append(paymentBytes, sessionBytes...)
+	bodyHash := blake2b.Sum256(serializedBody)
+	assert.Equal(t, expectedHash, key.Hash(bodyHash).ToHex())
+}

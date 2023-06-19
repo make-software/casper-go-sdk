@@ -15,7 +15,10 @@ var (
 
 func FromBytes(source []byte) (CLValue, error) {
 	buffer := bytes.NewBuffer(source)
-	valueLength := TrimByteSize(buffer)
+	valueLength, err := TrimByteSize(buffer)
+	if err != nil {
+		return CLValue{}, err
+	}
 	clType, err := cltype.FromBytes(buffer.Bytes()[valueLength:])
 	if err != nil {
 		return CLValue{}, err
@@ -25,7 +28,10 @@ func FromBytes(source []byte) (CLValue, error) {
 }
 
 func FromBuffer(buffer *bytes.Buffer) (CLValue, error) {
-	valueLength := TrimByteSize(buffer)
+	valueLength, err := TrimByteSize(buffer)
+	if err != nil {
+		return CLValue{}, err
+	}
 	data := buffer.Next(int(valueLength))
 	clType, err := cltype.FromBuffer(buffer)
 	if err != nil {
@@ -55,20 +61,20 @@ func FromBufferByType(buf *bytes.Buffer, sourceType cltype.CLType) (result CLVal
 			result.Bool, err = NewBoolFromBuffer(buf)
 			return result, err
 		case cltype.TypeIDI32:
-			result.I32 = NewInt32FromBuffer(buf)
-			return result, nil
+			result.I32, err = NewInt32FromBuffer(buf)
+			return result, err
 		case cltype.TypeIDI64:
-			result.I64 = NewInt64FromBuffer(buf)
-			return result, nil
+			result.I64, err = NewInt64FromBuffer(buf)
+			return result, err
 		case cltype.TypeIDU8:
 			result.UI8, err = NewUInt8FromBuffer(buf)
 			return result, err
 		case cltype.TypeIDU32:
-			result.UI32 = NewUint32FromBuffer(buf)
-			return result, nil
+			result.UI32, err = NewUint32FromBuffer(buf)
+			return result, err
 		case cltype.TypeIDU64:
-			result.UI64 = NewUint64FromBuffer(buf)
-			return result, nil
+			result.UI64, err = NewUint64FromBuffer(buf)
+			return result, err
 		case cltype.TypeIDU128:
 			result.UI128, err = NewUint128FromBuffer(buf)
 			return result, err
@@ -79,8 +85,8 @@ func FromBufferByType(buf *bytes.Buffer, sourceType cltype.CLType) (result CLVal
 			result.UI512, err = NewUint512FromBuffer(buf)
 			return result, err
 		case cltype.TypeIDString:
-			result.StringVal = NewStringFromBuffer(buf)
-			return result, nil
+			result.StringVal, err = NewStringFromBuffer(buf)
+			return result, err
 		case cltype.TypeIDUnit:
 			result.Unit, err = NewUnitFromBuffer(buf)
 			return result, err
