@@ -54,7 +54,7 @@ func (d *Duration) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &dataString); err != nil {
 		return err
 	}
-
+	dataString = strings.ReplaceAll(dataString, " ", "")
 	if dataString == "1day" {
 		dataString = "24h"
 	}
