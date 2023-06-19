@@ -11,11 +11,11 @@ import (
 )
 
 func Test_DurationUnmarshal_withSpace_shouldBeParsed(t *testing.T) {
-	value := `"1h 30m"`
+	value := `"2h 46m 40s"`
 	var result types.Duration
 	err := json.Unmarshal([]byte(value), &result)
 	require.NoError(t, err)
 	data, err := result.MarshalJSON()
 	require.NoError(t, err)
-	assert.Equal(t, `"1h30m"`, string(data))
+	assert.Equal(t, `"2h46m40s"`, string(data))
 }
