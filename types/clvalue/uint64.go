@@ -39,7 +39,7 @@ func NewUint64FromBytes(source []byte) (*UInt64, error) {
 }
 
 func NewUint64FromBuffer(buffer *bytes.Buffer) (*UInt64, error) {
-	if buffer.Len() < cltype.Int32ByteSize {
+	if buffer.Len() < cltype.Int64ByteSize {
 		return nil, errors.New("buffer size is too small")
 	}
 

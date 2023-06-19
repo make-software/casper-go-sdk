@@ -38,7 +38,7 @@ func NewInt64FromBytes(source []byte) (*Int64, error) {
 }
 
 func NewInt64FromBuffer(buf *bytes.Buffer) (*Int64, error) {
-	if buf.Len() < cltype.Int32ByteSize {
+	if buf.Len() < cltype.Int64ByteSize {
 		return nil, errors.New("buffer size is too small")
 	}
 	byteSlice := buf.Next(cltype.Int64ByteSize)
