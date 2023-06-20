@@ -223,7 +223,7 @@ func (c *client) PutDeploy(ctx context.Context, deploy types.Deploy) (PutDeployR
 
 func (c *client) processRequest(ctx context.Context, method Method, params interface{}, result any) error {
 	request := DefaultRpcRequest(method, params)
-	if reqID := GetReqIdCtx(ctx); reqID != 0 {
+	if reqID := GetReqIdCtx(ctx); reqID != "0" {
 		request.ID = reqID
 	}
 	resp, err := c.handler.ProcessCall(ctx, request)
