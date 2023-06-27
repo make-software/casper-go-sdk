@@ -1,6 +1,6 @@
 {
   "jsonrpc": "2.0",
-  "id": 1,
+  "id": "1",
   "result": {
     "api_version": "1.4.15",
     "state_root_hash": "78e2e5dc220fc8878f04f2f92db97c37a4d90fbb28378e10065c4de94cd775b1"

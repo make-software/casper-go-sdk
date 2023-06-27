@@ -13,7 +13,7 @@ import (
 // contains the returned data as a JSON object. If an error occurs Error property contains a description of an error.
 type RpcResponse struct {
 	Version string          `json:"jsonrpc"`
-	Id      int             `json:"id"`
+	Id      string          `json:"id,omitempty"`
 	Result  json.RawMessage `json:"result"`
 	Error   *RpcError       `json:"error,omitempty"`
 }
