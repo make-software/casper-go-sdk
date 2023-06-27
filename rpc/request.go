@@ -17,12 +17,12 @@ func WithRequestId(ctx context.Context, requestID int) context.Context {
 	return context.WithValue(ctx, RequestIDKey, requestID)
 }
 
-func GetReqIdCtx(ctx context.Context) int {
+func GetReqIdCtx(ctx context.Context) string {
 	value := ctx.Value(RequestIDKey)
 	if value == nil {
-		return 0
+		return "0"
 	}
-	return value.(int)
+	return value.(string)
 }
 
 // Method is represented a name of the RPC endpoint
@@ -52,8 +52,7 @@ type RpcRequest struct {
 	// Version of the RPC protocol in use
 	Version string `json:"jsonrpc"`
 	// Id of the RPC request that can be correlated with the equivalent Id in the RPC response
-	//TODO: ID doesn't work from the Node side (always return 1 in response)
-	ID     int         `json:"id"`
+	ID     string      `json:"id,omitempty"`
 	Method Method      `json:"method"`
 	Params interface{} `json:"params"`
 }
@@ -61,7 +60,7 @@ type RpcRequest struct {
 func DefaultRpcRequest(method Method, params interface{}) RpcRequest {
 	return RpcRequest{
 		Version: ApiVersion,
-		ID:      1,
+		ID:      "1",
 		Method:  method,
 		Params:  params,
 	}

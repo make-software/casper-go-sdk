@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -113,6 +114,18 @@ func Test_DefaultClient_QueryGlobalStateByBlock_GetAccount(t *testing.T) {
 	require.NoError(t, err)
 	assert.NotEmpty(t, res.BlockHeader.BodyHash)
 	assert.NotEmpty(t, res.StoredValue.Account.AccountHash)
+}
+
+func Test_DefaultClient_QueryGlobalStateByBlock_GetWithdraw(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/query_global_state_withdraw.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	blockHash := "4ecd164a29a4e42d40e14ab823a107fe1869dbd3a309202d729589cfa85265ec"
+	withdrawKey := "withdraw-b98aeebe049967c8273088fac9301978ac1edbd8bff07c5256e0957e52a0ccac"
+	res, err := client.QueryGlobalStateByBlockHash(context.Background(), blockHash, withdrawKey, nil)
+	require.NoError(t, err)
+	assert.NotEmpty(t, res.BlockHeader.BodyHash)
+	assert.Equal(t, "500468846906", strconv.Itoa(int(res.StoredValue.Withdraw[0].Amount)))
 }
 
 func Test_DefaultClient_QueryGlobalStateByStateRoot_GetAccount(t *testing.T) {

@@ -2,10 +2,13 @@ package secp256k1
 
 import (
 	"crypto/sha256"
+	"fmt"
 	"math/big"
 
 	"github.com/btcsuite/btcd/btcec"
 )
+
+const PublicKeySize = 33
 
 // used to reject malleable signatures
 // see:
@@ -54,6 +57,9 @@ func signatureFromBytes(sigStr []byte) *btcec.Signature {
 }
 
 func NewPublicKey(data []byte) (PublicKey, error) {
+	if len(data) != PublicKeySize {
+		return PublicKey{}, fmt.Errorf("can't parse wrong size of public key: %d", len(data))
+	}
 	key, err := btcec.ParsePubKey(data, btcec.S256())
 	if err != nil {
 		return PublicKey{}, err

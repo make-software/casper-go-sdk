@@ -13,5 +13,5 @@ type StoredValue struct {
 	DeployInfo      *DeployInfo      `json:"DeployInfo,omitempty"`
 	EraInfo         *EraInfo         `json:"EraInfo,omitempty"`
 	Bid             *Bid             `json:"Bid,omitempty"`
-	Withdraw        *UnbondingPurse  `json:"Withdraw,omitempty"`
+	Withdraw        []UnbondingPurse `json:"Withdraw,omitempty"`
 }

@@ -159,9 +159,11 @@ func NewPublicKeyFromBuffer(buf *bytes.Buffer) (PublicKey, error) {
 	result.cryptoAlg = keyAlgorithm(alg)
 	switch result.cryptoAlg {
 	case ED25519:
-		result.key = ed25519.NewPublicKey(buf.Bytes())
+		if result.key, err = ed25519.NewPublicKey(buf.Next(ed25519.PublicKeySize)); err != nil {
+			return PublicKey{}, err
+		}
 	case SECP256K1:
-		if result.key, err = secp256k1.NewPublicKey(buf.Bytes()); err != nil {
+		if result.key, err = secp256k1.NewPublicKey(buf.Next(secp256k1.PublicKeySize)); err != nil {
 			return PublicKey{}, err
 		}
 	default:

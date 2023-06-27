@@ -101,7 +101,7 @@ func FromBuffer(buf *bytes.Buffer) (CLType, error) {
 	case TypeIDList:
 		return NewListFromBuffer(buf)
 	case TypeIDByteArray:
-		return NewByteArrayFromBuffer(buf), nil
+		return NewByteArrayFromBuffer(buf)
 	case TypeIDResult:
 		return NewResultFromBuffer(buf)
 	case TypeIDMap:
