@@ -4,10 +4,12 @@ import (
 	"crypto/ed25519"
 	"encoding/pem"
 	"errors"
+	"fmt"
 	"os"
 )
 
 const PemFramePublicKeyPrefixSize = 12
+const PublicKeySize = 32
 
 type PublicKey ed25519.PublicKey
 
@@ -19,8 +21,11 @@ func (v PublicKey) VerifySignature(message []byte, sig []byte) bool {
 	return ed25519.Verify(ed25519.PublicKey(v), message, sig)
 }
 
-func NewPublicKey(data []byte) PublicKey {
-	return PublicKey(data)
+func NewPublicKey(data []byte) (PublicKey, error) {
+	if len(data) != PublicKeySize {
+		return nil, fmt.Errorf("can't parse wrong size of public key: %d", len(data))
+	}
+	return PublicKey(data), nil
 }
 
 func ParsePublicKeyFile(path string) (PublicKey, error) {
@@ -36,5 +41,5 @@ func ParsePublicKeyFile(path string) (PublicKey, error) {
 	// Trim PEM prefix
 	data := block.Bytes[PemFramePublicKeyPrefixSize:]
 
-	return PublicKey(data), nil
+	return NewPublicKey(data)
 }
