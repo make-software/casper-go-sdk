@@ -50,6 +50,9 @@ func NewByteArrayFromJson(source interface{}) (*ByteArray, error) {
 	return NewByteArray(uint32(val)), nil
 }
 
-func NewByteArrayFromBuffer(buf *bytes.Buffer) *ByteArray {
-	return NewByteArray(binary.LittleEndian.Uint32(buf.Bytes()))
+func NewByteArrayFromBuffer(buf *bytes.Buffer) (*ByteArray, error) {
+	if buf.Len() < Int32ByteSize {
+		return nil, fmt.Errorf("buffer len is less then size = %d", Int32ByteSize)
+	}
+	return NewByteArray(binary.LittleEndian.Uint32(buf.Next(Int32ByteSize))), nil
 }
