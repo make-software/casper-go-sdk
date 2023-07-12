@@ -191,7 +191,7 @@ type SpeculativeExecResult struct {
 
 type QueryBalanceResult struct {
 	ApiVersion string          `json:"api_version"`
-	Balance    clvalue.UInt512 `json:"balance,string"`
+	Balance    clvalue.UInt512 `json:"balance"`
 }
 
 type InfoGetChainspecResult struct {
