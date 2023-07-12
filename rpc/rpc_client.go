@@ -33,6 +33,14 @@ func (c *client) GetDeploy(ctx context.Context, hash string) (InfoGetDeployResul
 	}, &result)
 }
 
+func (c *client) GetDeployFinalizedApproval(ctx context.Context, hash string) (InfoGetDeployResult, error) {
+	var result InfoGetDeployResult
+	return result, c.processRequest(ctx, MethodGetDeploy, map[string]interface{}{
+		"deploy_hash":         hash,
+		"finalized_approvals": true,
+	}, &result)
+}
+
 func (c *client) GetStateItem(ctx context.Context, stateRootHash *string, key string, path []string) (StateGetItemResult, error) {
 	if stateRootHash == nil {
 		latestHashResult, err := c.GetStateRootHashLatest(ctx)
@@ -54,6 +62,13 @@ func (c *client) QueryGlobalStateByBlockHash(ctx context.Context, blockHash, key
 	var result QueryGlobalStateResult
 	return result, c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, ParamQueryGlobalStateID{
 		BlockHash: blockHash,
+	}), &result)
+}
+
+func (c *client) QueryGlobalStateByBlockHeight(ctx context.Context, blockHeight uint64, key string, path []string) (QueryGlobalStateResult, error) {
+	var result QueryGlobalStateResult
+	return result, c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, ParamQueryGlobalStateID{
+		BlockHeight: blockHeight,
 	}), &result)
 }
 
@@ -219,6 +234,16 @@ func (c *client) GetPeers(ctx context.Context) (InfoGetPeerResult, error) {
 func (c *client) PutDeploy(ctx context.Context, deploy types.Deploy) (PutDeployResult, error) {
 	var result PutDeployResult
 	return result, c.processRequest(ctx, MethodPutDeploy, PutDeployRequest{Deploy: deploy}, &result)
+}
+
+func (c *client) QueryBalance(ctx context.Context, identifier PurseIdentifier) (QueryBalanceResult, error) {
+	var result QueryBalanceResult
+	return result, c.processRequest(ctx, MethodQueryBalance, QueryBalanceRequest{identifier}, &result)
+}
+
+func (c *client) GetChainspec(ctx context.Context) (InfoGetChainspecResult, error) {
+	var result InfoGetChainspecResult
+	return result, c.processRequest(ctx, MethodInfoGetChainspec, nil, &result)
 }
 
 func (c *client) processRequest(ctx context.Context, method Method, params interface{}, result any) error {

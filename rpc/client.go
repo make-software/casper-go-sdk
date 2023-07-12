@@ -51,6 +51,8 @@ type ClientInformational interface {
 	GetAccountBalance(ctx context.Context, stateRootHash *string, purseURef string) (StateGetBalanceResult, error)
 	// GetDeploy retrieves a Deploy from a network. It requires a deploy_hash to query the Deploy.
 	GetDeploy(ctx context.Context, hash string) (InfoGetDeployResult, error)
+	// GetDeployFinalizedApproval returns Deploy with the finalized approvals substituted.
+	GetDeployFinalizedApproval(ctx context.Context, hash string) (InfoGetDeployResult, error)
 	// GetDictionaryItem returns an item from a Dictionary.
 	// Every dictionary has a seed URef, findable by using a dictionary_identifier.
 	// The address of a stored value is the blake2b hash of the seed URef and the byte representation of the dictionary key.
@@ -63,6 +65,8 @@ type ClientInformational interface {
 
 	// QueryGlobalStateByBlockHash allows for you to query for a value stored under certain keys in global state.
 	QueryGlobalStateByBlockHash(ctx context.Context, blockHash, key string, path []string) (QueryGlobalStateResult, error)
+	// QueryGlobalStateByBlockHeight allows for you to query for a value stored under certain keys in global state.
+	QueryGlobalStateByBlockHeight(ctx context.Context, blockHeight uint64, key string, path []string) (QueryGlobalStateResult, error)
 	// QueryGlobalStateByStateHash allows for you to query for a value stored under certain keys in global state.
 	// If the param stateRootHash is nil, the client will make an additional RPC call to retrieve the latest stateRootHash.
 	QueryGlobalStateByStateHash(ctx context.Context, stateRootHash *string, key string, path []string) (QueryGlobalStateResult, error)
@@ -108,6 +112,10 @@ type ClientInformational interface {
 	// GetPeers return a list of peers connected to the node on a Casper network.
 	// The responses return information specific to the queried node, and as such, will vary.
 	GetPeers(ctx context.Context) (InfoGetPeerResult, error)
+	// QueryBalance queries for balances under a given PurseIdentifier
+	QueryBalance(ctx context.Context, identifier PurseIdentifier) (QueryBalanceResult, error)
+	// GetChainspec returns the raw bytes of the chainspec.toml, accounts.toml and global_state.toml files as read at node startup.
+	GetChainspec(ctx context.Context) (InfoGetChainspecResult, error)
 }
 
 // ClientTransactional contains the description of account_put_deploy,

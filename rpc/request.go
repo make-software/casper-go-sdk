@@ -45,6 +45,9 @@ const (
 	MethodGetStatus           Method = "info_get_status"
 	MethodGetPeers            Method = "info_get_peers"
 	MethodPutDeploy           Method = "account_put_deploy"
+	MethodSpeculativeExec     Method = "speculative_exec"
+	MethodQueryBalance        Method = "query_balance"
+	MethodInfoGetChainspec    Method = "info_get_chainspec"
 )
 
 // RpcRequest is a wrapper struct for an RPC call method that can be serialized to JSON.
@@ -81,6 +84,7 @@ type ParamQueryGlobalState struct {
 type ParamQueryGlobalStateID struct {
 	StateRootHash string `json:"StateRootHash,omitempty"`
 	BlockHash     string `json:"BlockHash,omitempty"`
+	BlockHeight   uint64 `json:"BlockHeight,omitempty"`
 }
 
 func NewQueryGlobalStateParam(key string, path []string, id ParamQueryGlobalStateID) ParamQueryGlobalState {
@@ -123,4 +127,19 @@ func NewParamStateDictionaryItem(stateRootHash, uref, key string) map[string]int
 			},
 		},
 	}
+}
+
+type SpeculativeExecParams struct {
+	Deploy          types.Deploy     `json:"deploy"`
+	BlockIdentifier *BlockIdentifier `json:"block_identifier,omitempty"`
+}
+
+type PurseIdentifier struct {
+	MainPurseUnderPublicKey   *keypair.PublicKey `json:"main_purse_under_public_key,omitempty"`
+	MainPurseUnderAccountHash *string            `json:"main_purse_under_account_hash,omitempty"`
+	PurseUref                 *string            `json:"purse_uref,omitempty"`
+}
+
+type QueryBalanceRequest struct {
+	PurseIdentifier PurseIdentifier `json:"purse_identifier"`
 }
