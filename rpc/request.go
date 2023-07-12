@@ -45,6 +45,7 @@ const (
 	MethodGetStatus           Method = "info_get_status"
 	MethodGetPeers            Method = "info_get_peers"
 	MethodPutDeploy           Method = "account_put_deploy"
+	MethodSpeculativeExec     Method = "speculative_exec"
 )
 
 // RpcRequest is a wrapper struct for an RPC call method that can be serialized to JSON.
@@ -123,4 +124,9 @@ func NewParamStateDictionaryItem(stateRootHash, uref, key string) map[string]int
 			},
 		},
 	}
+}
+
+type SpeculativeExecParams struct {
+	Deploy          types.Deploy     `json:"deploy"`
+	BlockIdentifier *BlockIdentifier `json:"block_identifier,omitempty"`
 }
