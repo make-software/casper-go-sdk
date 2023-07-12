@@ -84,6 +84,7 @@ type ParamQueryGlobalState struct {
 type ParamQueryGlobalStateID struct {
 	StateRootHash string `json:"StateRootHash,omitempty"`
 	BlockHash     string `json:"BlockHash,omitempty"`
+	BlockHeight   uint64 `json:"BlockHeight,omitempty"`
 }
 
 func NewQueryGlobalStateParam(key string, path []string, id ParamQueryGlobalStateID) ParamQueryGlobalState {

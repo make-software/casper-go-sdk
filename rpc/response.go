@@ -54,6 +54,8 @@ type InfoGetDeployResult struct {
 	ApiVersion       string                        `json:"api_version"`
 	Deploy           types.Deploy                  `json:"deploy"`
 	ExecutionResults []types.DeployExecutionResult `json:"execution_results"`
+	BlockHash        *key.Hash                     `json:"block_hash,omitempty"`
+	BlockHeight      *uint64                       `json:"block_height,omitempty"`
 }
 
 type ChainGetEraInfoResult struct {

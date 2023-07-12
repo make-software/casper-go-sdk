@@ -126,6 +126,17 @@ func Test_DefaultClient_QueryGlobalStateByBlock_GetAccount(t *testing.T) {
 	assert.NotEmpty(t, res.StoredValue.Account.AccountHash)
 }
 
+func Test_DefaultClient_QueryGlobalStateByBlockHeight_GetAccount(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/query_global_state_era.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	accountKey := "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c"
+	res, err := client.QueryGlobalStateByBlockHeight(context.Background(), 1000, accountKey, nil)
+	require.NoError(t, err)
+	assert.NotEmpty(t, res.BlockHeader.BodyHash)
+	assert.NotEmpty(t, res.StoredValue.Account.AccountHash)
+}
+
 func Test_DefaultClient_QueryGlobalStateByBlock_GetWithdraw(t *testing.T) {
 	server := SetupServer(t, "../data/rpc_response/query_global_state_withdraw.json")
 	defer server.Close()

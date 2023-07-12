@@ -65,6 +65,8 @@ type ClientInformational interface {
 
 	// QueryGlobalStateByBlockHash allows for you to query for a value stored under certain keys in global state.
 	QueryGlobalStateByBlockHash(ctx context.Context, blockHash, key string, path []string) (QueryGlobalStateResult, error)
+	// QueryGlobalStateByBlockHeight allows for you to query for a value stored under certain keys in global state.
+	QueryGlobalStateByBlockHeight(ctx context.Context, blockHeight uint64, key string, path []string) (QueryGlobalStateResult, error)
 	// QueryGlobalStateByStateHash allows for you to query for a value stored under certain keys in global state.
 	// If the param stateRootHash is nil, the client will make an additional RPC call to retrieve the latest stateRootHash.
 	QueryGlobalStateByStateHash(ctx context.Context, stateRootHash *string, key string, path []string) (QueryGlobalStateResult, error)

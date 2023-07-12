@@ -65,6 +65,13 @@ func (c *client) QueryGlobalStateByBlockHash(ctx context.Context, blockHash, key
 	}), &result)
 }
 
+func (c *client) QueryGlobalStateByBlockHeight(ctx context.Context, blockHeight uint64, key string, path []string) (QueryGlobalStateResult, error) {
+	var result QueryGlobalStateResult
+	return result, c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, ParamQueryGlobalStateID{
+		BlockHeight: blockHeight,
+	}), &result)
+}
+
 func (c *client) QueryGlobalStateByStateHash(ctx context.Context, stateRootHash *string, key string, path []string) (QueryGlobalStateResult, error) {
 	if stateRootHash == nil {
 		latestHashResult, err := c.GetStateRootHashLatest(ctx)
