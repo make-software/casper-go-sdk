@@ -147,6 +147,20 @@ type InfoGetStatusResult struct {
 	StartingStateRootHash string `json:"starting_state_root_hash"`
 	// Time that passed since the node has started. format "2months 20days 22h 3m 21s 512ms"
 	Uptime string `json:"uptime"`
+	// Indicating the node's current operating mode
+	ReactorState string `json:"reactor_state"`
+	// Indicating the time the node last made progress
+	LastProgress types.Timestamp `json:"last_progress"`
+	// Indicating the highest contiguous sequence of the block chain for which the node has complete data
+	AvailableBlockRange struct {
+		Low  uint64 `json:"low"`
+		High uint64 `json:"high"`
+	} `json:"available_block_range"`
+	// Indicating the state of the block synchronizer component
+	BlockSync struct {
+		Historical string `json:"historical,omitempty"`
+		Forward    string `json:"forward,omitempty"`
+	} `json:"block_sync"`
 }
 
 // NodeNextUpgrade contains the information about the next protocol upgrade.
