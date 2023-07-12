@@ -221,6 +221,11 @@ func (c *client) PutDeploy(ctx context.Context, deploy types.Deploy) (PutDeployR
 	return result, c.processRequest(ctx, MethodPutDeploy, PutDeployRequest{Deploy: deploy}, &result)
 }
 
+func (c *client) QueryBalance(ctx context.Context, identifier PurseIdentifier) (QueryBalanceResult, error) {
+	var result QueryBalanceResult
+	return result, c.processRequest(ctx, MethodQueryBalance, QueryBalanceRequest{identifier}, &result)
+}
+
 func (c *client) processRequest(ctx context.Context, method Method, params interface{}, result any) error {
 	request := DefaultRpcRequest(method, params)
 	if reqID := GetReqIdCtx(ctx); reqID != "0" {

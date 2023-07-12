@@ -108,6 +108,8 @@ type ClientInformational interface {
 	// GetPeers return a list of peers connected to the node on a Casper network.
 	// The responses return information specific to the queried node, and as such, will vary.
 	GetPeers(ctx context.Context) (InfoGetPeerResult, error)
+	// QueryBalance queries for balances under a given PurseIdentifier
+	QueryBalance(ctx context.Context, identifier PurseIdentifier) (QueryBalanceResult, error)
 }
 
 // ClientTransactional contains the description of account_put_deploy,

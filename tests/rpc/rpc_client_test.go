@@ -394,3 +394,16 @@ func Test_DefaultClient_GetPeers(t *testing.T) {
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.Peers)
 }
+
+func Test_DefaultClient_QueryBalance_byPublicKey(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/query_balance.json")
+	defer server.Close()
+	pubKey, err := casper.NewPublicKey("0115394d1f395a87dfed4ab62bbfbc91b573bbb2bffb2c8ebb9c240c51d95bcc4d")
+	require.NoError(t, err)
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	result, err := client.QueryBalance(context.Background(), rpc.PurseIdentifier{
+		MainPurseUnderPublicKey: &pubKey,
+	})
+	require.NoError(t, err)
+	assert.NotEmpty(t, result.Balance)
+}

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/make-software/casper-go-sdk/types"
+	"github.com/make-software/casper-go-sdk/types/clvalue"
 	"github.com/make-software/casper-go-sdk/types/key"
 	"github.com/make-software/casper-go-sdk/types/keypair"
 )
@@ -186,4 +187,9 @@ type SpeculativeExecResult struct {
 	ApiVersion      string                      `json:"api_version"`
 	DeployHash      key.Hash                    `json:"deploy_hash"`
 	ExecutionResult types.ExecutionResultStatus `json:"execution_result"`
+}
+
+type QueryBalanceResult struct {
+	ApiVersion string          `json:"api_version"`
+	Balance    clvalue.UInt512 `json:"balance,string"`
 }
