@@ -47,6 +47,16 @@ func Test_DefaultClient_GetDeploy(t *testing.T) {
 	assert.Equal(t, deployHash, result.Deploy.Hash.ToHex())
 }
 
+func Test_DefaultClient_GetDeployFinalizedApproval(t *testing.T) {
+	server := SetupServer(t, "../data/deploy/get_raw_rpc_deploy.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	deployHash := "0009ea4441f4700325d9c38b0b6df415537596e1204abe4f6a94b6996aebf2f1"
+	result, err := client.GetDeployFinalizedApproval(context.Background(), deployHash)
+	require.NoError(t, err)
+	assert.Equal(t, deployHash, result.Deploy.Hash.ToHex())
+}
+
 func Test_DefaultClient_GetStateItem_GetAccount(t *testing.T) {
 	server := SetupServer(t, "../data/rpc_response/get_state_item_account.json")
 	defer server.Close()

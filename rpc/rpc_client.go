@@ -33,6 +33,14 @@ func (c *client) GetDeploy(ctx context.Context, hash string) (InfoGetDeployResul
 	}, &result)
 }
 
+func (c *client) GetDeployFinalizedApproval(ctx context.Context, hash string) (InfoGetDeployResult, error) {
+	var result InfoGetDeployResult
+	return result, c.processRequest(ctx, MethodGetDeploy, map[string]interface{}{
+		"deploy_hash":         hash,
+		"finalized_approvals": true,
+	}, &result)
+}
+
 func (c *client) GetStateItem(ctx context.Context, stateRootHash *string, key string, path []string) (StateGetItemResult, error) {
 	if stateRootHash == nil {
 		latestHashResult, err := c.GetStateRootHashLatest(ctx)

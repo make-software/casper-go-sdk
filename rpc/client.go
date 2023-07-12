@@ -51,6 +51,8 @@ type ClientInformational interface {
 	GetAccountBalance(ctx context.Context, stateRootHash *string, purseURef string) (StateGetBalanceResult, error)
 	// GetDeploy retrieves a Deploy from a network. It requires a deploy_hash to query the Deploy.
 	GetDeploy(ctx context.Context, hash string) (InfoGetDeployResult, error)
+	// GetDeployFinalizedApproval returns Deploy with the finalized approvals substituted.
+	GetDeployFinalizedApproval(ctx context.Context, hash string) (InfoGetDeployResult, error)
 	// GetDictionaryItem returns an item from a Dictionary.
 	// Every dictionary has a seed URef, findable by using a dictionary_identifier.
 	// The address of a stored value is the blake2b hash of the seed URef and the byte representation of the dictionary key.
