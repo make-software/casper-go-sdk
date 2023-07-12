@@ -193,3 +193,12 @@ type QueryBalanceResult struct {
 	ApiVersion string          `json:"api_version"`
 	Balance    clvalue.UInt512 `json:"balance,string"`
 }
+
+type InfoGetChainspecResult struct {
+	ApiVersion     string `json:"api_version"`
+	ChainspecBytes struct {
+		ChainspecBytes            string `json:"chainspec_bytes,omitempty"`
+		MaybeGenesisAccountsBytes string `json:"maybe_genesis_accounts_bytes,omitempty"`
+		MaybeGlobalStateBytes     string `json:"maybe_global_state_bytes,omitempty"`
+	} `json:"chainspec_bytes"`
+}

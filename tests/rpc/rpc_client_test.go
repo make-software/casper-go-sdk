@@ -407,3 +407,12 @@ func Test_DefaultClient_QueryBalance_byPublicKey(t *testing.T) {
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.Balance)
 }
+
+func Test_DefaultClient_GetChainspec(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_chainspec.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	result, err := client.GetChainspec(context.Background())
+	require.NoError(t, err)
+	assert.NotEmpty(t, result.ChainspecBytes.ChainspecBytes)
+}

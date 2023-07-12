@@ -226,6 +226,11 @@ func (c *client) QueryBalance(ctx context.Context, identifier PurseIdentifier) (
 	return result, c.processRequest(ctx, MethodQueryBalance, QueryBalanceRequest{identifier}, &result)
 }
 
+func (c *client) GetChainspec(ctx context.Context) (InfoGetChainspecResult, error) {
+	var result InfoGetChainspecResult
+	return result, c.processRequest(ctx, MethodInfoGetChainspec, nil, &result)
+}
+
 func (c *client) processRequest(ctx context.Context, method Method, params interface{}, result any) error {
 	request := DefaultRpcRequest(method, params)
 	if reqID := GetReqIdCtx(ctx); reqID != "0" {

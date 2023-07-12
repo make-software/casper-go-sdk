@@ -47,6 +47,7 @@ const (
 	MethodPutDeploy           Method = "account_put_deploy"
 	MethodSpeculativeExec     Method = "speculative_exec"
 	MethodQueryBalance        Method = "query_balance"
+	MethodInfoGetChainspec    Method = "info_get_chainspec"
 )
 
 // RpcRequest is a wrapper struct for an RPC call method that can be serialized to JSON.

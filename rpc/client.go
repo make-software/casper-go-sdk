@@ -110,6 +110,8 @@ type ClientInformational interface {
 	GetPeers(ctx context.Context) (InfoGetPeerResult, error)
 	// QueryBalance queries for balances under a given PurseIdentifier
 	QueryBalance(ctx context.Context, identifier PurseIdentifier) (QueryBalanceResult, error)
+	// GetChainspec returns the raw bytes of the chainspec.toml, accounts.toml and global_state.toml files as read at node startup.
+	GetChainspec(ctx context.Context) (InfoGetChainspecResult, error)
 }
 
 // ClientTransactional contains the description of account_put_deploy,

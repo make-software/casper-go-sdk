@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 package rpc
 
 import (
@@ -21,4 +24,11 @@ func Test_QueryBalance_byPublicKey(t *testing.T) {
 	})
 	require.NoError(t, err)
 	assert.Equal(t, "1000000000000000000000000000000000", res.Balance.String())
+}
+
+func Test_GetChainspec(t *testing.T) {
+	client := rpc.NewClient(rpc.NewHttpHandler("http://127.0.0.1:11101/rpc", http.DefaultClient))
+	res, err := client.GetChainspec(context.Background())
+	require.NoError(t, err)
+	assert.NotEmpty(t, res.ChainspecBytes.ChainspecBytes)
 }
