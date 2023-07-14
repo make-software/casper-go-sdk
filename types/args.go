@@ -84,8 +84,20 @@ func (a *Argument) Value() (clvalue.CLValue, error) {
 	return ArgsFromRawJson(a.rawData)
 }
 
+func (a *Argument) Raw() (RawArg, error) {
+	var rawArg RawArg
+	if a.rawData == nil {
+		return RawArg{}, nil
+	}
+	err := json.Unmarshal(a.rawData, &rawArg)
+	if err != nil {
+		return RawArg{}, err
+	}
+	return rawArg, nil
+}
+
 func (a *Argument) Parsed() (json.RawMessage, error) {
-	var rawData rawArg
+	var rawData RawArg
 	if a.rawData == nil {
 		return json.RawMessage{}, nil
 	}
@@ -97,7 +109,7 @@ func (a *Argument) Parsed() (json.RawMessage, error) {
 }
 
 func (a *Argument) Bytes() (HexBytes, error) {
-	var rawData rawArg
+	var rawData RawArg
 	if a.value != nil {
 		return clvalue.ToBytesWithType(*a.value)
 	}
@@ -124,7 +136,7 @@ func (a *Argument) MarshalJSON() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	argData := rawArg{
+	argData := RawArg{
 		CLType: typeName,
 		Bytes:  a.value.Bytes(),
 	}
@@ -142,9 +154,9 @@ func (a *Argument) Name() (string, error) {
 	return *a.name, nil
 }
 
-// rawArg is a type used in deploy input arguments. And it can also be returned as a
+// RawArg is a type used in deploy input arguments. And it can also be returned as a
 // result of a query to the network or a contract call.
-type rawArg struct {
+type RawArg struct {
 	// Type of the value. Can be simple or constructed
 	CLType json.RawMessage `json:"cl_type"`
 	// Bytes array representation of underlying data
@@ -154,7 +166,7 @@ type rawArg struct {
 }
 
 func ArgsFromRawJson(raw json.RawMessage) (clvalue.CLValue, error) {
-	var rawData rawArg
+	var rawData RawArg
 	err := json.Unmarshal(raw, &rawData)
 	if err != nil {
 		return clvalue.CLValue{}, err
