@@ -97,27 +97,22 @@ func (a *Argument) Raw() (RawArg, error) {
 }
 
 func (a *Argument) Parsed() (json.RawMessage, error) {
-	var rawData RawArg
-	if a.rawData == nil {
-		return json.RawMessage{}, nil
-	}
-	err := json.Unmarshal(a.rawData, &rawData)
+	rawArg, err := a.Raw()
 	if err != nil {
 		return nil, err
 	}
-	return rawData.Parsed, nil
+	return rawArg.Parsed, nil
 }
 
 func (a *Argument) Bytes() (HexBytes, error) {
-	var rawData RawArg
 	if a.value != nil {
 		return clvalue.ToBytesWithType(*a.value)
 	}
-	err := json.Unmarshal(a.rawData, &rawData)
+	rawArg, err := a.Raw()
 	if err != nil {
 		return nil, err
 	}
-	return rawData.Bytes, nil
+	return rawArg.Bytes, nil
 }
 
 func (a *Argument) UnmarshalJSON(bytes []byte) error {
