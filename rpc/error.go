@@ -8,10 +8,11 @@ import (
 type RpcError struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
+	Data    string `json:"data,omitempty"`
 }
 
 func (h *RpcError) Error() string {
-	return h.Message
+	return fmt.Sprintf("key: %s, data: %s", h.Message, h.Data)
 }
 
 type HttpError struct {
