@@ -1,6 +1,7 @@
 package types
 
 import (
+	"database/sql/driver"
 	"encoding/json"
 	"errors"
 
@@ -59,4 +60,28 @@ func (p *Proposer) UnmarshalJSON(bytes []byte) error {
 		return err
 	}
 	return nil
+}
+
+func (p *Proposer) Scan(value any) error {
+	b, ok := value.([]byte)
+	if !ok {
+		return errors.New("invalid scan value type")
+	}
+	if string(b) == "00" {
+		p.isSystem = true
+		return nil
+	}
+	var pubKey keypair.PublicKey
+	if err := pubKey.Scan(value); err != nil {
+		return err
+	}
+	p.publicKey = &pubKey
+	return nil
+}
+
+func (p Proposer) Value() (driver.Value, error) {
+	if p.isSystem {
+		return []byte("00"), nil
+	}
+	return p.publicKey.Value()
 }
