@@ -2,6 +2,7 @@ package types
 
 import (
 	"database/sql/driver"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 
@@ -67,7 +68,7 @@ func (p *Proposer) Scan(value any) error {
 	if !ok {
 		return errors.New("invalid scan value type")
 	}
-	if string(b) == "00" {
+	if hex.EncodeToString(b) == "00" {
 		p.isSystem = true
 		return nil
 	}
@@ -81,7 +82,7 @@ func (p *Proposer) Scan(value any) error {
 
 func (p Proposer) Value() (driver.Value, error) {
 	if p.isSystem {
-		return []byte("00"), nil
+		return hex.DecodeString("00")
 	}
 	return p.publicKey.Value()
 }

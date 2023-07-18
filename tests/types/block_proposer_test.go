@@ -12,7 +12,9 @@ import (
 
 func Test_BlockProposer_Scan_System(t *testing.T) {
 	res := &types.Proposer{}
-	err := res.Scan([]byte("00"))
+	hexData, err := hex.DecodeString("00")
+	require.NoError(t, err)
+	err = res.Scan(hexData)
 	require.NoError(t, err)
 	assert.True(t, res.IsSystem())
 }
