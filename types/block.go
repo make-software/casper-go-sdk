@@ -19,7 +19,7 @@ type BlockBody struct {
 	// Public key of the validator that proposed the block
 	Proposer keypair.PublicKey `json:"proposer"`
 	// List of `TransferHash` hashes included in the block
-	TransferHashes []key.TransferHash `json:"transfer_hashes"`
+	TransferHashes []key.Hash `json:"transfer_hashes"`
 }
 
 type BlockHeader struct {
