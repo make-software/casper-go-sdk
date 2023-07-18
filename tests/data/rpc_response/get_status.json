@@ -34,8 +34,11 @@
     },
     "our_public_signing_key": "0115394d1f395a87dfed4ab62bbfbc91b573bbb2bffb2c8ebb9c240c51d95bcc4d",
     "round_length": "4s 96ms",
-    "next_upgrade": null,
-    "uptime": "2h 47m 49s 365ms",
+    "next_upgrade": {
+      "activation_point": 9904,
+      "protocol_version": "1.5.2"
+    },
+    "uptime": "2months 13days 5h 37m 7s 171ms",
     "reactor_state": "Validate",
     "last_progress": "2023-07-12T12:31:32.550Z",
     "available_block_range": {
