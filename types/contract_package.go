@@ -13,7 +13,8 @@ type ContractPackage struct {
 	// of the allowed groups is present in the caller’s context before execution.
 	Groups []ContractGroup `json:"groups"`
 	// List of active versions of a contract.
-	Versions []ContractVersion `json:"versions"`
+	Versions   []ContractVersion `json:"versions"`
+	LockStatus string            `json:"lock_status"`
 }
 
 // ContractGroup associate a set of URefs with a label.

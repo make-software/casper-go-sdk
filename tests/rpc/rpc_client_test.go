@@ -47,6 +47,16 @@ func Test_DefaultClient_GetDeploy(t *testing.T) {
 	assert.Equal(t, deployHash, result.Deploy.Hash.ToHex())
 }
 
+func Test_DefaultClient_GetDeployFinalizedApproval(t *testing.T) {
+	server := SetupServer(t, "../data/deploy/get_raw_rpc_deploy.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	deployHash := "0009ea4441f4700325d9c38b0b6df415537596e1204abe4f6a94b6996aebf2f1"
+	result, err := client.GetDeployFinalizedApproval(context.Background(), deployHash)
+	require.NoError(t, err)
+	assert.Equal(t, deployHash, result.Deploy.Hash.ToHex())
+}
+
 func Test_DefaultClient_GetStateItem_GetAccount(t *testing.T) {
 	server := SetupServer(t, "../data/rpc_response/get_state_item_account.json")
 	defer server.Close()
@@ -111,6 +121,17 @@ func Test_DefaultClient_QueryGlobalStateByBlock_GetAccount(t *testing.T) {
 	blockHash := "bf06bdb1616050cea5862333d1f4787718f1011c95574ba92378419eefeeee59"
 	accountKey := "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c"
 	res, err := client.QueryGlobalStateByBlockHash(context.Background(), blockHash, accountKey, nil)
+	require.NoError(t, err)
+	assert.NotEmpty(t, res.BlockHeader.BodyHash)
+	assert.NotEmpty(t, res.StoredValue.Account.AccountHash)
+}
+
+func Test_DefaultClient_QueryGlobalStateByBlockHeight_GetAccount(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/query_global_state_era.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	accountKey := "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c"
+	res, err := client.QueryGlobalStateByBlockHeight(context.Background(), 1000, accountKey, nil)
 	require.NoError(t, err)
 	assert.NotEmpty(t, res.BlockHeader.BodyHash)
 	assert.NotEmpty(t, res.StoredValue.Account.AccountHash)
@@ -393,4 +414,26 @@ func Test_DefaultClient_GetPeers(t *testing.T) {
 	result, err := client.GetPeers(context.Background())
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.Peers)
+}
+
+func Test_DefaultClient_QueryBalance_byPublicKey(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/query_balance.json")
+	defer server.Close()
+	pubKey, err := casper.NewPublicKey("0115394d1f395a87dfed4ab62bbfbc91b573bbb2bffb2c8ebb9c240c51d95bcc4d")
+	require.NoError(t, err)
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	result, err := client.QueryBalance(context.Background(), rpc.PurseIdentifier{
+		MainPurseUnderPublicKey: &pubKey,
+	})
+	require.NoError(t, err)
+	assert.NotEmpty(t, result.Balance)
+}
+
+func Test_DefaultClient_GetChainspec(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/get_chainspec.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	result, err := client.GetChainspec(context.Background())
+	require.NoError(t, err)
+	assert.NotEmpty(t, result.ChainspecBytes.ChainspecBytes)
 }
