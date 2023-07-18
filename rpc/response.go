@@ -2,7 +2,6 @@ package rpc
 
 import (
 	"encoding/json"
-	"time"
 
 	"github.com/make-software/casper-go-sdk/types"
 	"github.com/make-software/casper-go-sdk/types/key"
@@ -152,15 +151,9 @@ type InfoGetStatusResult struct {
 // NodeNextUpgrade contains the information about the next protocol upgrade.
 type NodeNextUpgrade struct {
 	//The first era to which the associated protocol version applies.
-	ActivationPoint ActivationPoint `json:"activation_point"`
+	ActivationPoint uint64 `json:"activation_point"`
 	// The protocol version of the next upgrade
 	ProtocolVersion string `json:"protocol_version"`
-}
-
-// ActivationPoint is the first era to which the associated protocol version applies.
-type ActivationPoint struct {
-	EraID     uint32    `json:"era_id"`
-	Timestamp time.Time `json:"timestamp"`
 }
 
 type PutDeployResult struct {

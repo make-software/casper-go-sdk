@@ -1,6 +1,6 @@
 {
   "jsonrpc": "2.0",
-  "id": "1",
+  "id": "0",
   "result": {
     "api_version": "1.4.15",
     "chainspec_name": "casper-test",
@@ -20,7 +20,11 @@
       },
       {
         "node_id": "tls:025d..b2d8",
-        "address": "85.114.132.133:35000"
+        "address": "85.114.132.133:60242"
+      },
+      {
+        "node_id": "tls:0316..a1c4",
+        "address": "141.94.194.38:35000"
       },
       {
         "node_id": "tls:034c..dd84",
@@ -33,6 +37,10 @@
       {
         "node_id": "tls:0454..aafb",
         "address": "95.216.1.154:35000"
+      },
+      {
+        "node_id": "tls:045d..a2ff",
+        "address": "65.21.92.145:35000"
       },
       {
         "node_id": "tls:04db..0cdc",
@@ -55,40 +63,20 @@
         "address": "65.21.239.31:35000"
       },
       {
-        "node_id": "tls:0671..e81b",
-        "address": "89.58.58.118:35000"
-      },
-      {
-        "node_id": "tls:0676..5e5d",
-        "address": "136.243.187.84:35000"
-      },
-      {
-        "node_id": "tls:06fd..c6e8",
-        "address": "162.55.63.245:35000"
-      },
-      {
         "node_id": "tls:0769..64cc",
         "address": "178.63.63.89:35000"
-      },
-      {
-        "node_id": "tls:07bb..fa83",
-        "address": "65.108.2.35:35000"
       },
       {
         "node_id": "tls:092a..e75d",
         "address": "65.108.0.107:35000"
       },
       {
-        "node_id": "tls:0a06..28dc",
-        "address": "89.58.2.198:35000"
+        "node_id": "tls:09fd..caed",
+        "address": "95.217.144.180:35000"
       },
       {
         "node_id": "tls:0ab4..8c65",
         "address": "65.21.134.245:35000"
-      },
-      {
-        "node_id": "tls:0c2c..6d25",
-        "address": "45.32.28.180:35000"
       },
       {
         "node_id": "tls:0c2d..b70e",
@@ -96,59 +84,87 @@
       },
       {
         "node_id": "tls:0c5d..d687",
-        "address": "135.181.165.97:35000"
+        "address": "135.181.165.97:57550"
       },
       {
         "node_id": "tls:0ce3..dcde",
         "address": "51.158.201.207:55760"
       },
       {
-        "node_id": "tls:0d33..7356",
-        "address": "65.21.234.60:35000"
-      },
-      {
         "node_id": "tls:0d38..edf5",
         "address": "51.158.55.55:56090"
-      },
-      {
-        "node_id": "tls:0e7d..dd00",
-        "address": "94.130.140.91:35000"
       },
       {
         "node_id": "tls:0e7d..ee28",
         "address": "3.129.252.116:35000"
       },
       {
+        "node_id": "tls:0ef6..d4b8",
+        "address": "157.90.34.213:35000"
+      },
+      {
         "node_id": "tls:0f70..7a73",
         "address": "178.63.75.44:35000"
+      },
+      {
+        "node_id": "tls:0fee..0e8e",
+        "address": "45.32.28.180:35000"
       },
       {
         "node_id": "tls:0ff8..b876",
         "address": "46.4.32.165:35000"
       },
       {
-        "node_id": "tls:108e..c8e5",
-        "address": "162.55.85.92:35000"
+        "node_id": "tls:10d7..c12c",
+        "address": "65.108.4.79:35000"
       },
       {
-        "node_id": "tls:1139..f606",
-        "address": "35.91.110.58:35000"
+        "node_id": "tls:139b..5c1c",
+        "address": "3.253.20.129:35000"
       },
       {
         "node_id": "tls:1461..5977",
-        "address": "135.181.113.209:35000"
+        "address": "135.181.113.209:46128"
+      },
+      {
+        "node_id": "tls:1509..21c5",
+        "address": "5.9.154.76:35000"
       },
       {
         "node_id": "tls:16b2..6587",
         "address": "95.216.44.9:35000"
       },
       {
+        "node_id": "tls:1763..6dd7",
+        "address": "136.243.187.84:57362"
+      },
+      {
+        "node_id": "tls:187b..cfbf",
+        "address": "88.99.89.209:35000"
+      },
+      {
+        "node_id": "tls:192a..2b2c",
+        "address": "65.21.231.87:53730"
+      },
+      {
         "node_id": "tls:19df..417f",
         "address": "148.251.90.119:35000"
       },
       {
+        "node_id": "tls:1b39..1347",
+        "address": "65.21.227.126:35000"
+      },
+      {
         "node_id": "tls:1c4d..0043",
         "address": "51.158.201.217:48894"
+      },
+      {
+        "node_id": "tls:1d53..2624",
+        "address": "93.190.143.39:35000"
+      },
+      {
+        "node_id": "tls:1ea6..bd4f",
+        "address": "65.108.140.73:35000"
       },
       {
         "node_id": "tls:1ebf..31c9",
@@ -160,23 +176,23 @@
       },
       {
         "node_id": "tls:1f78..b47f",
-        "address": "95.214.55.182:35000"
+        "address": "95.214.55.182:54012"
       },
       {
         "node_id": "tls:1f9a..3e35",
         "address": "3.208.91.63:35000"
       },
       {
+        "node_id": "tls:20d0..d97a",
+        "address": "65.108.2.35:35000"
+      },
+      {
+        "node_id": "tls:21f0..b329",
+        "address": "65.21.234.60:58198"
+      },
+      {
         "node_id": "tls:2217..1c00",
         "address": "65.21.124.134:35000"
-      },
-      {
-        "node_id": "tls:222c..f9ce",
-        "address": "65.21.235.239:35000"
-      },
-      {
-        "node_id": "tls:2313..09d5",
-        "address": "103.104.75.222:35000"
       },
       {
         "node_id": "tls:237a..fd40",
@@ -192,19 +208,19 @@
       },
       {
         "node_id": "tls:2517..1c2b",
-        "address": "95.214.55.66:35000"
-      },
-      {
-        "node_id": "tls:2759..f45d",
-        "address": "65.21.92.145:35000"
+        "address": "95.214.55.66:35476"
       },
       {
         "node_id": "tls:2769..51fa",
-        "address": "141.94.194.38:35000"
+        "address": "141.94.194.38:57680"
       },
       {
         "node_id": "tls:28ed..4019",
         "address": "159.69.73.104:35000"
+      },
+      {
+        "node_id": "tls:2903..3107",
+        "address": "65.108.41.42:35000"
       },
       {
         "node_id": "tls:2c6b..29bd",
@@ -213,6 +229,10 @@
       {
         "node_id": "tls:2c88..f8ba",
         "address": "88.99.60.204:35000"
+      },
+      {
+        "node_id": "tls:2cae..77b1",
+        "address": "157.90.34.213:50394"
       },
       {
         "node_id": "tls:2cff..b314",
@@ -227,20 +247,28 @@
         "address": "95.216.116.53:35000"
       },
       {
+        "node_id": "tls:2f4a..4c3c",
+        "address": "65.108.199.53:55972"
+      },
+      {
+        "node_id": "tls:2f89..2fd1",
+        "address": "65.21.238.224:51080"
+      },
+      {
         "node_id": "tls:2ff0..0747",
         "address": "195.201.106.180:35000"
       },
       {
-        "node_id": "tls:3065..35be",
-        "address": "65.21.226.33:35000"
-      },
-      {
-        "node_id": "tls:3068..981b",
-        "address": "65.109.16.79:35151"
+        "node_id": "tls:321c..9b54",
+        "address": "195.3.222.184:35000"
       },
       {
         "node_id": "tls:325e..5d20",
         "address": "65.21.229.213:35000"
+      },
+      {
+        "node_id": "tls:331d..dcb4",
+        "address": "88.99.141.148:35000"
       },
       {
         "node_id": "tls:33e4..7704",
@@ -251,32 +279,60 @@
         "address": "3.15.74.20:35000"
       },
       {
+        "node_id": "tls:35ea..4201",
+        "address": "212.90.121.143:35000"
+      },
+      {
         "node_id": "tls:3646..acc0",
         "address": "195.201.174.222:35000"
       },
       {
-        "node_id": "tls:388d..db38",
-        "address": "18.167.47.162:35000"
+        "node_id": "tls:3700..6c4a",
+        "address": "54.171.89.201:35000"
+      },
+      {
+        "node_id": "tls:371d..d654",
+        "address": "148.251.79.153:35000"
+      },
+      {
+        "node_id": "tls:3729..023f",
+        "address": "65.21.226.33:35000"
+      },
+      {
+        "node_id": "tls:377c..14a8",
+        "address": "76.91.193.251:49712"
+      },
+      {
+        "node_id": "tls:37d5..36b9",
+        "address": "213.202.212.222:35000"
+      },
+      {
+        "node_id": "tls:3a2f..0fa6",
+        "address": "3.15.154.50:35000"
+      },
+      {
+        "node_id": "tls:3a82..8640",
+        "address": "23.88.0.163:35000"
       },
       {
         "node_id": "tls:3bce..1efd",
         "address": "195.201.167.179:35000"
       },
       {
-        "node_id": "tls:3e1c..9425",
-        "address": "135.181.114.117:35000"
-      },
-      {
         "node_id": "tls:3e90..623f",
         "address": "46.4.119.228:35000"
       },
       {
-        "node_id": "tls:4043..ce83",
-        "address": "89.58.31.153:35000"
+        "node_id": "tls:3ef4..1b24",
+        "address": "213.239.207.87:35000"
       },
       {
         "node_id": "tls:405a..fa74",
         "address": "78.46.68.30:35000"
+      },
+      {
+        "node_id": "tls:40f4..7054",
+        "address": "91.102.117.130:54130"
       },
       {
         "node_id": "tls:418e..b92c",
@@ -285,10 +341,6 @@
       {
         "node_id": "tls:43b3..1f51",
         "address": "142.4.215.112:35000"
-      },
-      {
-        "node_id": "tls:44ff..2186",
-        "address": "65.108.11.103:35000"
       },
       {
         "node_id": "tls:4569..b26b",
@@ -307,28 +359,36 @@
         "address": "135.181.214.9:35000"
       },
       {
-        "node_id": "tls:461f..1a28",
-        "address": "195.154.169.193:35000"
-      },
-      {
         "node_id": "tls:470c..b737",
         "address": "81.30.157.85:35000"
       },
       {
-        "node_id": "tls:4953..9ad7",
-        "address": "89.58.58.2:35000"
+        "node_id": "tls:48db..874e",
+        "address": "89.58.52.245:35000"
       },
       {
         "node_id": "tls:49c4..61f6",
         "address": "138.201.53.13:35000"
       },
       {
-        "node_id": "tls:4a8f..35d1",
-        "address": "65.108.73.113:35000"
+        "node_id": "tls:4afc..fbcb",
+        "address": "93.186.201.14:48904"
       },
       {
-        "node_id": "tls:4b48..42e0",
-        "address": "89.58.58.196:35000"
+        "node_id": "tls:4b29..8b04",
+        "address": "76.91.193.251:60678"
+      },
+      {
+        "node_id": "tls:4c67..5fd5",
+        "address": "135.181.57.13:35000"
+      },
+      {
+        "node_id": "tls:4dd0..b0e2",
+        "address": "162.55.63.245:49962"
+      },
+      {
+        "node_id": "tls:4fa0..300f",
+        "address": "65.21.33.37:35000"
       },
       {
         "node_id": "tls:5016..b28d",
@@ -337,14 +397,6 @@
       {
         "node_id": "tls:5100..f382",
         "address": "162.55.6.177:35000"
-      },
-      {
-        "node_id": "tls:5206..3c03",
-        "address": "88.99.143.246:35000"
-      },
-      {
-        "node_id": "tls:5208..a376",
-        "address": "13.52.2.182:35000"
       },
       {
         "node_id": "tls:53db..6315",
@@ -359,16 +411,32 @@
         "address": "5.9.6.115:35000"
       },
       {
+        "node_id": "tls:581b..d06b",
+        "address": "93.186.201.14:35000"
+      },
+      {
         "node_id": "tls:5880..a086",
-        "address": "91.102.117.130:35000"
+        "address": "91.102.117.130:45120"
       },
       {
         "node_id": "tls:5894..5909",
         "address": "65.21.237.160:35000"
       },
       {
+        "node_id": "tls:5a77..6b62",
+        "address": "65.109.158.239:35000"
+      },
+      {
+        "node_id": "tls:5abc..c663",
+        "address": "65.108.199.53:35000"
+      },
+      {
         "node_id": "tls:5abe..bc92",
-        "address": "65.21.231.87:35000"
+        "address": "65.21.231.87:47880"
+      },
+      {
+        "node_id": "tls:5adf..c697",
+        "address": "65.21.238.229:35000"
       },
       {
         "node_id": "tls:5cab..69c4",
@@ -388,27 +456,35 @@
       },
       {
         "node_id": "tls:5ee3..4af9",
-        "address": "65.108.4.79:35000"
+        "address": "65.108.4.79:54470"
       },
       {
         "node_id": "tls:5eef..3b7a",
         "address": "157.90.130.143:35000"
       },
       {
-        "node_id": "tls:61db..987e",
-        "address": "65.21.238.229:35000"
-      },
-      {
         "node_id": "tls:62c2..65a7",
         "address": "136.243.147.249:35000"
+      },
+      {
+        "node_id": "tls:630a..b981",
+        "address": "65.108.42.61:35000"
       },
       {
         "node_id": "tls:633e..76cc",
         "address": "95.217.115.123:35000"
       },
       {
-        "node_id": "tls:6481..03d6",
-        "address": "65.109.28.177:35000"
+        "node_id": "tls:63b7..dd0a",
+        "address": "65.109.16.79:35151"
+      },
+      {
+        "node_id": "tls:65a6..2132",
+        "address": "76.91.193.251:42626"
+      },
+      {
+        "node_id": "tls:6844..1a32",
+        "address": "76.91.193.251:52756"
       },
       {
         "node_id": "tls:6897..f929",
@@ -439,32 +515,16 @@
         "address": "135.181.207.1:35000"
       },
       {
-        "node_id": "tls:6dc8..57b6",
-        "address": "95.217.144.180:35000"
-      },
-      {
         "node_id": "tls:6e7a..0179",
         "address": "5.9.77.72:35000"
-      },
-      {
-        "node_id": "tls:6eb9..3998",
-        "address": "65.109.158.239:35000"
       },
       {
         "node_id": "tls:71f9..8941",
         "address": "65.21.204.190:35000"
       },
       {
-        "node_id": "tls:75a9..989f",
-        "address": "65.21.227.126:35000"
-      },
-      {
-        "node_id": "tls:75c4..8114",
-        "address": "89.58.58.83:35000"
-      },
-      {
-        "node_id": "tls:76c3..42af",
-        "address": "65.21.88.62:35000"
+        "node_id": "tls:7218..1dde",
+        "address": "144.76.110.71:35000"
       },
       {
         "node_id": "tls:77f1..221e",
@@ -479,10 +539,6 @@
         "address": "18.210.121.229:35000"
       },
       {
-        "node_id": "tls:7955..e178",
-        "address": "93.186.201.14:35000"
-      },
-      {
         "node_id": "tls:7967..fd08",
         "address": "44.208.234.65:35000"
       },
@@ -491,12 +547,20 @@
         "address": "95.217.62.236:35000"
       },
       {
-        "node_id": "tls:7a30..f877",
-        "address": "89.58.58.148:35000"
+        "node_id": "tls:79e1..2dab",
+        "address": "65.21.233.95:35000"
       },
       {
         "node_id": "tls:7baf..df81",
         "address": "116.202.82.28:35000"
+      },
+      {
+        "node_id": "tls:7bb1..0272",
+        "address": "95.214.55.66:35000"
+      },
+      {
+        "node_id": "tls:7c1f..1fcc",
+        "address": "54.187.94.155:35000"
       },
       {
         "node_id": "tls:7d12..bb10",
@@ -511,6 +575,10 @@
         "address": "69.57.160.57:35000"
       },
       {
+        "node_id": "tls:7ff9..a73f",
+        "address": "142.132.131.170:35000"
+      },
+      {
         "node_id": "tls:80aa..e813",
         "address": "107.155.109.42:35000"
       },
@@ -521,6 +589,10 @@
       {
         "node_id": "tls:8225..4634",
         "address": "138.201.199.100:35000"
+      },
+      {
+        "node_id": "tls:848c..03ff",
+        "address": "65.21.77.17:35000"
       },
       {
         "node_id": "tls:861f..8588",
@@ -539,14 +611,6 @@
         "address": "65.21.204.180:35000"
       },
       {
-        "node_id": "tls:8812..8191",
-        "address": "148.251.79.153:35000"
-      },
-      {
-        "node_id": "tls:8909..6380",
-        "address": "212.90.121.143:35000"
-      },
-      {
         "node_id": "tls:89db..fda9",
         "address": "51.159.221.68:60344"
       },
@@ -555,20 +619,20 @@
         "address": "135.181.132.246:35000"
       },
       {
-        "node_id": "tls:8bca..edc6",
-        "address": "65.108.12.160:35000"
-      },
-      {
-        "node_id": "tls:8cb2..6efd",
-        "address": "88.99.141.148:35000"
+        "node_id": "tls:8ba3..a2ab",
+        "address": "35.90.81.203:35000"
       },
       {
         "node_id": "tls:8cf4..b892",
         "address": "190.102.106.18:35000"
       },
       {
-        "node_id": "tls:8da4..3ad0",
-        "address": "18.236.230.32:35000"
+        "node_id": "tls:8d82..66a5",
+        "address": "103.104.75.222:35000"
+      },
+      {
+        "node_id": "tls:8df1..5d51",
+        "address": "76.91.193.251:34148"
       },
       {
         "node_id": "tls:8e5e..b596",
@@ -579,44 +643,24 @@
         "address": "65.108.104.176:35000"
       },
       {
-        "node_id": "tls:8f84..e153",
-        "address": "89.58.53.128:35000"
-      },
-      {
         "node_id": "tls:8ff6..f14b",
         "address": "65.21.72.209:35000"
+      },
+      {
+        "node_id": "tls:90fb..7f9a",
+        "address": "34.254.29.100:35000"
       },
       {
         "node_id": "tls:9178..af33",
         "address": "65.108.4.145:35000"
       },
       {
-        "node_id": "tls:91c2..b30b",
-        "address": "65.21.238.244:35000"
-      },
-      {
         "node_id": "tls:92cd..9d00",
         "address": "3.23.146.54:35000"
       },
       {
-        "node_id": "tls:92e3..8fef",
-        "address": "23.88.0.163:35000"
-      },
-      {
-        "node_id": "tls:9318..6ce2",
-        "address": "54.193.230.87:35000"
-      },
-      {
-        "node_id": "tls:9390..96f7",
-        "address": "94.130.236.189:35000"
-      },
-      {
         "node_id": "tls:9532..d84c",
         "address": "95.216.247.164:45268"
-      },
-      {
-        "node_id": "tls:9573..f7bb",
-        "address": "5.45.108.18:35000"
       },
       {
         "node_id": "tls:9575..eee3",
@@ -628,7 +672,7 @@
       },
       {
         "node_id": "tls:95e1..8d7f",
-        "address": "157.90.34.213:35000"
+        "address": "157.90.34.213:52496"
       },
       {
         "node_id": "tls:9605..6f20",
@@ -643,44 +687,52 @@
         "address": "195.201.194.160:35000"
       },
       {
-        "node_id": "tls:9a52..fea7",
-        "address": "54.244.29.172:35000"
-      },
-      {
-        "node_id": "tls:9b26..aa2c",
-        "address": "65.108.199.53:35000"
-      },
-      {
         "node_id": "tls:9c59..dcb3",
         "address": "5.9.21.244:35000"
       },
       {
-        "node_id": "tls:9d74..b9e1",
-        "address": "88.99.89.209:35000"
+        "node_id": "tls:9e69..5cb8",
+        "address": "95.214.55.182:35000"
       },
       {
         "node_id": "tls:9ed5..b3ff",
         "address": "148.251.81.170:35000"
       },
       {
+        "node_id": "tls:9f88..562e",
+        "address": "65.21.236.44:35000"
+      },
+      {
         "node_id": "tls:a161..2a93",
         "address": "69.57.160.57:2340"
+      },
+      {
+        "node_id": "tls:a329..8d31",
+        "address": "142.132.212.178:35000"
       },
       {
         "node_id": "tls:a352..5f8e",
         "address": "144.76.238.62:35000"
       },
       {
-        "node_id": "tls:a4b1..ae41",
+        "node_id": "tls:a521..127a",
+        "address": "95.217.202.183:35000"
+      },
+      {
+        "node_id": "tls:a5ff..d344",
+        "address": "34.212.32.65:35000"
+      },
+      {
+        "node_id": "tls:a61f..cdc3",
+        "address": "135.181.114.117:35000"
+      },
+      {
+        "node_id": "tls:a948..abff",
+        "address": "144.76.116.118:35000"
+      },
+      {
+        "node_id": "tls:ab2b..78b2",
         "address": "65.108.41.164:35000"
-      },
-      {
-        "node_id": "tls:a81b..ee09",
-        "address": "89.58.30.252:35000"
-      },
-      {
-        "node_id": "tls:a928..1810",
-        "address": "144.76.110.71:35000"
       },
       {
         "node_id": "tls:ab62..8bd3",
@@ -699,10 +751,6 @@
         "address": "135.181.165.233:35000"
       },
       {
-        "node_id": "tls:ad04..8cb2",
-        "address": "65.108.1.61:35000"
-      },
-      {
         "node_id": "tls:ad74..e8c2",
         "address": "109.236.83.153:35000"
       },
@@ -711,12 +759,12 @@
         "address": "65.21.135.137:35000"
       },
       {
-        "node_id": "tls:ae5a..e608",
-        "address": "95.216.45.210:35000"
+        "node_id": "tls:adca..9b57",
+        "address": "65.108.1.61:35000"
       },
       {
-        "node_id": "tls:ae86..399c",
-        "address": "65.21.33.37:35000"
+        "node_id": "tls:ae5a..e608",
+        "address": "95.216.45.210:35000"
       },
       {
         "node_id": "tls:af99..338d",
@@ -731,16 +779,16 @@
         "address": "65.108.0.43:35000"
       },
       {
+        "node_id": "tls:b1f1..1a13",
+        "address": "51.158.202.24:35000"
+      },
+      {
         "node_id": "tls:b342..5b0c",
         "address": "35.169.197.193:35000"
       },
       {
-        "node_id": "tls:b34e..097d",
-        "address": "65.108.41.42:35000"
-      },
-      {
         "node_id": "tls:b3c6..0ced",
-        "address": "93.91.131.124:35000"
+        "address": "93.91.131.124:53158"
       },
       {
         "node_id": "tls:b3f1..f75c",
@@ -749,6 +797,18 @@
       {
         "node_id": "tls:b457..0e60",
         "address": "95.216.72.156:35000"
+      },
+      {
+        "node_id": "tls:b45a..5ced",
+        "address": "34.243.92.87:35000"
+      },
+      {
+        "node_id": "tls:b667..1afc",
+        "address": "46.4.20.60:35000"
+      },
+      {
+        "node_id": "tls:b6b3..0558",
+        "address": "65.108.10.150:35000"
       },
       {
         "node_id": "tls:b6ba..5cfe",
@@ -763,32 +823,24 @@
         "address": "95.216.67.144:35000"
       },
       {
-        "node_id": "tls:b77d..f8cd",
-        "address": "65.21.233.95:35000"
-      },
-      {
         "node_id": "tls:b7b6..1a2c",
         "address": "65.108.0.105:35000"
       },
       {
-        "node_id": "tls:b7ba..e84f",
-        "address": "95.216.102.235:35000"
-      },
-      {
-        "node_id": "tls:b7e6..1c80",
-        "address": "5.9.154.76:35000"
-      },
-      {
-        "node_id": "tls:b950..7ff8",
-        "address": "65.21.238.219:35000"
+        "node_id": "tls:b990..e107",
+        "address": "95.214.55.182:37016"
       },
       {
         "node_id": "tls:ba66..374a",
         "address": "159.69.75.172:35000"
       },
       {
-        "node_id": "tls:bc49..ea0a",
-        "address": "54.195.153.185:35000"
+        "node_id": "tls:baa0..a752",
+        "address": "65.108.12.160:35000"
+      },
+      {
+        "node_id": "tls:bc0d..7787",
+        "address": "65.109.28.177:35000"
       },
       {
         "node_id": "tls:bc80..b061",
@@ -799,84 +851,84 @@
         "address": "5.9.93.122:35000"
       },
       {
-        "node_id": "tls:bd4a..7af6",
-        "address": "65.108.10.150:35000"
-      },
-      {
         "node_id": "tls:bd53..f2b2",
         "address": "94.130.10.55:35000"
       },
       {
-        "node_id": "tls:bd9c..4e49",
-        "address": "13.36.53.201:35000"
+        "node_id": "tls:bf07..8eec",
+        "address": "213.202.212.222:37754"
       },
       {
-        "node_id": "tls:bf0d..c450",
-        "address": "65.21.227.101:35000"
+        "node_id": "tls:c02b..80de",
+        "address": "157.90.34.213:35318"
       },
       {
-        "node_id": "tls:c165..03c5",
-        "address": "54.191.55.103:35000"
+        "node_id": "tls:c063..98bb",
+        "address": "65.21.231.29:35000"
       },
       {
-        "node_id": "tls:c340..35df",
-        "address": "65.21.231.103:35000"
+        "node_id": "tls:c40d..2406",
+        "address": "185.207.251.220:35000"
+      },
+      {
+        "node_id": "tls:c4b8..ed0e",
+        "address": "95.216.45.26:46990"
+      },
+      {
+        "node_id": "tls:c545..03ad",
+        "address": "89.58.53.128:35000"
       },
       {
         "node_id": "tls:c683..3c48",
-        "address": "46.4.20.60:35000"
+        "address": "46.4.20.60:33966"
       },
       {
         "node_id": "tls:c753..13fa",
         "address": "142.132.208.215:35000"
       },
       {
+        "node_id": "tls:c7b1..e158",
+        "address": "65.21.238.224:35000"
+      },
+      {
+        "node_id": "tls:c7c6..b388",
+        "address": "76.91.193.251:35000"
+      },
+      {
         "node_id": "tls:c9a7..cf61",
-        "address": "185.207.251.220:35000"
+        "address": "185.207.251.220:54916"
       },
       {
         "node_id": "tls:ccb6..9038",
         "address": "65.108.0.148:35000"
       },
       {
-        "node_id": "tls:cdaf..6486",
-        "address": "37.120.164.130:35000"
+        "node_id": "tls:cdd0..726c",
+        "address": "95.216.10.102:35000"
       },
       {
         "node_id": "tls:cdd1..2009",
         "address": "65.21.236.40:35000"
       },
       {
-        "node_id": "tls:d12f..a1f8",
-        "address": "65.108.42.61:35000"
+        "node_id": "tls:ce22..9f0e",
+        "address": "213.133.111.30:35000"
       },
       {
-        "node_id": "tls:d1fb..7b78",
-        "address": "213.202.212.222:35000"
+        "node_id": "tls:ce6b..e49f",
+        "address": "94.130.236.189:35000"
       },
       {
-        "node_id": "tls:d20f..ae7c",
-        "address": "95.216.10.102:35000"
-      },
-      {
-        "node_id": "tls:d282..add0",
-        "address": "65.21.77.17:35000"
-      },
-      {
-        "node_id": "tls:d41a..2cd0",
-        "address": "3.15.154.50:35000"
-      },
-      {
-        "node_id": "tls:d496..f6f5",
-        "address": "65.21.236.44:35000"
-      },
-      {
-        "node_id": "tls:d49d..c143",
-        "address": "213.239.207.87:35000"
+        "node_id": "tls:d2a9..44b0",
+        "address": "65.21.231.87:35000"
       },
       {
         "node_id": "tls:d607..369a",
         "address": "34.130.124.223:35000"
+      },
+      {
+        "node_id": "tls:d608..e1f2",
+        "address": "138.201.122.209:35000"
       },
       {
         "node_id": "tls:d69a..6ede",
@@ -891,16 +943,16 @@
         "address": "65.108.46.187:35000"
       },
       {
-        "node_id": "tls:d87b..3cab",
-        "address": "65.21.238.224:35000"
+        "node_id": "tls:d7bf..1569",
+        "address": "65.21.235.239:35000"
       },
       {
-        "node_id": "tls:db58..1b47",
-        "address": "52.35.59.254:35000"
+        "node_id": "tls:dcd9..a6cb",
+        "address": "162.55.85.92:38534"
       },
       {
-        "node_id": "tls:db9c..5efc",
-        "address": "18.163.249.168:35000"
+        "node_id": "tls:dea0..ad36",
+        "address": "65.21.231.103:35000"
       },
       {
         "node_id": "tls:deb8..fb1d",
@@ -911,12 +963,20 @@
         "address": "95.216.96.62:35000"
       },
       {
-        "node_id": "tls:dff2..2403",
-        "address": "94.130.14.186:35000"
+        "node_id": "tls:e0ea..c376",
+        "address": "65.21.238.244:35000"
       },
       {
         "node_id": "tls:e2e0..5c22",
         "address": "3.35.9.254:35000"
+      },
+      {
+        "node_id": "tls:e3c4..0c25",
+        "address": "157.90.34.213:38930"
+      },
+      {
+        "node_id": "tls:e6bd..f8b8",
+        "address": "94.130.14.186:35000"
       },
       {
         "node_id": "tls:e6bf..d40f",
@@ -925,18 +985,6 @@
       {
         "node_id": "tls:e6d5..fb46",
         "address": "88.99.100.42:35000"
-      },
-      {
-        "node_id": "tls:e70f..088f",
-        "address": "135.181.57.13:35000"
-      },
-      {
-        "node_id": "tls:e749..e028",
-        "address": "65.21.231.29:35000"
-      },
-      {
-        "node_id": "tls:e7ec..5878",
-        "address": "195.3.222.184:35000"
       },
       {
         "node_id": "tls:e8e4..e46c",
@@ -949,6 +997,10 @@
       {
         "node_id": "tls:ec90..f512",
         "address": "95.216.67.162:35000"
+      },
+      {
+        "node_id": "tls:ed1d..cbeb",
+        "address": "35.92.155.144:35000"
       },
       {
         "node_id": "tls:ed2d..c530",
@@ -971,6 +1023,10 @@
         "address": "88.99.209.137:35000"
       },
       {
+        "node_id": "tls:f182..44bc",
+        "address": "93.91.131.124:35000"
+      },
+      {
         "node_id": "tls:f1a3..202b",
         "address": "213.133.103.49:35000"
       },
@@ -987,6 +1043,10 @@
         "address": "35.175.83.250:35000"
       },
       {
+        "node_id": "tls:f3b3..454d",
+        "address": "65.21.231.87:33440"
+      },
+      {
         "node_id": "tls:f46f..1523",
         "address": "138.201.17.176:35000"
       },
@@ -999,36 +1059,32 @@
         "address": "65.108.0.50:35000"
       },
       {
-        "node_id": "tls:f7fa..9234",
-        "address": "94.130.33.181:35000"
-      },
-      {
-        "node_id": "tls:f87d..52ac",
-        "address": "76.91.193.251:35000"
-      },
-      {
         "node_id": "tls:f8e1..3f1c",
         "address": "65.21.227.86:35000"
       },
       {
-        "node_id": "tls:f8f5..6e5d",
-        "address": "138.201.122.209:35000"
+        "node_id": "tls:f972..d114",
+        "address": "65.21.88.62:35000"
+      },
+      {
+        "node_id": "tls:fbaf..6431",
+        "address": "94.130.140.91:35000"
       },
       {
         "node_id": "tls:fbb4..2a10",
-        "address": "65.108.140.73:35000"
+        "address": "65.108.140.73:60422"
       },
       {
-        "node_id": "tls:fc57..b913",
-        "address": "142.132.131.170:35000"
+        "node_id": "tls:fc37..7893",
+        "address": "18.236.160.203:35000"
       },
       {
         "node_id": "tls:fd7a..9e7f",
         "address": "65.21.231.40:35000"
       },
       {
-        "node_id": "tls:fd97..ced2",
-        "address": "89.58.56.197:35000"
+        "node_id": "tls:fd8e..b084",
+        "address": "135.181.182.96:35000"
       },
       {
         "node_id": "tls:fd98..64a5",
@@ -1043,26 +1099,25 @@
         "address": "135.181.74.237:35000"
       },
       {
-        "node_id": "tls:ff3b..1b25",
-        "address": "89.58.59.217:35000"
-      },
-      {
         "node_id": "tls:ffc0..555b",
         "address": "95.217.228.224:35000"
       }
     ],
     "last_added_block_info": {
-      "hash": "8cd9b82ab53bcab84ece93fccf8c1b0bc1d9a679d7e61a4cc43443768f14cb1f",
-      "timestamp": "2023-05-18T08:43:43.488Z",
-      "era_id": 9181,
-      "height": 1732250,
-      "state_root_hash": "d923d8dc09643aa8be103e3a4d7257f09d5d09d0ad471fba8f7e8db6946a1c57",
-      "creator": "015da78bc6315643fbcf57d87a50853c67d8b271b615f38f6538f78a844cc4501d"
+      "hash": "1fe71703e73f88c6198cde59574656c8c3f2e64de231e9fdf22676937ded1505",
+      "timestamp": "2023-07-17T14:47:55.648Z",
+      "era_id": 9903,
+      "height": 1890732,
+      "state_root_hash": "a345414abb7b9c1ac24a014a50c62473a50d91fb0a9b26af3921639337a1b50a",
+      "creator": "0196948158bf5b35c0c84f680f110b8debaa4e7628e13ba336a95651a214d3b9bd"
     },
     "our_public_signing_key": "0145fb72c75e1b459839555d70356a5e6172e706efa204d86c86050e2f7878960f",
     "round_length": "32s 768ms",
-    "next_upgrade": null,
+    "next_upgrade": {
+      "activation_point": 9904,
+      "protocol_version": "1.5.2"
+    },
     "build_version": "1.4.15-039d438f2-casper-mainnet",
-    "uptime": "13days 20h 40m 2s 205ms"
+    "uptime": "2months 13days 5h 37m 7s 171ms"
   }
 }
