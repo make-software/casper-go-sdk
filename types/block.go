@@ -17,7 +17,7 @@ type BlockBody struct {
 	// List of `Deploy` hashes included in the block
 	DeployHashes []key.Hash `json:"deploy_hashes"`
 	// Public key of the validator that proposed the block
-	Proposer keypair.PublicKey `json:"proposer"`
+	Proposer Proposer `json:"proposer"`
 	// List of `TransferHash` hashes included in the block
 	TransferHashes []key.Hash `json:"transfer_hashes"`
 }
