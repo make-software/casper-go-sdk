@@ -100,7 +100,11 @@ func (v *PublicKey) Scan(value interface{}) error {
 	if !ok {
 		return errors.New("invalid scan value type")
 	}
-	tmp, err := NewPublicKeyFromBuffer(bytes.NewBuffer(data))
+
+	dst := make([]byte, len(data))
+	copy(dst, data)
+
+	tmp, err := NewPublicKeyFromBuffer(bytes.NewBuffer(dst))
 	if err != nil {
 		return err
 	}
