@@ -37,6 +37,10 @@ func NewPrivateKeyFromPEMFile(path string) (PrivateKey, error) {
 		return PrivateKey{}, errors.New("can't read file")
 	}
 
+	return NewPrivateKeyFromPEM(content)
+}
+
+func NewPrivateKeyFromPEM(content []byte) (PrivateKey, error) {
 	block, _ := pem.Decode(content)
 	// Trim PEM prefix
 	data := block.Bytes[PemFramePrivateKeyPrefixSize:]

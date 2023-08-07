@@ -210,7 +210,15 @@ func (k *Key) UnmarshalJSON(i []byte) error {
 }
 
 func (k *Key) Scan(value any) (err error) {
-	*k, err = NewKeyFromBuffer(bytes.NewBuffer(value.([]byte)))
+	data, ok := value.([]byte)
+	if !ok {
+		return errors.New("invalid scan value type")
+	}
+
+	dst := make([]byte, len(data))
+	copy(dst, data)
+
+	*k, err = NewKeyFromBuffer(bytes.NewBuffer(dst))
 	return err
 }
 
