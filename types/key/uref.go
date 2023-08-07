@@ -121,7 +121,11 @@ func (v *URef) Scan(value interface{}) error {
 	if !ok {
 		return errors.New("invalid scan value type")
 	}
-	tmp, err := NewURefFromBytes(data)
+
+	dst := make([]byte, len(data))
+	copy(dst, data)
+
+	tmp, err := NewURefFromBytes(dst)
 	if err != nil {
 		return err
 	}
