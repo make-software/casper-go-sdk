@@ -82,9 +82,9 @@ type ParamQueryGlobalState struct {
 }
 
 type ParamQueryGlobalStateID struct {
-	StateRootHash string `json:"StateRootHash,omitempty"`
-	BlockHash     string `json:"BlockHash,omitempty"`
-	BlockHeight   uint64 `json:"BlockHeight,omitempty"`
+	StateRootHash string  `json:"StateRootHash,omitempty"`
+	BlockHash     string  `json:"BlockHash,omitempty"`
+	BlockHeight   *uint64 `json:"BlockHeight,omitempty"`
 }
 
 func NewQueryGlobalStateParam(key string, path []string, id ParamQueryGlobalStateID) ParamQueryGlobalState {
@@ -101,8 +101,8 @@ type PutDeployRequest struct {
 }
 
 type BlockIdentifier struct {
-	Hash   string `json:"Hash,omitempty"`
-	Height uint64 `json:"Height,omitempty"`
+	Hash   string  `json:"Hash,omitempty"`
+	Height *uint64 `json:"Height,omitempty"`
 }
 
 type ParamBlockIdentifier struct {
@@ -110,7 +110,7 @@ type ParamBlockIdentifier struct {
 }
 
 func NewParamBlockByHeight(height uint64) ParamBlockIdentifier {
-	return ParamBlockIdentifier{BlockIdentifier: BlockIdentifier{Height: height}}
+	return ParamBlockIdentifier{BlockIdentifier: BlockIdentifier{Height: &height}}
 }
 
 func NewParamBlockByHash(hash string) ParamBlockIdentifier {

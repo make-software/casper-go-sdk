@@ -22,3 +22,16 @@ func Test_Transfer_MarshalUnmarshal_ShouldReturnSameResult(t *testing.T) {
 	assert.NoError(t, err)
 	assert.JSONEq(t, string(fixture), string(result))
 }
+
+func Test_Transfer_WithEmptyReceiver_ShouldReturnSameResult(t *testing.T) {
+	fixture, err := os.ReadFile("../data/transfer/transfer_empty_receiver.json")
+	assert.NoError(t, err)
+
+	var transfer types.Transfer
+	err = json.Unmarshal(fixture, &transfer)
+	assert.NoError(t, err)
+
+	result, err := json.Marshal(transfer)
+	assert.NoError(t, err)
+	assert.JSONEq(t, string(fixture), string(result))
+}

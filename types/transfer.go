@@ -18,5 +18,5 @@ type Transfer struct {
 	// Target purse
 	Target key.URef `json:"target"`
 	// Account to which funds are transferred
-	To key.AccountHash `json:"to"`
+	To *key.AccountHash `json:"to"`
 }
