@@ -54,3 +54,10 @@ func Test_UnmarshalRpcRequest_withoutID(t *testing.T) {
 	require.NoError(t, err)
 	assert.JSONEq(t, data, string(result))
 }
+
+func Test_NewParamBlockByHeight_withZero(t *testing.T) {
+	tmp := rpc.NewParamBlockByHeight(0)
+	res, err := json.Marshal(tmp)
+	require.NoError(t, err)
+	assert.JSONEq(t, `{"block_identifier":{"Height":0}}`, string(res))
+}
