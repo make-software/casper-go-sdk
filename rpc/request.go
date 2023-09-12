@@ -55,7 +55,7 @@ type RpcRequest struct {
 	// Version of the RPC protocol in use
 	Version string `json:"jsonrpc"`
 	// Id of the RPC request that can be correlated with the equivalent Id in the RPC response
-	ID     string      `json:"id,omitempty"`
+	ID     *IDValue    `json:"id,omitempty"`
 	Method Method      `json:"method"`
 	Params interface{} `json:"params"`
 }
@@ -63,7 +63,7 @@ type RpcRequest struct {
 func DefaultRpcRequest(method Method, params interface{}) RpcRequest {
 	return RpcRequest{
 		Version: ApiVersion,
-		ID:      "1",
+		ID:      NewIDFromString("1"),
 		Method:  method,
 		Params:  params,
 	}

@@ -249,7 +249,7 @@ func (c *client) GetChainspec(ctx context.Context) (InfoGetChainspecResult, erro
 func (c *client) processRequest(ctx context.Context, method Method, params interface{}, result any) error {
 	request := DefaultRpcRequest(method, params)
 	if reqID := GetReqIdCtx(ctx); reqID != "0" {
-		request.ID = reqID
+		request.ID = NewIDFromString(reqID)
 	}
 	resp, err := c.handler.ProcessCall(ctx, request)
 	if err != nil {

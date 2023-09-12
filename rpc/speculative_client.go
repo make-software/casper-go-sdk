@@ -23,7 +23,7 @@ func (c SpeculativeClient) SpeculativeExec(ctx context.Context, deploy types.Dep
 		BlockIdentifier: identifier,
 	})
 	if reqID := GetReqIdCtx(ctx); reqID != "0" {
-		request.ID = reqID
+		request.ID = NewIDFromString(reqID)
 	}
 	resp, err := c.handler.ProcessCall(ctx, request)
 	if err != nil {
