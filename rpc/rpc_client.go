@@ -98,6 +98,15 @@ func (c *client) GetAccountInfoByBlochHeight(ctx context.Context, blockHeight ui
 }
 
 func (c *client) GetDictionaryItem(ctx context.Context, stateRootHash *string, uref, key string) (StateGetDictionaryResult, error) {
+	return c.GetDictionaryItemByIdentifier(ctx, stateRootHash, ParamDictionaryIdentifier{
+		URef: &ParamDictionaryIdentifierURef{
+			DictionaryItemKey: key,
+			SeedUref:          uref,
+		},
+	})
+}
+
+func (c *client) GetDictionaryItemByIdentifier(ctx context.Context, stateRootHash *string, identifier ParamDictionaryIdentifier) (StateGetDictionaryResult, error) {
 	if stateRootHash == nil {
 		latestHashResult, err := c.GetStateRootHashLatest(ctx)
 		if err != nil {
@@ -107,7 +116,10 @@ func (c *client) GetDictionaryItem(ctx context.Context, stateRootHash *string, u
 		stateRootHash = &latestHashString
 	}
 	var result StateGetDictionaryResult
-	return result, c.processRequest(ctx, MethodGetDictionaryItem, NewParamStateDictionaryItem(*stateRootHash, uref, key), &result)
+	return result, c.processRequest(ctx, MethodGetDictionaryItem, map[string]interface{}{
+		"state_root_hash":       *stateRootHash,
+		"dictionary_identifier": identifier,
+	}, &result)
 }
 
 func (c *client) GetAccountBalance(ctx context.Context, stateRootHash *string, purseURef string) (StateGetBalanceResult, error) {

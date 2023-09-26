@@ -54,10 +54,12 @@ type ClientInformational interface {
 	// GetDeployFinalizedApproval returns Deploy with the finalized approvals substituted.
 	GetDeployFinalizedApproval(ctx context.Context, hash string) (InfoGetDeployResult, error)
 	// GetDictionaryItem returns an item from a Dictionary.
-	// Every dictionary has a seed URef, findable by using a dictionary_identifier.
 	// The address of a stored value is the blake2b hash of the seed URef and the byte representation of the dictionary key.
 	// If the param stateRootHash is nil, the client will make an additional RPC call to retrieve the latest stateRootHash.
 	GetDictionaryItem(ctx context.Context, stateRootHash *string, uref, key string) (StateGetDictionaryResult, error)
+	// GetDictionaryItemByIdentifier returns an item from a Dictionary.
+	// Every dictionary has a seed URef, findable by using a dictionary_identifier.
+	GetDictionaryItemByIdentifier(ctx context.Context, stateRootHash *string, identifier ParamDictionaryIdentifier) (StateGetDictionaryResult, error)
 	// GetStateItem allows to get item from the global state
 	// If the param stateRootHash is nil, the client will make an additional RPC call to retrieve the latest stateRootHash.
 	// Deprecated: use QueryGlobalStateByStateHash instead

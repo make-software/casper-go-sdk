@@ -1,14 +1,15 @@
 package rpc
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
 
 type RpcError struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
-	Data    string `json:"data,omitempty"`
+	Code    int             `json:"code"`
+	Message string          `json:"message"`
+	Data    json.RawMessage `json:"data,omitempty"`
 }
 
 func (h *RpcError) Error() string {
