@@ -24,8 +24,8 @@ type StateGetAuctionInfoResult struct {
 }
 
 type StateGetBalanceResult struct {
-	ApiVersion   string `json:"api_version"`
-	BalanceValue uint64 `json:"balance_value,string"`
+	ApiVersion   string          `json:"api_version"`
+	BalanceValue clvalue.UInt512 `json:"balance_value"`
 }
 
 type StateGetAccountInfo struct {
