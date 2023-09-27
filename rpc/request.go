@@ -117,16 +117,28 @@ func NewParamBlockByHash(hash string) ParamBlockIdentifier {
 	return ParamBlockIdentifier{BlockIdentifier: BlockIdentifier{Hash: hash}}
 }
 
-func NewParamStateDictionaryItem(stateRootHash, uref, key string) map[string]interface{} {
-	return map[string]interface{}{
-		"state_root_hash": stateRootHash,
-		"dictionary_identifier": map[string]interface{}{
-			"URef": map[string]string{
-				"dictionary_item_key": key,
-				"seed_uref":           uref,
-			},
-		},
-	}
+type ParamDictionaryIdentifier struct {
+	AccountNamedKey  *AccountNamedKey                           `json:"AccountNamedKey,omitempty"`
+	ContractNamedKey *ParamDictionaryIdentifierContractNamedKey `json:"ContractNamedKey,omitempty"`
+	URef             *ParamDictionaryIdentifierURef             `json:"URef,omitempty"`
+	Dictionary       *string                                    `json:"Dictionary,omitempty"`
+}
+
+type AccountNamedKey struct {
+	Key               string `json:"key"`
+	DictionaryName    string `json:"dictionary_name"`
+	DictionaryItemKey string `json:"dictionary_item_key"`
+}
+
+type ParamDictionaryIdentifierContractNamedKey struct {
+	Key               string `json:"key"`
+	DictionaryName    string `json:"dictionary_name"`
+	DictionaryItemKey string `json:"dictionary_item_key"`
+}
+
+type ParamDictionaryIdentifierURef struct {
+	DictionaryItemKey string `json:"dictionary_item_key"`
+	SeedUref          string `json:"seed_uref"`
 }
 
 type SpeculativeExecParams struct {

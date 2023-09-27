@@ -204,7 +204,7 @@ func Test_DefaultClient_GetStateBalance(t *testing.T) {
 		"uref-7b12008bb757ee32caefb3f7a1f77d9f659ee7a4e21ad4950c4e0294000492eb-007",
 	)
 	require.NoError(t, err)
-	assert.NotEmpty(t, result.BalanceValue)
+	assert.Equal(t, "93000000000", result.BalanceValue.String())
 }
 
 func Test_DefaultClient_GetStateBalance_WithEmptyStateRootHash(t *testing.T) {
