@@ -42,6 +42,12 @@ func Test_KeyEraID_ToBytes(t *testing.T) {
 	assert.Equal(t, "050004000000000000", hex.EncodeToString(res.Bytes()))
 }
 
+func Test_KeyEraSummary_ToBytes(t *testing.T) {
+	res, err := key.NewKey("era-summary-0000000000000000000000000000000000000000000000000000000000000000")
+	require.NoError(t, err)
+	assert.Equal(t, "0b0000000000000000000000000000000000000000000000000000000000000000", hex.EncodeToString(res.Bytes()))
+}
+
 func Test_KeyEraID_FromBytesByType(t *testing.T) {
 	source := "050004000000000000"
 	decoded, err := hex.DecodeString(source)
