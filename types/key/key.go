@@ -10,6 +10,30 @@ import (
 	"strings"
 )
 
+type PrefixName = string
+
+const (
+	PrefixNameAccount                PrefixName = "account-hash-"
+	PrefixNameHash                   PrefixName = "hash-"
+	PrefixNameContractPackageWasm    PrefixName = "contract-package-wasm"
+	PrefixNameContractPackage        PrefixName = "contract-package-"
+	PrefixNameContractWasm           PrefixName = "contract-wasm-"
+	PrefixNameContract               PrefixName = "contract-"
+	PrefixNameURef                   PrefixName = "uref-"
+	PrefixNameTransfer               PrefixName = "transfer-"
+	PrefixNameDeployInfo             PrefixName = "deploy-"
+	PrefixNameEraId                  PrefixName = "era-"
+	PrefixNameBid                    PrefixName = "bid-"
+	PrefixNameBalance                PrefixName = "balance-"
+	PrefixNameWithdraw               PrefixName = "withdraw-"
+	PrefixNameDictionary             PrefixName = "dictionary-"
+	PrefixNameSystemContractRegistry PrefixName = "system-contract-registry-"
+	PrefixNameEraSummary             PrefixName = "era-summary-"
+	PrefixNameUnbond                 PrefixName = "unbond-"
+	PrefixNameChainspecRegistry      PrefixName = "chainspec-registry-"
+	PrefixNameChecksumRegistry       PrefixName = "checksum-registry-"
+)
+
 var ErrNotFoundPrefix = errors.New("prefix is not found")
 
 type TypeID = byte
@@ -26,6 +50,7 @@ const (
 	TypeIDWithdraw
 	TypeIDDictionary
 	TypeIDSystemContractRegistry
+	TypeIDEraSummary
 	TypeIDUnbond
 	TypeIDChainspecRegistry
 	TypeIDChecksumRegistry
@@ -44,8 +69,9 @@ const (
 	TypeNameBalance                TypeName = "Balance"
 	TypeNameWithdraw               TypeName = "Withdraw"
 	TypeNameDictionary             TypeName = "Dictionary"
-	TypeNameUnbond                 TypeName = "Unbond"
 	TypeNameSystemContractRegistry TypeName = "SystemContractRegistry"
+	TypeNameEraSummary             TypeName = "EraSummary"
+	TypeNameUnbond                 TypeName = "Unbond"
 	TypeNameChainspecRegistry      TypeName = "ChainspecRegistry"
 	TypeNameChecksumRegistry       TypeName = "ChecksumRegistry"
 )
@@ -61,8 +87,9 @@ var typeIDbyNames = map[TypeName]TypeID{
 	TypeNameBalance:                TypeIDBalance,
 	TypeNameWithdraw:               TypeIDWithdraw,
 	TypeNameDictionary:             TypeIDDictionary,
-	TypeNameUnbond:                 TypeIDUnbond,
 	TypeNameSystemContractRegistry: TypeIDSystemContractRegistry,
+	TypeNameEraSummary:             TypeIDEraSummary,
+	TypeNameUnbond:                 TypeIDUnbond,
 	TypeNameChainspecRegistry:      TypeIDChainspecRegistry,
 	TypeNameChecksumRegistry:       TypeIDChecksumRegistry,
 }
@@ -78,8 +105,9 @@ var keyIDbyPrefix = map[PrefixName]TypeID{
 	PrefixNameBalance:                TypeIDBalance,
 	PrefixNameWithdraw:               TypeIDWithdraw,
 	PrefixNameDictionary:             TypeIDDictionary,
-	PrefixNameUnbond:                 TypeIDUnbond,
 	PrefixNameSystemContractRegistry: TypeIDSystemContractRegistry,
+	PrefixNameEraSummary:             TypeIDEraSummary,
+	PrefixNameUnbond:                 TypeIDUnbond,
 	PrefixNameChainspecRegistry:      TypeIDChainspecRegistry,
 	PrefixNameChecksumRegistry:       TypeIDChecksumRegistry,
 }
@@ -108,6 +136,8 @@ type Key struct {
 	Dictionary *Hash
 	// A `Key` variant under which system contract hashes are stored.
 	SystemContactRegistry *Hash
+	// A `Key` under which we store current era info.
+	EraSummary *Hash
 	// A `Key` under which we store unbond information.
 	Unbond *AccountHash
 	// A `Key` variant under which chainspec and other hashes are stored.
@@ -132,6 +162,8 @@ func (k Key) Bytes() []byte {
 		return append([]byte{TypeIDChainspecRegistry}, k.ChainspecRegistry.Bytes()...)
 	case TypeIDChecksumRegistry:
 		return append([]byte{TypeIDChecksumRegistry}, k.ChecksumRegistry.Bytes()...)
+	case TypeIDEraSummary:
+		return append([]byte{TypeIDEraSummary}, k.EraSummary.Bytes()...)
 	case TypeIDAccount:
 		return append([]byte{TypeIDAccount}, k.Account.Bytes()...)
 	case TypeIDHash:
@@ -180,6 +212,8 @@ func (k Key) ToPrefixedString() string {
 		return PrefixNameWithdraw + k.Withdraw.ToHex()
 	case TypeIDSystemContractRegistry:
 		return PrefixNameSystemContractRegistry + k.SystemContactRegistry.ToHex()
+	case TypeIDEraSummary:
+		return PrefixNameEraSummary + k.EraSummary.ToHex()
 	case TypeIDUnbond:
 		return PrefixNameUnbond + k.Unbond.ToHex()
 	case TypeIDChainspecRegistry:
@@ -230,6 +264,10 @@ func findPrefixByMap(source string, prefixes map[PrefixName]TypeID) PrefixName {
 	var prefix PrefixName
 	for one := range prefixes {
 		if strings.HasPrefix(source, one) {
+			// handle the special case when prefix era- is the part of the prefix era-summary-
+			if one == PrefixNameEraId && strings.HasPrefix(source, PrefixNameEraSummary) {
+				return PrefixNameEraSummary
+			}
 			prefix = one
 			break
 		}
@@ -323,6 +361,10 @@ func createByType(source string, typeID TypeID) (result Key, err error) {
 		hash, err := NewHash(strings.TrimPrefix(source, PrefixNameSystemContractRegistry))
 		result.SystemContactRegistry = &hash
 		return result, err
+	case TypeIDEraSummary:
+		hash, err := NewHash(strings.TrimPrefix(source, PrefixNameEraSummary))
+		result.EraSummary = &hash
+		return result, err
 	case TypeIDUnbond:
 		data, err := NewAccountHash(strings.TrimPrefix(source, PrefixNameUnbond))
 		result.Unbond = &data
@@ -394,6 +436,10 @@ func NewKeyFromBuffer(buffer *bytes.Buffer) (result Key, err error) {
 	case TypeIDURef:
 		data, err := NewURefFromBuffer(buffer)
 		result.URef = &data
+		return result, err
+	case TypeIDEraSummary:
+		data, err := NewByteHashFromBuffer(buffer)
+		result.EraSummary = &data
 		return result, err
 	case TypeIDUnbond:
 		data, err := NewByteHashFromBuffer(buffer)
