@@ -49,6 +49,6 @@ func Test_withOneWorker_shouldProcessRequest(t *testing.T) {
 		result = true
 		return nil
 	})
-	assert.Error(t, client.Start(context.Background(), 0))
+	assert.Error(t, client.Start(context.Background(), -1))
 	assert.True(t, result)
 }

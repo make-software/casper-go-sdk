@@ -6,6 +6,8 @@ import (
 	"github.com/make-software/casper-go-sdk/types/key"
 )
 
+var ErrNamedKeyNotFound = errors.New("NamedKey not found")
+
 // NamedKey is a key in an Account or Contract.
 type NamedKey struct {
 	// The name of the entry.
@@ -31,5 +33,5 @@ func (k NamedKeys) Find(target string) (key.Key, error) {
 		}
 	}
 
-	return key.Key{}, errors.New("NamedKey not found")
+	return key.Key{}, ErrNamedKeyNotFound
 }
