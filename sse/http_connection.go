@@ -34,7 +34,7 @@ func (c *HttpConnection) Request(ctx context.Context, lastEventID int) (*http.Re
 	req.Header.Set("Accept", "text/event-stream")
 	req.Header.Set("Connection", "keep-alive")
 
-	if lastEventID != 0 {
+	if lastEventID >= 0 {
 		query := req.URL.Query()
 		query.Add("start_from", strconv.Itoa(lastEventID))
 		req.URL.RawQuery = query.Encode()
