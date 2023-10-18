@@ -1,6 +1,8 @@
 package casper
 
-import "github.com/shopspring/decimal"
+import (
+	"github.com/shopspring/decimal"
+)
 
 var MotesToCSPRRate = decimal.NewFromInt(1000000000)
 

@@ -1,6 +1,8 @@
 package types
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 // StoredValue is a wrapper class for different types of values stored in the global state.
 type StoredValue struct {

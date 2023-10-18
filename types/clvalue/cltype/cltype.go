@@ -1,6 +1,8 @@
 package cltype
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 const Int32ByteSize = 4
 const Int64ByteSize = 8
