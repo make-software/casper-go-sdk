@@ -23,8 +23,8 @@ func (v PrivateKey) PublicKey() PublicKey {
 }
 
 // Sign creates a Casper compatible cryptographic signature, including the algorithm tag prefix
-func (v PrivateKey) Sign(mes []byte) ([]byte, error) {
-	sign, err := v.priv.Sign(mes)
+func (v PrivateKey) Sign(msg []byte) ([]byte, error) {
+	sign, err := v.priv.Sign(msg)
 	if err != nil {
 		return nil, err
 	}
@@ -83,11 +83,8 @@ func GeneratePrivateKey(algorithm keyAlgorithm) (PrivateKey, error) {
 			return PrivateKey{}, err
 		}
 	case SECP256K1:
-		data, _, err := secp256k1.NewPemPair()
+		priv, err = secp256k1.GeneratePrivateKey()
 		if err != nil {
-			return PrivateKey{}, err
-		}
-		if priv, err = secp256k1.NewPrivateKeyFromPem(data); err != nil {
 			return PrivateKey{}, err
 		}
 	}
