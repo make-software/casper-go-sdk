@@ -1,6 +1,8 @@
 package cltype
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type Dynamic struct {
 	TypeID TypeID

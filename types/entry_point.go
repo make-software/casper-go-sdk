@@ -1,6 +1,8 @@
 package types
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 // EntryPointType defines whether the code runs in the contract's or the session context.
 type EntryPointType string
