@@ -18,5 +18,5 @@ type UnbondingPurse struct {
 	// The original validator's public key.
 	ValidatorPublicKey keypair.PublicKey `json:"validator_public_key"`
 	// The re-delegated validator's public key.
-	NewValidator keypair.PublicKey `json:"new_validator"`
+	NewValidator *keypair.PublicKey `json:"new_validator"`
 }
