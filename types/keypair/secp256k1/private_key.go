@@ -19,7 +19,8 @@ func (v PrivateKey) PublicKeyBytes() []byte {
 
 func (v PrivateKey) Sign(mes []byte) ([]byte, error) {
 	hash := sha256.Sum256(mes)
-	return ecdsa.Sign(v.key, hash[:]).Serialize(), nil
+	// Return the signature as a concatenation of the R and S values in big-endian to match the old signature format.
+	return ecdsa.SignCompact(v.key, hash[:], false)[1:], nil
 }
 
 func NewPrivateKeyFromPemFile(path string) (PrivateKey, error) {

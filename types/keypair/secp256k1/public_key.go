@@ -22,10 +22,26 @@ func (v PublicKey) Bytes() []byte {
 // VerifySignature verifies a signature of the form R || S.
 // It rejects signatures which are not in lower-S form.
 func (v PublicKey) VerifySignature(msg []byte, sigStr []byte) bool {
-	signature, err := ecdsa.ParseDERSignature(sigStr)
-	if err != nil {
-		log.Println(err)
-		return false
+	var signature *ecdsa.Signature
+	var err error
+	// if old signature len = 64, parse it as raw signature
+	if len(sigStr) == 64 {
+		// Split the signature bytes into r and s values and parse them into ModNScalar
+		var r, s secp256k1.ModNScalar
+		var bytesR [32]byte
+		var bytesS [32]byte
+		copy(bytesR[:], sigStr[:32])
+		copy(bytesS[:], sigStr[32:])
+		r.SetBytes(&bytesR)
+		s.SetBytes(&bytesS)
+
+		signature = ecdsa.NewSignature(&r, &s)
+	} else {
+		signature, err = ecdsa.ParseDERSignature(sigStr)
+		if err != nil {
+			log.Println(err)
+			return false
+		}
 	}
 	hash := sha256.Sum256(msg)
 	return signature.Verify(hash[:], v.key)
