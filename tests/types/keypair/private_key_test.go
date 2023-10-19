@@ -41,3 +41,23 @@ func Test_SECPKey_CreateAndValidateRawSignature(t *testing.T) {
 	err = privateKeyData.PublicKey().VerifyRawSignature(secretMessage, signature)
 	assert.NoError(t, err)
 }
+
+func Test_ED25PKey_CreateAndValidateSignature(t *testing.T) {
+	secretMessage := []byte("Enigmatic Shadows Concealing Ancient Whispers")
+	privateKeyData, err := keypair.GeneratePrivateKey(keypair.ED25519)
+	require.NoError(t, err)
+	signature, err := privateKeyData.Sign(secretMessage)
+	require.NoError(t, err)
+	err = privateKeyData.PublicKey().VerifySignature(secretMessage, signature)
+	assert.NoError(t, err)
+}
+
+func Test_ED25Key_CreateAndValidateRawSignature(t *testing.T) {
+	secretMessage := []byte("Enigmatic Shadows Concealing Ancient Whispers")
+	privateKeyData, err := keypair.GeneratePrivateKey(keypair.ED25519)
+	require.NoError(t, err)
+	signature, err := privateKeyData.RawSign(secretMessage)
+	require.NoError(t, err)
+	err = privateKeyData.PublicKey().VerifyRawSignature(secretMessage, signature)
+	assert.NoError(t, err)
+}
