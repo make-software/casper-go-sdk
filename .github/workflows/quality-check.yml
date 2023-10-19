@@ -27,7 +27,7 @@ jobs:
       - name: Setup GO environment
         run: |
           go mod vendor
-          go install -v github.com/incu6us/goimports-reviser/v3.5.6
+          go install -v github.com/incu6us/goimports-reviser/v3@v3.5.6
           go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.50.1
 
       - name: Format
