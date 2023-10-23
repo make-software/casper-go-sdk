@@ -1,11 +1,14 @@
 package types
 
-import "github.com/make-software/casper-go-sdk/types/key"
+import (
+	"github.com/make-software/casper-go-sdk/types/clvalue"
+	"github.com/make-software/casper-go-sdk/types/key"
+)
 
 // Transfer represents a transfer from one purse to another
 type Transfer struct {
 	// Transfer amount
-	Amount uint64 `json:"amount,string"`
+	Amount clvalue.UInt512 `json:"amount"`
 	// Deploy that created the transfer
 	DeployHash key.Hash `json:"deploy_hash"`
 	// Account hash from which transfer was executed

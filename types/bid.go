@@ -1,6 +1,7 @@
 package types
 
 import (
+	"github.com/make-software/casper-go-sdk/types/clvalue"
 	"github.com/make-software/casper-go-sdk/types/key"
 	"github.com/make-software/casper-go-sdk/types/keypair"
 )
@@ -14,7 +15,7 @@ type baseBid struct {
 	// `true` if validator has been "evicted"
 	Inactive bool `json:"inactive"`
 	// The amount of tokens staked by a validator (not including delegators).
-	StakedAmount uint64 `json:"staked_amount,string"`
+	StakedAmount clvalue.UInt512 `json:"staked_amount"`
 }
 
 // Bid is an entry stored in the Global state and representing a bid.
@@ -43,7 +44,7 @@ type baseDelegator struct {
 	// The purse that was used for delegating.
 	BondingPurse key.URef `json:"bonding_purse"`
 	// Amount of Casper token (in motes) delegated
-	StakedAmount uint64 `json:"staked_amount,string"`
+	StakedAmount clvalue.UInt512 `json:"staked_amount"`
 }
 
 // Delegator is associated with the given validator.
@@ -68,6 +69,6 @@ type AuctionDelegators struct {
 
 // VestingSchedule for a genesis validator.
 type VestingSchedule struct {
-	InitialReleaseTimestampMillis uint64   `json:"initial_release_timestamp_millis"`
-	LockedAmounts                 []uint64 `json:"locked_amounts"`
+	InitialReleaseTimestampMillis uint64            `json:"initial_release_timestamp_millis"`
+	LockedAmounts                 []clvalue.UInt512 `json:"locked_amounts"`
 }
