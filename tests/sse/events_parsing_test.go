@@ -1,6 +1,7 @@
 package sse
 
 import (
+	"encoding/json"
 	"os"
 	"testing"
 
@@ -96,4 +97,15 @@ func Test_RawEvent_ParseAsStepEvent(t *testing.T) {
 	res, err := rawEvent.ParseAsStepEvent()
 	require.NoError(t, err)
 	assert.False(t, res.Step.ExecutionEffect.Transforms[0].Transform.IsWriteTransfer())
+}
+
+func Test_RawEvent_ParseAndMarshalStepEvent(t *testing.T) {
+	data, err := os.ReadFile("../data/sse/step_event.json")
+	require.NoError(t, err)
+	rawEvent := sse.RawEvent{
+		Data: data,
+	}
+	res, err := rawEvent.ParseAsStepEvent()
+	_, err = json.Marshal(res)
+	assert.NoError(t, err)
 }
