@@ -70,6 +70,10 @@ func (t *Transform) IsWriteWithdraw() bool {
 	return strings.Contains(string(*t), "WriteWithdraw")
 }
 
+func (t *Transform) IsWriteUnbonding() bool {
+	return strings.Contains(string(*t), "WriteUnbonding")
+}
+
 func (t *Transform) IsWriteCLValue() bool {
 	return bytes.Contains(*t, []byte("\"WriteCLValue\""))
 }
@@ -80,7 +84,7 @@ func (t *Transform) IsWriteBid() bool {
 
 func (t *Transform) ParseAsWriteWithdraws() ([]UnbondingPurse, error) {
 	type RawWriteWithdrawals struct {
-		Withdraws []UnbondingPurse `json:"WriteWithdraw"`
+		UnbondingPurses []UnbondingPurse `json:"WriteWithdraw"`
 	}
 
 	jsonRes := RawWriteWithdrawals{}
@@ -88,7 +92,20 @@ func (t *Transform) ParseAsWriteWithdraws() ([]UnbondingPurse, error) {
 		return nil, err
 	}
 
-	return jsonRes.Withdraws, nil
+	return jsonRes.UnbondingPurses, nil
+}
+
+func (t *Transform) ParseAsWriteUnbondings() ([]UnbondingPurse, error) {
+	type RawWriteUnbondings struct {
+		UnbondingPurses []UnbondingPurse `json:"WriteUnbonding"`
+	}
+
+	jsonRes := RawWriteUnbondings{}
+	if err := json.Unmarshal(*t, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	return jsonRes.UnbondingPurses, nil
 }
 
 func (t *Transform) ParseAsWriteCLValue() (*Argument, error) {
