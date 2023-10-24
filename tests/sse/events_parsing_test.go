@@ -106,6 +106,7 @@ func Test_RawEvent_ParseAndMarshalStepEvent(t *testing.T) {
 		Data: data,
 	}
 	res, err := rawEvent.ParseAsStepEvent()
+	require.NoError(t, err)
 	_, err = json.Marshal(res)
 	assert.NoError(t, err)
 }
