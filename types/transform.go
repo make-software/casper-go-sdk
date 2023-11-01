@@ -6,6 +6,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/make-software/casper-go-sdk/types/clvalue"
 	"github.com/make-software/casper-go-sdk/types/key"
 )
 
@@ -22,7 +23,7 @@ type WriteTransfer struct {
 	To         *key.AccountHash `json:"to"`
 	DeployHash key.Hash         `json:"deploy_hash"`
 	From       key.AccountHash  `json:"from"`
-	Amount     uint64           `json:"amount,string"`
+	Amount     clvalue.UInt512  `json:"amount"`
 	Source     key.URef         `json:"source"`
 	Target     key.URef         `json:"target"`
 	Gas        string           `json:"gas"`
@@ -70,6 +71,10 @@ func (t *Transform) IsWriteWithdraw() bool {
 	return strings.Contains(string(*t), "WriteWithdraw")
 }
 
+func (t *Transform) IsWriteUnbonding() bool {
+	return strings.Contains(string(*t), "WriteUnbonding")
+}
+
 func (t *Transform) IsWriteCLValue() bool {
 	return bytes.Contains(*t, []byte("\"WriteCLValue\""))
 }
@@ -78,9 +83,17 @@ func (t *Transform) IsWriteBid() bool {
 	return strings.Contains(string(*t), "WriteBid")
 }
 
+func (t *Transform) IsAddUint512() bool {
+	return strings.Contains(string(*t), "AddUInt512")
+}
+
+func (t *Transform) IsWriteDeployInfo() bool {
+	return strings.Contains(string(*t), "WriteDeployInfo")
+}
+
 func (t *Transform) ParseAsWriteWithdraws() ([]UnbondingPurse, error) {
 	type RawWriteWithdrawals struct {
-		Withdraws []UnbondingPurse `json:"WriteWithdraw"`
+		UnbondingPurses []UnbondingPurse `json:"WriteWithdraw"`
 	}
 
 	jsonRes := RawWriteWithdrawals{}
@@ -88,7 +101,20 @@ func (t *Transform) ParseAsWriteWithdraws() ([]UnbondingPurse, error) {
 		return nil, err
 	}
 
-	return jsonRes.Withdraws, nil
+	return jsonRes.UnbondingPurses, nil
+}
+
+func (t *Transform) ParseAsWriteUnbondings() ([]UnbondingPurse, error) {
+	type RawWriteUnbondings struct {
+		UnbondingPurses []UnbondingPurse `json:"WriteUnbonding"`
+	}
+
+	jsonRes := RawWriteUnbondings{}
+	if err := json.Unmarshal(*t, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	return jsonRes.UnbondingPurses, nil
 }
 
 func (t *Transform) ParseAsWriteCLValue() (*Argument, error) {
@@ -102,4 +128,30 @@ func (t *Transform) ParseAsWriteCLValue() (*Argument, error) {
 	}
 
 	return &jsonRes.WriteCLValue, nil
+}
+
+func (t *Transform) ParseAsUInt512() (*clvalue.UInt512, error) {
+	type RawUInt512 struct {
+		UInt512 clvalue.UInt512 `json:"AddUInt512"`
+	}
+
+	jsonRes := RawUInt512{}
+	if err := json.Unmarshal(*t, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	return &jsonRes.UInt512, nil
+}
+
+func (t *Transform) ParseAsWriteDeployInfo() (*DeployInfo, error) {
+	type RawWriteDeployInfo struct {
+		WriteDeployInfo DeployInfo `json:"WriteDeployInfo"`
+	}
+
+	jsonRes := RawWriteDeployInfo{}
+	if err := json.Unmarshal(*t, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	return &jsonRes.WriteDeployInfo, nil
 }

@@ -111,9 +111,9 @@ type (
 		EraID           uint64       `json:"era_id"`
 		ExecutionEffect types.Effect `json:"execution_effect"`
 		// Todo: not sure, didn't found example to test
-		Operations []types.Operation `json:"operations"`
+		Operations *[]types.Operation `json:"operations,omitempty"`
 		// Todo: not sure, didn't found example to test
-		Transform types.TransformKey `json:"transform"`
+		Transform *types.TransformKey `json:"transform,omitempty"`
 	}
 	StepEvent struct {
 		Step StepPayload `json:"step"`

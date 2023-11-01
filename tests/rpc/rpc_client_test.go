@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -146,7 +145,7 @@ func Test_DefaultClient_QueryGlobalStateByBlock_GetWithdraw(t *testing.T) {
 	res, err := client.QueryGlobalStateByBlockHash(context.Background(), blockHash, withdrawKey, nil)
 	require.NoError(t, err)
 	assert.NotEmpty(t, res.BlockHeader.BodyHash)
-	assert.Equal(t, "500468846906", strconv.Itoa(int(res.StoredValue.Withdraw[0].Amount)))
+	assert.Equal(t, "500468846906", res.StoredValue.Withdraw[0].Amount.String())
 }
 
 func Test_DefaultClient_QueryGlobalStateByStateRoot_GetAccount(t *testing.T) {

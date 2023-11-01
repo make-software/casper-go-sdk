@@ -180,7 +180,7 @@ type PutDeployResult struct {
 
 type SpeculativeExecResult struct {
 	ApiVersion      string                      `json:"api_version"`
-	DeployHash      key.Hash                    `json:"deploy_hash"`
+	BlockHash       key.Hash                    `json:"block_hash"`
 	ExecutionResult types.ExecutionResultStatus `json:"execution_result"`
 }
 

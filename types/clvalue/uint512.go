@@ -3,13 +3,15 @@ package clvalue
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"math/big"
 
 	"github.com/make-software/casper-go-sdk/types/clvalue/cltype"
 )
 
 type UInt512 struct {
-	val *big.Int
+	val         *big.Int
+	isStringFmt bool
 }
 
 func (v *UInt512) Bytes() []byte {
@@ -24,18 +26,35 @@ func (v *UInt512) Value() *big.Int {
 	return v.val
 }
 
-func (v *UInt512) MarshalJSON() ([]byte, error) {
-	return json.Marshal(v.Value().String())
+func (v UInt512) MarshalJSON() ([]byte, error) {
+	if v.isStringFmt {
+		return json.Marshal(v.String())
+	}
+	return []byte(v.String()), nil
 }
 
 func (v *UInt512) UnmarshalJSON(b []byte) error {
-	var val string
-	err := json.Unmarshal(b, &val)
+	var num json.Number
+	err := json.Unmarshal(b, &num)
 	if err != nil {
 		return err
 	}
-	v.val = &big.Int{}
-	v.val.SetString(val, 10)
+
+	// Convert json.Number to string
+	s := num.String()
+
+	// Check if the original data was a quoted string
+	if b[0] == '"' {
+		v.isStringFmt = true
+	}
+
+	v.val = new(big.Int)
+	val, ok := v.val.SetString(s, 10)
+	if !ok {
+		return fmt.Errorf("invalid integer string: %s", s)
+	}
+	v.val = val
+
 	return nil
 }
 
