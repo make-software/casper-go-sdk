@@ -1,0 +1,14 @@
+{
+  "key": "deploy-e379d531188e90892ca07dba8469def6f9a45e627717b2a3ae4a8ec440c9f001",
+  "transform": {
+    "WriteDeployInfo": {
+      "deploy_hash": "e379d531188e90892ca07dba8469def6f9a45e627717b2a3ae4a8ec440c9f001",
+      "transfers": [
+        "transfer-78c4663dd4b83fa35d031e8173dccb53431520adf559a3853892530946fcb777"
+      ],
+      "from": "account-hash-e15156d73d79f92b13aa147552a01ef2a3d677134f13961b51033ffd9fba481c",
+      "source": "uref-012e4506440c6bf5427d3d76ad20a1bdefc6bf5d79cee3d28bfaae36603f1133-007",
+      "gas": "100000000"
+    }
+  }
+}

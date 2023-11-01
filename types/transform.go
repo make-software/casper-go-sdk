@@ -6,6 +6,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/make-software/casper-go-sdk/types/clvalue"
 	"github.com/make-software/casper-go-sdk/types/key"
 )
 
@@ -82,6 +83,14 @@ func (t *Transform) IsWriteBid() bool {
 	return strings.Contains(string(*t), "WriteBid")
 }
 
+func (t *Transform) IsAddUint512() bool {
+	return strings.Contains(string(*t), "AddUInt512")
+}
+
+func (t *Transform) IsWriteDeployInfo() bool {
+	return strings.Contains(string(*t), "WriteDeployInfo")
+}
+
 func (t *Transform) ParseAsWriteWithdraws() ([]UnbondingPurse, error) {
 	type RawWriteWithdrawals struct {
 		UnbondingPurses []UnbondingPurse `json:"WriteWithdraw"`
@@ -119,4 +128,30 @@ func (t *Transform) ParseAsWriteCLValue() (*Argument, error) {
 	}
 
 	return &jsonRes.WriteCLValue, nil
+}
+
+func (t *Transform) ParseAsUInt512() (*clvalue.UInt512, error) {
+	type RawUInt512 struct {
+		UInt512 clvalue.UInt512 `json:"AddUInt512"`
+	}
+
+	jsonRes := RawUInt512{}
+	if err := json.Unmarshal(*t, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	return &jsonRes.UInt512, nil
+}
+
+func (t *Transform) ParseAsWriteDeployInfo() (*DeployInfo, error) {
+	type RawWriteDeployInfo struct {
+		WriteDeployInfo DeployInfo `json:"WriteDeployInfo"`
+	}
+
+	jsonRes := RawWriteDeployInfo{}
+	if err := json.Unmarshal(*t, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	return &jsonRes.WriteDeployInfo, nil
 }
