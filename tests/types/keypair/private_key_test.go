@@ -22,6 +22,26 @@ func Test_SECPKey_From_PemFile(t *testing.T) {
 	assert.Equal(t, "0203c90c0ee375abc85da81a982507d1f8258a380af2058b63c37abdb9c7045940f4", privateKeyData.PublicKey().ToHex())
 }
 
+func Test_SECPKey_ToPemFile(t *testing.T) {
+	privateKeyData, err := keypair.NewPrivateKeySECP256K1("../../data/keys/account_test_SECP_secret_key.pem")
+	require.NoError(t, err)
+	data, err := privateKeyData.ToPem()
+	require.NoError(t, err)
+	privateKeyData2, err := keypair.NewPrivateKeyFromPEM(data, keypair.SECP256K1)
+	require.NoError(t, err)
+	assert.Equal(t, privateKeyData.PublicKey().Bytes(), privateKeyData2.PublicKey().Bytes())
+}
+
+func Test_ED25519_PrivateKey_ToPemFile(t *testing.T) {
+	privateKeyData, err := keypair.NewPrivateKeyED25518("../../data/keys/account_test_ED25519_secret_key.pem")
+	require.NoError(t, err)
+	data, err := privateKeyData.ToPem()
+	require.NoError(t, err)
+	privateKeyData2, err := keypair.NewPrivateKeyFromPEM(data, keypair.ED25519)
+	require.NoError(t, err)
+	assert.Equal(t, privateKeyData.PublicKey().Bytes(), privateKeyData2.PublicKey().Bytes())
+}
+
 func Test_SECPKey_CreateAndValidateSignature(t *testing.T) {
 	secretMessage := []byte("Enigmatic Shadows Concealing Ancient Whispers")
 	privateKeyData, err := keypair.GeneratePrivateKey(keypair.SECP256K1)

@@ -67,8 +67,8 @@ func PrivateKeyToPem(priv *secp256k1.PrivateKey) ([]byte, error) {
 	), nil
 }
 
-func PemToPrivateKey(priv []byte) (*secp256k1.PrivateKey, error) {
-	block, _ := pem.Decode(priv)
+func PemToPrivateKey(content []byte) (*secp256k1.PrivateKey, error) {
+	block, _ := pem.Decode(content)
 	if block == nil {
 		return nil, fmt.Errorf("key not found")
 	}
