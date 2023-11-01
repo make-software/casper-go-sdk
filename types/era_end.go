@@ -1,6 +1,7 @@
 package types
 
 import (
+	"github.com/make-software/casper-go-sdk/types/clvalue"
 	"github.com/make-software/casper-go-sdk/types/keypair"
 )
 
@@ -22,5 +23,5 @@ type EraReport struct {
 
 type Reward struct {
 	Validator keypair.PublicKey `json:"validator"`
-	Amount    uint64            `json:"amount"`
+	Amount    clvalue.UInt512   `json:"amount"`
 }

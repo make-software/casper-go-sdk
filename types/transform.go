@@ -23,7 +23,7 @@ type WriteTransfer struct {
 	To         *key.AccountHash `json:"to"`
 	DeployHash key.Hash         `json:"deploy_hash"`
 	From       key.AccountHash  `json:"from"`
-	Amount     uint64           `json:"amount,string"`
+	Amount     clvalue.UInt512  `json:"amount"`
 	Source     key.URef         `json:"source"`
 	Target     key.URef         `json:"target"`
 	Gas        string           `json:"gas"`

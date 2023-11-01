@@ -1,6 +1,7 @@
 package types
 
 import (
+	"github.com/make-software/casper-go-sdk/types/clvalue"
 	"github.com/make-software/casper-go-sdk/types/key"
 	"github.com/make-software/casper-go-sdk/types/keypair"
 )
@@ -8,7 +9,7 @@ import (
 // UnbondingPurse stores information of an unbonding or delegation withdrawal
 type UnbondingPurse struct {
 	// Unbonding Amount
-	Amount uint64 `json:"amount,string"`
+	Amount clvalue.UInt512 `json:"amount"`
 	// Bonding purse
 	BondingPurse key.URef `json:"bonding_purse"`
 	// Era ID in which this unbonding request was created.
