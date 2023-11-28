@@ -5,14 +5,18 @@ package sse
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/make-software/casper-go-sdk/sse"
 )
@@ -140,4 +144,33 @@ func Test_SSE_WithConfigurations(t *testing.T) {
 	consumer := sse.NewConsumer()
 	_ = streamer
 	_ = consumer
+}
+
+func Test_Client_WithAuthorizationHeader(t *testing.T) {
+	authToken := "1234567890"
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		auth := request.Header.Get("Authorization")
+		if auth != authToken {
+			writer.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		_, err := writer.Write(json.RawMessage(`data: {"ApiVersion":"1.0.0"}`))
+		require.NoError(t, err)
+	}))
+
+	client := sse.NewClient(server.URL)
+	client.Streamer.Connection.Headers = map[string]string{"Authorization": authToken}
+	ctx, cancel := context.WithCancel(context.Background())
+	client.RegisterHandler(sse.APIVersionEventType, func(ctx context.Context, event sse.RawEvent) error {
+		data, err := event.ParseAsAPIVersionEvent()
+		require.NoError(t, err)
+		assert.Equal(t, "1.0.0", data.APIVersion)
+		cancel()
+		return nil
+	})
+	err := client.Start(context.Background(), 123)
+	if err != io.EOF {
+		require.NoError(t, err)
+	}
+	<-ctx.Done()
 }

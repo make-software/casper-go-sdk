@@ -84,3 +84,25 @@ func Test_SpeculativeExec(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, uint64(100000000), result.ExecutionResult.Success.Cost)
 }
+
+func Test_Client_RPCGetStatus_WithAuthorizationHeader(t *testing.T) {
+	authToken := "1234567890"
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		auth := req.Header.Get("Authorization")
+		if auth != authToken {
+			rw.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		fixture, err := os.ReadFile("../data/rpc_response/get_status.json")
+		require.NoError(t, err)
+		rw.Write(fixture)
+		rw.WriteHeader(http.StatusOK)
+	}))
+	handler := casper.NewRPCHandler(server.URL, http.DefaultClient)
+	handler.CustomHeaders = map[string]string{"Authorization": authToken}
+	client := casper.NewRPCClient(handler)
+
+	status, err := client.GetStatus(context.Background())
+	require.NoError(t, err)
+	assert.Equal(t, "1.0.0", status.APIVersion)
+}
