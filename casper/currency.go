@@ -8,12 +8,8 @@ var MotesToCSPRRate = decimal.NewFromInt(1000000000)
 
 type Motes uint64
 
-func (m *Motes) ToCSPR() decimal.Decimal {
-	if m == nil {
-		return decimal.NewFromInt(0)
-	}
-
-	dec := decimal.NewFromInt(int64(*m))
+func (m Motes) ToCSPR() decimal.Decimal {
+	dec := decimal.NewFromInt(int64(m))
 
 	return dec.Div(MotesToCSPRRate)
 }
