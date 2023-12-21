@@ -39,6 +39,10 @@ func (v URef) ToPrefixedString() string {
 	return PrefixNameURef + hex.EncodeToString(v.data[:]) + "-0" + hex.EncodeToString([]byte{v.access})
 }
 
+func (v *URef) SetAccess(access UrefAccess) {
+	v.access = access
+}
+
 func (v *URef) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
