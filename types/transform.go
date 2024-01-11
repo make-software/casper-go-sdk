@@ -63,6 +63,23 @@ func (t *Transform) ParseAsWriteTransfer() (*WriteTransfer, error) {
 	return &jsonRes.WriteTransfer, nil
 }
 
+func (t *Transform) IsWriteAccount() bool {
+	return strings.Contains(string(*t), "WriteAccount")
+}
+
+func (t *Transform) ParseAsWriteAccount() (key.AccountHash, error) {
+	type RawWriteAccountTransform struct {
+		key.AccountHash `json:"WriteAccount"`
+	}
+
+	jsonRes := RawWriteAccountTransform{}
+	if err := json.Unmarshal(*t, &jsonRes); err != nil {
+		return key.AccountHash{}, err
+	}
+
+	return jsonRes.AccountHash, nil
+}
+
 func (t *Transform) IsWriteContract() bool {
 	return bytes.Equal(*t, []byte("\"WriteContract\""))
 }
