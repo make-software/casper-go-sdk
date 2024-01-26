@@ -69,7 +69,7 @@ func (t *Transform) IsWriteAccount() bool {
 
 func (t *Transform) ParseAsWriteAccount() (key.AccountHash, error) {
 	type RawWriteAccountTransform struct {
-		key.AccountHash `json:"WriteAccount"`
+		WriteAccount key.AccountHash `json:"WriteAccount"`
 	}
 
 	jsonRes := RawWriteAccountTransform{}
@@ -77,7 +77,7 @@ func (t *Transform) ParseAsWriteAccount() (key.AccountHash, error) {
 		return key.AccountHash{}, err
 	}
 
-	return jsonRes.AccountHash, nil
+	return jsonRes.WriteAccount, nil
 }
 
 func (t *Transform) IsWriteContract() bool {
