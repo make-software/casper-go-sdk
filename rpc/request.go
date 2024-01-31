@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/make-software/casper-go-sdk/types"
+	"github.com/make-software/casper-go-sdk/types/key"
 	"github.com/make-software/casper-go-sdk/types/keypair"
 )
 
@@ -76,9 +77,9 @@ type ParamStateRootHash struct {
 }
 
 type ParamQueryGlobalState struct {
-	StateIdentifier ParamQueryGlobalStateID `json:"state_identifier"`
-	Key             string                  `json:"key"`
-	Path            []string                `json:"path,omitempty"`
+	StateIdentifier *ParamQueryGlobalStateID `json:"state_identifier,omitempty"`
+	Key             string                   `json:"key"`
+	Path            []string                 `json:"path,omitempty"`
 }
 
 type ParamQueryGlobalStateID struct {
@@ -87,13 +88,18 @@ type ParamQueryGlobalStateID struct {
 	BlockHeight   *uint64 `json:"BlockHeight,omitempty"`
 }
 
-func NewQueryGlobalStateParam(key string, path []string, id ParamQueryGlobalStateID) ParamQueryGlobalState {
+func NewQueryGlobalStateParam(key string, path []string, id *ParamQueryGlobalStateID) ParamQueryGlobalState {
 	return ParamQueryGlobalState{StateIdentifier: id, Key: key, Path: path}
 }
 
 type ParamGetAccountInfoBalance struct {
-	PublicKey keypair.PublicKey `json:"public_key"`
+	AccountIdentifier string `json:"account_identifier"`
 	ParamBlockIdentifier
+}
+
+type AccountIdentifier struct {
+	AccountHash *key.AccountHash
+	PublicKey   *keypair.PublicKey
 }
 
 type PutDeployRequest struct {
@@ -101,20 +107,20 @@ type PutDeployRequest struct {
 }
 
 type BlockIdentifier struct {
-	Hash   string  `json:"Hash,omitempty"`
+	Hash   *string `json:"Hash,omitempty"`
 	Height *uint64 `json:"Height,omitempty"`
 }
 
 type ParamBlockIdentifier struct {
-	BlockIdentifier BlockIdentifier `json:"block_identifier"`
+	BlockIdentifier *BlockIdentifier `json:"block_identifier"`
 }
 
 func NewParamBlockByHeight(height uint64) ParamBlockIdentifier {
-	return ParamBlockIdentifier{BlockIdentifier: BlockIdentifier{Height: &height}}
+	return ParamBlockIdentifier{BlockIdentifier: &BlockIdentifier{Height: &height}}
 }
 
 func NewParamBlockByHash(hash string) ParamBlockIdentifier {
-	return ParamBlockIdentifier{BlockIdentifier: BlockIdentifier{Hash: hash}}
+	return ParamBlockIdentifier{BlockIdentifier: &BlockIdentifier{Hash: &hash}}
 }
 
 type ParamDictionaryIdentifier struct {
