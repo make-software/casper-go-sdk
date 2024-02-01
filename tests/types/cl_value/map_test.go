@@ -3,12 +3,15 @@ package cl_value
 import (
 	"bytes"
 	"encoding/hex"
+	"encoding/json"
 	"math/big"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/make-software/casper-go-sdk/casper"
+	"github.com/make-software/casper-go-sdk/types"
 	"github.com/make-software/casper-go-sdk/types/clvalue"
 	"github.com/make-software/casper-go-sdk/types/clvalue/cltype"
 	"github.com/make-software/casper-go-sdk/types/key"
@@ -72,4 +75,17 @@ func Test_NewMapFromBuffer_IncompleteFormat_ShouldRaiseError(t *testing.T) {
 	require.NoError(t, err)
 	_, err = clvalue.NewMapFromBuffer(bytes.NewBuffer(inBytes), cltype.NewMap(cltype.String, cltype.String))
 	assert.Error(t, err)
+}
+
+func Test_ArgsWriter_MapFromRawJson(t *testing.T) {
+	source := `{"cl_type":{"Map":{"value":"U32","key":"String"}},"bytes":"01000000030000004f4e4502000000"}`
+	clValue, err := types.ArgsFromRawJson(json.RawMessage(source))
+	require.NoError(t, err)
+	args := &casper.Args{}
+	args.AddArgument("test", clValue)
+	oneArg, err := args.Find("test")
+	require.NoError(t, err)
+	res, err := oneArg.MarshalJSON()
+	require.NoError(t, err)
+	assert.JSONEq(t, source, string(res))
 }

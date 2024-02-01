@@ -31,7 +31,14 @@ func (m *Map) Name() TypeName {
 }
 
 func (m *Map) MarshalJSON() ([]byte, error) {
-	return json.Marshal(map[string]CLType{m.Key.String(): m.Val})
+	type mapTypeInner struct {
+		Key   CLType `json:"key"`
+		Value CLType `json:"value"`
+	}
+	type mapJsonView struct {
+		Map mapTypeInner `json:"Map"`
+	}
+	return json.Marshal(mapJsonView{Map: mapTypeInner{Key: m.Key, Value: m.Val}})
 }
 
 func NewMap(keyType CLType, valType CLType) *Map {
