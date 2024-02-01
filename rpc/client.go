@@ -79,6 +79,9 @@ type ClientInformational interface {
 	// GetAccountInfoByBlochHeight returns a JSON representation of an Account from the network.
 	// The blockHeight must refer to a Block after the Account's creation, or the method will return an empty response.
 	GetAccountInfoByBlochHeight(ctx context.Context, blockHeight uint64, pub keypair.PublicKey) (StateGetAccountInfo, error)
+	// GetAccountInfo returns a JSON representation of an Account from the network.
+	// This is the most generic interface.
+	GetAccountInfo(ctx context.Context, blockIdentifier *ParamBlockIdentifier, accountIdentifier AccountIdentifier) (StateGetAccountInfo, error)
 
 	// GetBlockLatest returns the latest types.Block from the network.
 	GetBlockLatest(ctx context.Context) (ChainGetBlockResult, error)

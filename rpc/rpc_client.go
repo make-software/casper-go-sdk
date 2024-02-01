@@ -60,41 +60,52 @@ func (c *client) GetStateItem(ctx context.Context, stateRootHash *string, key st
 
 func (c *client) QueryGlobalStateByBlockHash(ctx context.Context, blockHash, key string, path []string) (QueryGlobalStateResult, error) {
 	var result QueryGlobalStateResult
-	return result, c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, ParamQueryGlobalStateID{
+	return result, c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, &ParamQueryGlobalStateID{
 		BlockHash: blockHash,
 	}), &result)
 }
 
 func (c *client) QueryGlobalStateByBlockHeight(ctx context.Context, blockHeight uint64, key string, path []string) (QueryGlobalStateResult, error) {
 	var result QueryGlobalStateResult
-	return result, c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, ParamQueryGlobalStateID{
+	return result, c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, &ParamQueryGlobalStateID{
 		BlockHeight: &blockHeight,
 	}), &result)
 }
 
 func (c *client) QueryGlobalStateByStateHash(ctx context.Context, stateRootHash *string, key string, path []string) (QueryGlobalStateResult, error) {
-	if stateRootHash == nil {
-		latestHashResult, err := c.GetStateRootHashLatest(ctx)
-		if err != nil {
-			return QueryGlobalStateResult{}, err
-		}
-		latestHashString := latestHashResult.StateRootHash.String()
-		stateRootHash = &latestHashString
-	}
 	var result QueryGlobalStateResult
-	return result, c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, ParamQueryGlobalStateID{
+	if stateRootHash == nil {
+		return result, c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, nil), &result)
+	}
+	return result, c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, &ParamQueryGlobalStateID{
 		StateRootHash: *stateRootHash,
 	}), &result)
 }
 
 func (c *client) GetAccountInfoByBlochHash(ctx context.Context, blockHash string, pub keypair.PublicKey) (StateGetAccountInfo, error) {
 	var result StateGetAccountInfo
-	return result, c.processRequest(ctx, MethodGetStateAccount, ParamGetAccountInfoBalance{PublicKey: pub, ParamBlockIdentifier: NewParamBlockByHash(blockHash)}, &result)
+	return result, c.processRequest(ctx, MethodGetStateAccount, ParamGetAccountInfoBalance{AccountIdentifier: pub.String(), ParamBlockIdentifier: NewParamBlockByHash(blockHash)}, &result)
 }
 
 func (c *client) GetAccountInfoByBlochHeight(ctx context.Context, blockHeight uint64, pub keypair.PublicKey) (StateGetAccountInfo, error) {
 	var result StateGetAccountInfo
-	return result, c.processRequest(ctx, MethodGetStateAccount, ParamGetAccountInfoBalance{PublicKey: pub, ParamBlockIdentifier: NewParamBlockByHeight(blockHeight)}, &result)
+	return result, c.processRequest(ctx, MethodGetStateAccount, ParamGetAccountInfoBalance{AccountIdentifier: pub.String(), ParamBlockIdentifier: NewParamBlockByHeight(blockHeight)}, &result)
+}
+
+func (c *client) GetAccountInfo(ctx context.Context, blockIdentifier *ParamBlockIdentifier, accountIdentifier AccountIdentifier) (StateGetAccountInfo, error) {
+	if blockIdentifier == nil {
+		blockIdentifier = &ParamBlockIdentifier{}
+	}
+	var accountParam string
+	if accountIdentifier.AccountHash != nil {
+		accountParam = accountIdentifier.AccountHash.ToPrefixedString()
+	} else if accountIdentifier.PublicKey != nil {
+		accountParam = accountIdentifier.PublicKey.String()
+	} else {
+		return StateGetAccountInfo{}, fmt.Errorf("account identifier is empty")
+	}
+	var result StateGetAccountInfo
+	return result, c.processRequest(ctx, MethodGetStateAccount, ParamGetAccountInfoBalance{AccountIdentifier: accountParam, ParamBlockIdentifier: *blockIdentifier}, &result)
 }
 
 func (c *client) GetDictionaryItem(ctx context.Context, stateRootHash *string, uref, key string) (StateGetDictionaryResult, error) {
