@@ -19,6 +19,7 @@ var (
 	ErrEmptySignature       = errors.New("empty signature")
 	ErrInvalidPublicKeyAlgo = errors.New("invalid public key algorithm")
 	ErrInvalidSignature     = errors.New("invalid signature")
+	ErrEmptyPublicKey       = errors.New("empty public key")
 )
 
 type PublicKeyInternal interface {
@@ -32,6 +33,10 @@ type PublicKey struct {
 }
 
 func (v PublicKey) Bytes() []byte {
+	if v.key == nil {
+		return nil
+	}
+
 	return append([]byte{byte(v.cryptoAlg)}, v.key.Bytes()...)
 }
 
@@ -79,6 +84,10 @@ func (v PublicKey) GobEncode() ([]byte, error) {
 }
 
 func (v PublicKey) AccountHash() key.AccountHash {
+	if v.key == nil {
+		return key.AccountHash{}
+	}
+
 	bytesToHash := make([]byte, 0, len(v.cryptoAlg.String())+1+len(v.key.Bytes()))
 
 	bytesToHash = append(bytesToHash, []byte(strings.ToLower(v.cryptoAlg.String()))...)
@@ -122,6 +131,10 @@ func (v PublicKey) VerifySignature(message []byte, sig []byte) error {
 		return ErrEmptySignature
 	}
 
+	if v.key == nil {
+		return ErrEmptyPublicKey
+	}
+
 	// Trim first byte with algorithm data
 	sig = sig[1:]
 
@@ -135,6 +148,10 @@ func (v PublicKey) VerifySignature(message []byte, sig []byte) error {
 // VerifyRawSignature verifies message using raw signature
 // Deprecated: won't work with Casper node, use VerifySignature method to achieve compatibility
 func (v PublicKey) VerifyRawSignature(message []byte, sig []byte) error {
+	if v.key == nil {
+		return ErrEmptyPublicKey
+	}
+
 	if v.key.VerifySignature(message, sig) {
 		return nil
 	}
