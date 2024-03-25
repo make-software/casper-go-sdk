@@ -32,7 +32,7 @@ func Test_NewURefFromString_IncorrectFormat(t *testing.T) {
 	source := "01506f4df2ac64a2233e787c430dc91dad5cee8eabd7d64555f64bdc1a4b4044d7"
 	_, err := key.NewURef(source)
 	require.Error(t, err)
-	assert.Equal(t, err, key.ErrIncorrectPurseFormat)
+	assert.Equal(t, err, key.ErrIncorrectUrefFormat)
 }
 
 func Test_FromBytesByType_URef(t *testing.T) {

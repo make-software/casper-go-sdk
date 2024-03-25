@@ -12,7 +12,7 @@ import (
 type UrefAccess = byte
 
 var (
-	ErrIncorrectPurseFormat = errors.New("incorrect uref format")
+	ErrIncorrectUrefFormat = errors.New("incorrect uref format")
 )
 
 const (
@@ -90,7 +90,7 @@ func (v URef) GobEncode() ([]byte, error) {
 func NewURef(source string) (res URef, err error) {
 	parts := strings.Split(source, "-")
 	if len(parts) != 3 {
-		return res, ErrIncorrectPurseFormat
+		return res, ErrIncorrectUrefFormat
 	}
 
 	payloadInBytes, err := hex.DecodeString(parts[1])
