@@ -12,7 +12,7 @@ import (
 type UrefAccess = byte
 
 var (
-	ErrIncorrectPurseFormat = errors.New("incorrect purse format")
+	ErrIncorrectPurseFormat = errors.New("incorrect uref format")
 )
 
 const (
