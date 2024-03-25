@@ -28,6 +28,13 @@ func Test_NewURefFromString_toBytes(t *testing.T) {
 	assert.Equal(t, "000102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f07", hex.EncodeToString(res.Bytes()))
 }
 
+func Test_NewURefFromString_IncorrectFormat(t *testing.T) {
+	source := "01506f4df2ac64a2233e787c430dc91dad5cee8eabd7d64555f64bdc1a4b4044d7"
+	_, err := key.NewURef(source)
+	require.Error(t, err)
+	assert.Equal(t, err, key.ErrIncorrectPurseFormat)
+}
+
 func Test_FromBytesByType_URef(t *testing.T) {
 	source := "000102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f07"
 	inBytes, err := hex.DecodeString(source)

@@ -11,6 +11,10 @@ import (
 
 type UrefAccess = byte
 
+var (
+	ErrIncorrectPurseFormat = errors.New("incorrect uref format")
+)
+
 const (
 	UrefAccessNone = iota
 	UrefAccessRead
@@ -85,6 +89,10 @@ func (v URef) GobEncode() ([]byte, error) {
 
 func NewURef(source string) (res URef, err error) {
 	parts := strings.Split(source, "-")
+	if len(parts) != 3 {
+		return res, ErrIncorrectPurseFormat
+	}
+
 	payloadInBytes, err := hex.DecodeString(parts[1])
 	if err != nil {
 		return res, err
