@@ -31,7 +31,7 @@ func NewCLTuple3(val1 CLValue, val2 CLValue, val3 CLValue) CLValue {
 		innerType: tupleType,
 		Inner1:    val1,
 		Inner2:    val2,
-		Inner3:    val2,
+		Inner3:    val3,
 	}}
 }
 
