@@ -39,3 +39,11 @@ func Test_FromBytesByType_Tuple3U32ToVal(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, "(10, 11, 12)", res.String())
 }
+
+func Test_NewCLTuple3(t *testing.T) {
+	val1 := clvalue.NewCLUInt32(10)
+	val2 := clvalue.NewCLUInt32(11)
+	val3 := clvalue.NewCLUInt32(12)
+	res := clvalue.NewCLTuple3(*val1, *val2, *val3)
+	assert.Equal(t, "(10, 11, 12)", res.String())
+}
