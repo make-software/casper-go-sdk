@@ -48,6 +48,7 @@ const (
 	MethodPutDeploy           Method = "account_put_deploy"
 	MethodSpeculativeExec     Method = "speculative_exec"
 	MethodQueryBalance        Method = "query_balance"
+	MethodQueryBalanceDetails Method = "query_balance_details"
 	MethodInfoGetChainspec    Method = "info_get_chainspec"
 )
 
@@ -111,6 +112,16 @@ type BlockIdentifier struct {
 	Height *uint64 `json:"Height,omitempty"`
 }
 
+type StateRootInfo struct {
+	StateRootHash string `json:"state_root_hash"`
+	Timestamp     string `json:"timestamp"`
+}
+
+type BalanceStateIdentifier struct {
+	Block     *BlockIdentifier `json:"block,omitempty"`
+	StateRoot *StateRootInfo   `json:"state_root,omitempty"`
+}
+
 type ParamBlockIdentifier struct {
 	BlockIdentifier *BlockIdentifier `json:"block_identifier"`
 }
@@ -155,9 +166,15 @@ type SpeculativeExecParams struct {
 type PurseIdentifier struct {
 	MainPurseUnderPublicKey   *keypair.PublicKey `json:"main_purse_under_public_key,omitempty"`
 	MainPurseUnderAccountHash *string            `json:"main_purse_under_account_hash,omitempty"`
+	MainPurseUnderEntityAddr  *string            `json:"main_purse_under_entity_addr,omitempty"`
 	PurseUref                 *string            `json:"purse_uref,omitempty"`
 }
 
 type QueryBalanceRequest struct {
 	PurseIdentifier PurseIdentifier `json:"purse_identifier"`
+}
+
+type QueryBalanceDetailsRequest struct {
+	PurseIdentifier PurseIdentifier        `json:"purse_identifier"`
+	StateIdentifier BalanceStateIdentifier `json:"state_identifier"`
 }

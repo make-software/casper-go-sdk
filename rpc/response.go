@@ -189,6 +189,21 @@ type QueryBalanceResult struct {
 	Balance    clvalue.UInt512 `json:"balance"`
 }
 
+type QueryBalanceDetailsResult struct {
+	APIVersion        string                 `json:"api_version"`
+	TotalBalance      clvalue.UInt512        `json:"total_balance"`
+	AvailableBalance  clvalue.UInt512        `json:"available_balance"`
+	TotalBalanceProof string                 `json:"total_balance_proof"`
+	Holds             []BalanceHoldWithProof `json:"holds"`
+}
+
+// BalanceHoldWithProof The block time at which the hold was created.
+type BalanceHoldWithProof struct {
+	Time   types.BlockTime `json:"time"`
+	Amount clvalue.UInt512 `json:"amount"`
+	Proof  string          `json:"proof"`
+}
+
 type InfoGetChainspecResult struct {
 	ApiVersion     string `json:"api_version"`
 	ChainspecBytes struct {

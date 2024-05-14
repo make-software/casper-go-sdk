@@ -264,6 +264,11 @@ func (c *client) QueryBalance(ctx context.Context, identifier PurseIdentifier) (
 	return result, c.processRequest(ctx, MethodQueryBalance, QueryBalanceRequest{identifier}, &result)
 }
 
+func (c *client) QueryBalanceDetails(ctx context.Context, purseIdentifier PurseIdentifier, stateIdentifier BalanceStateIdentifier) (QueryBalanceDetailsResult, error) {
+	var result QueryBalanceDetailsResult
+	return result, c.processRequest(ctx, MethodQueryBalanceDetails, QueryBalanceDetailsRequest{purseIdentifier, stateIdentifier}, &result)
+}
+
 func (c *client) GetChainspec(ctx context.Context) (InfoGetChainspecResult, error) {
 	var result InfoGetChainspecResult
 	return result, c.processRequest(ctx, MethodInfoGetChainspec, nil, &result)
