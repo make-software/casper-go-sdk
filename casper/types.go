@@ -11,9 +11,9 @@ type (
 	Args            = types.Args
 	ValidatorBid    = types.ValidatorBid
 	AuctionBid      = types.AuctionBid
-	Block           = types.Block
-	BlockHeader     = types.BlockHeader
-	BlockBody       = types.BlockBody
+	Block           = types.BlockV1
+	BlockHeader     = types.BlockHeaderV1
+	BlockBody       = types.BlockBodyV1
 	ContractPackage = types.ContractPackage
 	ContractVersion = types.ContractVersion
 	Contract        = types.Contract
@@ -28,7 +28,7 @@ type (
 	Transform       = types.Transform
 	Argument        = types.Argument
 	Account         = types.Account
-	Reward          = types.Reward
+	Reward          = types.EraReward
 	WriteTransfer   = types.WriteTransfer
 	UnbondingPurse  = types.UnbondingPurse
 )

@@ -16,7 +16,7 @@ func Test_BlockHeader_MarshalUnmarshal_ShouldReturnSameResult(t *testing.T) {
 	fixture, err := os.ReadFile("../data/block/block_header.json")
 	assert.NoError(t, err)
 
-	var block types.BlockHeader
+	var block types.BlockHeaderV1
 	err = json.Unmarshal(fixture, &block)
 	assert.NoError(t, err)
 

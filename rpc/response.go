@@ -34,8 +34,8 @@ type StateGetAccountInfo struct {
 }
 
 type ChainGetBlockResult struct {
-	Version string      `json:"version"`
-	Block   types.Block `json:"block"`
+	APIVersion          string                    `json:"api_version"`
+	BlockWithSignatures types.BlockWithSignatures `json:"block_with_signatures"`
 }
 
 type ChainGetBlockTransfersResult struct {
@@ -76,9 +76,9 @@ type StateGetDictionaryResult struct {
 }
 
 type QueryGlobalStateResult struct {
-	ApiVersion  string            `json:"api_version"`
-	BlockHeader types.BlockHeader `json:"block_header,omitempty"`
-	StoredValue types.StoredValue `json:"stored_value"`
+	ApiVersion  string              `json:"api_version"`
+	BlockHeader types.BlockHeaderV1 `json:"block_header,omitempty"`
+	StoredValue types.StoredValue   `json:"stored_value"`
 	//MerkleProof is a construction created using a merkle trie that allows verification of the associated hashes.
 	MerkleProof json.RawMessage `json:"merkle_proof"`
 }
@@ -107,7 +107,7 @@ const (
 	ValidatorStateRemoved ValidatorState = "Removed"
 	// ValidatorStateBanned means that the validator has been banned in the current era.
 	ValidatorStateBanned ValidatorState = "Banned"
-	// ValidatorStateCannotPropose means that the validator cannot propose a Block.
+	// ValidatorStateCannotPropose means that the validator cannot propose a BlockV1.
 	ValidatorStateCannotPropose ValidatorState = "CannotPropose"
 	// ValidatorStateSeenAsFaulty means that the validator has performed questionable activity.
 	ValidatorStateSeenAsFaulty ValidatorState = "SeenAsFaulty"

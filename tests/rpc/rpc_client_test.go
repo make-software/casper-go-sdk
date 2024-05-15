@@ -263,30 +263,71 @@ func Test_DefaultClient_GetValidatorChanges(t *testing.T) {
 }
 
 func Test_DefaultClient_GetBlockLatest(t *testing.T) {
-	server := SetupServer(t, "../data/rpc_response/get_block.json")
-	defer server.Close()
-	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetBlockLatest(context.Background())
-	require.NoError(t, err)
-	assert.NotEmpty(t, result.Block.Hash)
+	tests := []struct {
+		filePath string
+	}{
+		{
+			filePath: "../data/rpc_response/get_block_v2.json",
+		},
+		{
+			filePath: "../data/rpc_response/get_block_v2_era_end.json",
+		},
+	}
+	for _, tt := range tests {
+		t.Run("GetBlockLatest", func(t *testing.T) {
+			server := SetupServer(t, tt.filePath)
+			defer server.Close()
+			client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+			result, err := client.GetBlockLatest(context.Background())
+			require.NoError(t, err)
+			assert.NotEmpty(t, result.APIVersion)
+			assert.NotEmpty(t, result.BlockWithSignatures)
+			assert.NotEmpty(t, result.BlockWithSignatures.Proofs)
+			assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2)
+			assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Body.RewardedSignatures)
+			assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Body.Proposer)
+			assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.Height)
+			assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.ParentHash)
+			assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.ProtocolVersion)
+			assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.BodyHash)
+		})
+	}
 }
 
 func Test_DefaultClient_GetBlockByHash(t *testing.T) {
-	server := SetupServer(t, "../data/rpc_response/get_block.json")
+	server := SetupServer(t, "../data/rpc_response/get_block_v2.json")
 	defer server.Close()
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
 	result, err := client.GetBlockByHash(context.Background(), "5dafbccc05cd3eb765ef9471a141877d8ffae306fb79c75fa4db46ab98bca370")
 	require.NoError(t, err)
-	assert.NotEmpty(t, result.Block.Hash)
+	assert.NotEmpty(t, result.APIVersion)
+	assert.NotEmpty(t, result.BlockWithSignatures)
+	assert.NotEmpty(t, result.BlockWithSignatures.Proofs)
+	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2)
+	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Body.RewardedSignatures)
+	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Body.Proposer)
+	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.Height)
+	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.ParentHash)
+	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.ProtocolVersion)
+	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.BodyHash)
 }
 
 func Test_DefaultClient_GetBlockByHeight(t *testing.T) {
-	server := SetupServer(t, "../data/rpc_response/get_block.json")
+	server := SetupServer(t, "../data/rpc_response/get_block_v2.json")
 	defer server.Close()
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetBlockByHeight(context.Background(), 185)
+	result, err := client.GetBlockByHeight(context.Background(), 441)
 	require.NoError(t, err)
-	assert.NotEmpty(t, result.Block.Hash)
+	assert.NotEmpty(t, result.APIVersion)
+	assert.NotEmpty(t, result.BlockWithSignatures)
+	assert.NotEmpty(t, result.BlockWithSignatures.Proofs)
+	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2)
+	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Body.RewardedSignatures)
+	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Body.Proposer)
+	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.Height)
+	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.ParentHash)
+	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.ProtocolVersion)
+	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.BodyHash)
 }
 
 func Test_DefaultClient_GetBlockTransfersLatest(t *testing.T) {
