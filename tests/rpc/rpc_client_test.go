@@ -404,6 +404,7 @@ func Test_DefaultClient_GetStatus(t *testing.T) {
 	result, err := client.GetStatus(context.Background())
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.ChainSpecName)
+	assert.NotEmpty(t, result.LatestSwitchBlockHash)
 }
 
 func Test_DefaultClient_GetPeers(t *testing.T) {

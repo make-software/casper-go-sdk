@@ -1,53 +1,55 @@
 {
   "jsonrpc": "2.0",
-  "id": "0",
+  "id": "1",
   "result": {
+    "api_version": "2.0.0",
     "peers": [
       {
-        "node_id": "tls:11a8..bd2e",
-        "address": "127.0.0.1:22103"
+        "node_id": "tls:4cca..587b",
+        "address": "3.139.219.212:35000"
       },
       {
-        "node_id": "tls:55dc..5942",
-        "address": "127.0.0.1:22102"
+        "node_id": "tls:743f..dc85",
+        "address": "3.140.9.1:35000"
       },
       {
-        "node_id": "tls:6be4..cf82",
-        "address": "127.0.0.1:22104"
+        "node_id": "tls:8eca..0f34",
+        "address": "3.14.48.188:35000"
       },
       {
-        "node_id": "tls:b1ca..3f4b",
-        "address": "127.0.0.1:22105"
+        "node_id": "tls:9f05..8d58",
+        "address": "18.218.51.191:35000"
+      },
+      {
+        "node_id": "tls:e582..3681",
+        "address": "18.221.38.28:35000"
       }
     ],
-    "api_version": "1.0.0",
-    "build_version": "1.5.1-6873c86",
-    "chainspec_name": "casper-net-1",
-    "starting_state_root_hash": "f96888aa1e0f1d4ff573ea97ac57b56950e9ee97b1608d4469f9c83131675e78",
+    "build_version": "2.0.0",
+    "chainspec_name": "dev-net",
+    "starting_state_root_hash": "b275db1f79912c7b2507a8e48f5ef15e6ae3236bed542c7710ce15321622d1cb",
     "last_added_block_info": {
-      "hash": "4233cfc493996925354492b217287346f5c5cc76cdf9b83ad885d203e1e4ee7f",
-      "timestamp": "2023-07-12T15:19:18.784Z",
-      "era_id": 223,
-      "height": 2321,
-      "state_root_hash": "b3bb8e711b29b8fdb0ba93c4794e496802cbb478f548cb9d70055be7c236d3ce",
-      "creator": "01c81fada2be0fa2c36957c13e2366d3e4f994f48cd927d9118a8f4d36ca004cb1"
+      "hash": "e8637cdc918e901c6e10a050cc7d3be949b892dc8842580088f5aa592a342d39",
+      "timestamp": "2024-05-15T07:52:31.214Z",
+      "era_id": 386,
+      "height": 170022,
+      "state_root_hash": "18502c7912b294d65cadbaaf6a60b9d04b376224d540e31fca184606b16c706c",
+      "creator": "0140afe8f752e5ff100e0189c080bc207e8805b3e5e82f792ec608de2f11f39f6c"
     },
-    "our_public_signing_key": "0115394d1f395a87dfed4ab62bbfbc91b573bbb2bffb2c8ebb9c240c51d95bcc4d",
-    "round_length": "4s 96ms",
-    "next_upgrade": {
-      "activation_point": 9904,
-      "protocol_version": "1.5.2"
-    },
-    "uptime": "2months 13days 5h 37m 7s 171ms",
+    "our_public_signing_key": "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c",
+    "round_length": "16s 384ms",
+    "next_upgrade": null,
+    "uptime": "1month 1day 17h 40m 43s",
     "reactor_state": "Validate",
-    "last_progress": "2023-07-12T12:31:32.550Z",
+    "last_progress": "2024-04-13T03:38:19.626Z",
     "available_block_range": {
       "low": 0,
-      "high": 2321
+      "high": 170022
     },
     "block_sync": {
       "historical": null,
       "forward": null
-    }
+    },
+    "latest_switch_block_hash": "099cc3232b04ebb556c73328597c0b8c518fa4565c7d1f7981bc251414ce8c2f"
   }
 }
