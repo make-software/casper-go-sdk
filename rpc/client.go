@@ -83,6 +83,13 @@ type ClientInformational interface {
 	// This is the most generic interface.
 	GetAccountInfo(ctx context.Context, blockIdentifier *ParamBlockIdentifier, accountIdentifier AccountIdentifier) (StateGetAccountInfo, error)
 
+	// GetEntityLatest returns latest AddressableEntity from the network.
+	GetEntityLatest(ctx context.Context, entityIdentifier EntityIdentifier) (StateGetEntity, error)
+	// GetEntityByHash returns an AddressableEntity by block hash from the network.
+	GetEntityByHash(ctx context.Context, entityIdentifier EntityIdentifier, hash string) (StateGetEntity, error)
+	// GetEntityByHeight returns an AddressableEntity by block height from the network.
+	GetEntityByHeight(ctx context.Context, entityIdentifier EntityIdentifier, height uint64) (StateGetEntity, error)
+
 	// GetBlockLatest returns the latest types.Block from the network.
 	GetBlockLatest(ctx context.Context) (ChainGetBlockResult, error)
 	// GetBlockByHash returns the types.Block from the network the requested block hash.

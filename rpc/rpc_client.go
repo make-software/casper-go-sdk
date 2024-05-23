@@ -82,6 +82,21 @@ func (c *client) QueryGlobalStateByStateHash(ctx context.Context, stateRootHash 
 	}), &result)
 }
 
+func (c *client) GetEntityLatest(ctx context.Context, entityIdentifier EntityIdentifier) (StateGetEntity, error) {
+	var result StateGetEntity
+	return result, c.processRequest(ctx, MethodGetStateEntity, ParamGetStateEntity{EntityIdentifier: entityIdentifier}, &result)
+}
+
+func (c *client) GetEntityByHash(ctx context.Context, entityIdentifier EntityIdentifier, hash string) (StateGetEntity, error) {
+	var result StateGetEntity
+	return result, c.processRequest(ctx, MethodGetStateEntity, ParamGetStateEntity{EntityIdentifier: entityIdentifier, BlockIdentifier: &BlockIdentifier{Hash: &hash}}, &result)
+}
+
+func (c *client) GetEntityByHeight(ctx context.Context, entityIdentifier EntityIdentifier, height uint64) (StateGetEntity, error) {
+	var result StateGetEntity
+	return result, c.processRequest(ctx, MethodGetStateEntity, ParamGetStateEntity{EntityIdentifier: entityIdentifier, BlockIdentifier: &BlockIdentifier{Height: &height}}, &result)
+}
+
 func (c *client) GetAccountInfoByBlochHash(ctx context.Context, blockHash string, pub keypair.PublicKey) (StateGetAccountInfo, error) {
 	var result StateGetAccountInfo
 	return result, c.processRequest(ctx, MethodGetStateAccount, ParamGetAccountInfoBalance{AccountIdentifier: pub.String(), ParamBlockIdentifier: NewParamBlockByHash(blockHash)}, &result)
