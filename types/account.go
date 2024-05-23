@@ -1,6 +1,8 @@
 package types
 
-import "github.com/make-software/casper-go-sdk/types/key"
+import (
+	"github.com/make-software/casper-go-sdk/types/key"
+)
 
 // Account representing a user's account, stored in a global state.
 type Account struct {
