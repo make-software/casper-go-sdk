@@ -18,8 +18,8 @@ type EraEndV2 struct {
 	NextEraGasPrice uint8                      `json:"next_era_gas_price"`
 }
 
-// EraEnd contains a report and list of validator weights for the next era
-type EraEnd struct {
+// EraEndV1 contains a report and list of validator weights for the next era
+type EraEndV1 struct {
 	EraReport EraReport `json:"era_report"`
 	// A list of validator weights for the next era
 	NextEraValidatorWeights []ValidatorWeightEraEnd `json:"next_era_validator_weights"`

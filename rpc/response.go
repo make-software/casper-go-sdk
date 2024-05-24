@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/make-software/casper-go-sdk/types"
 	"github.com/make-software/casper-go-sdk/types/clvalue"
@@ -34,8 +35,31 @@ type StateGetAccountInfo struct {
 }
 
 type ChainGetBlockResult struct {
-	APIVersion          string                    `json:"api_version"`
-	BlockWithSignatures types.BlockWithSignatures `json:"block_with_signatures"`
+	APIVersion string `json:"api_version"`
+	Block      types.Block
+}
+
+type chainGetBlockResultV1Compatible struct {
+	APIVersion          string                     `json:"api_version"`
+	BlockWithSignatures *types.BlockWithSignatures `json:"block_with_signatures"`
+	BlockV1             *types.BlockV1             `json:"block"`
+}
+
+func newChainGetBlockResultFromV1Compatible(result chainGetBlockResultV1Compatible) (ChainGetBlockResult, error) {
+	if result.BlockV1 != nil {
+		return ChainGetBlockResult{
+			APIVersion: result.APIVersion,
+			Block:      types.NewBlockFromBlockV1(*result.BlockV1),
+		}, nil
+	}
+
+	if result.BlockWithSignatures != nil {
+		return ChainGetBlockResult{
+			APIVersion: result.APIVersion,
+			Block:      types.NewBlockFromBlockWithSignatures(*result.BlockWithSignatures),
+		}, nil
+	}
+	return ChainGetBlockResult{}, errors.New("incorrect RPC response structure")
 }
 
 type ChainGetBlockTransfersResult struct {
@@ -107,7 +131,7 @@ const (
 	ValidatorStateRemoved ValidatorState = "Removed"
 	// ValidatorStateBanned means that the validator has been banned in the current era.
 	ValidatorStateBanned ValidatorState = "Banned"
-	// ValidatorStateCannotPropose means that the validator cannot propose a BlockV1.
+	// ValidatorStateCannotPropose means that the validator cannot propose a Block.
 	ValidatorStateCannotPropose ValidatorState = "CannotPropose"
 	// ValidatorStateSeenAsFaulty means that the validator has performed questionable activity.
 	ValidatorStateSeenAsFaulty ValidatorState = "SeenAsFaulty"

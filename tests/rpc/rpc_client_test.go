@@ -272,6 +272,9 @@ func Test_DefaultClient_GetBlockLatest(t *testing.T) {
 		{
 			filePath: "../data/rpc_response/get_block_v2_era_end.json",
 		},
+		{
+			filePath: "../data/rpc_response/get_block_v1.json",
+		},
 	}
 	for _, tt := range tests {
 		t.Run("GetBlockLatest", func(t *testing.T) {
@@ -281,53 +284,17 @@ func Test_DefaultClient_GetBlockLatest(t *testing.T) {
 			result, err := client.GetBlockLatest(context.Background())
 			require.NoError(t, err)
 			assert.NotEmpty(t, result.APIVersion)
-			assert.NotEmpty(t, result.BlockWithSignatures)
-			assert.NotEmpty(t, result.BlockWithSignatures.Proofs)
-			assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2)
-			assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Body.RewardedSignatures)
-			assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Body.Proposer)
-			assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.Height)
-			assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.ParentHash)
-			assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.ProtocolVersion)
-			assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.BodyHash)
+			assert.NotEmpty(t, result.Block.Hash)
+			assert.NotEmpty(t, result.Block.Body.Proposer)
+			assert.NotEmpty(t, result.Block.Header.Height)
+			assert.NotEmpty(t, result.Block.Header.ParentHash)
+			assert.NotEmpty(t, result.Block.Header.StateRootHash)
+			assert.NotEmpty(t, result.Block.Header.Timestamp)
+			assert.NotEmpty(t, result.Block.Header.EraID)
+			assert.NotEmpty(t, result.Block.Header.ProtocolVersion)
+			assert.NotEmpty(t, result.Block.Proofs)
 		})
 	}
-}
-
-func Test_DefaultClient_GetBlockByHash(t *testing.T) {
-	server := SetupServer(t, "../data/rpc_response/get_block_v2.json")
-	defer server.Close()
-	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetBlockByHash(context.Background(), "5dafbccc05cd3eb765ef9471a141877d8ffae306fb79c75fa4db46ab98bca370")
-	require.NoError(t, err)
-	assert.NotEmpty(t, result.APIVersion)
-	assert.NotEmpty(t, result.BlockWithSignatures)
-	assert.NotEmpty(t, result.BlockWithSignatures.Proofs)
-	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2)
-	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Body.RewardedSignatures)
-	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Body.Proposer)
-	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.Height)
-	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.ParentHash)
-	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.ProtocolVersion)
-	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.BodyHash)
-}
-
-func Test_DefaultClient_GetBlockByHeight(t *testing.T) {
-	server := SetupServer(t, "../data/rpc_response/get_block_v2.json")
-	defer server.Close()
-	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetBlockByHeight(context.Background(), 441)
-	require.NoError(t, err)
-	assert.NotEmpty(t, result.APIVersion)
-	assert.NotEmpty(t, result.BlockWithSignatures)
-	assert.NotEmpty(t, result.BlockWithSignatures.Proofs)
-	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2)
-	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Body.RewardedSignatures)
-	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Body.Proposer)
-	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.Height)
-	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.ParentHash)
-	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.ProtocolVersion)
-	assert.NotEmpty(t, result.BlockWithSignatures.Block.BlockV2.Header.BodyHash)
 }
 
 func Test_DefaultClient_GetBlockTransfersLatest(t *testing.T) {

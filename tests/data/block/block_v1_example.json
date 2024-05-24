@@ -16,5 +16,31 @@
     "proposer": "019e7b8bdec03ba83be4f5443d9f7f9111c77fec984ce9bb5bb7eb3da1e689c02d",
     "deploy_hashes": [],
     "transfer_hashes": []
-  }
+  },
+  "proofs": [
+    {
+      "public_key": "011b19ef983c039a2a335f2f35199bf8cad5ba2c583bd709748feb76f24ffb1bab",
+      "signature": "01f6bfd939b7797f1be4f16e597a115f38687745ad32dcd3402ef38c750b6abfb50c0918cb1e57ea25b174fa632a1f62000cc727aff703eb17c3b5f976ca17f304"
+    },
+    {
+      "public_key": "011d86fcc3e438fcb47d4d9af77e9db97ca1c322c3e87d5a4ea6f3386b9ddcd6ed",
+      "signature": "019a011ea3f5d5d5446748ae58c40f5d6f0f255dfd1a75161d84b2c280f79a523756fee665401617e765651c32dd4a10598a15e71ae08ee3b48479033db4d2f30c"
+    },
+    {
+      "public_key": "017234b285929170324e1051ccd887dc08adf049650ecf5d383985b0b0048ab39b",
+      "signature": "017664b8c0b2cdba2261ae1af6f213ad0f8812799e2fbd840b668799221c4f0a5951aa7f9e1828bbbe16fc51e1e94e5c1a935f31c3781feef7a36500c660774601"
+    },
+    {
+      "public_key": "017fec504c642f2b321b8591f1c3008348c57a81acafceb5a392cf8416a5fb4a3c",
+      "signature": "01e921e323ce23a1e7cf9453e0efdc23c0ee9001d28eb8124da73e85f0fc5fe3f6cd22008aa7053cf5c8c20813230f414238b95032f98c0ce6e09e643dfc011009"
+    },
+    {
+      "public_key": "019e7b8bdec03ba83be4f5443d9f7f9111c77fec984ce9bb5bb7eb3da1e689c02d",
+      "signature": "01fcdf5f457fbe2868e03a15bee5af2c15fa4d8fce05888fde0c7b080ffda418511c380a71c500097ff840e0e68ff0976e4c0ec74fd318554e8557a4d5b6042c06"
+    },
+    {
+      "public_key": "01cb8e121682e087058610828a6f75e8ca504321508243c7518a4047d3284f2f3c",
+      "signature": "014bee8a716df01a593a535ebf2dee20da400a99dffe1d56e07f2dfa5f947d4d5003e4ee51289e389998e4c9b45efe00a1193d7db79a67dd824d489ddf16ad820e"
+    }
+  ]
 }
