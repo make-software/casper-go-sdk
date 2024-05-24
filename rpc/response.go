@@ -3,11 +3,12 @@ package rpc
 import (
 	"encoding/json"
 	"errors"
+	"strings"
+
 	"github.com/make-software/casper-go-sdk/types"
 	"github.com/make-software/casper-go-sdk/types/clvalue"
 	"github.com/make-software/casper-go-sdk/types/key"
 	"github.com/make-software/casper-go-sdk/types/keypair"
-	"strings"
 )
 
 // RpcResponse is a wrapper struct for an RPC Response. For a successful response the Result property
