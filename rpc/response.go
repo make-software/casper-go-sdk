@@ -3,11 +3,11 @@ package rpc
 import (
 	"encoding/json"
 	"errors"
-
 	"github.com/make-software/casper-go-sdk/types"
 	"github.com/make-software/casper-go-sdk/types/clvalue"
 	"github.com/make-software/casper-go-sdk/types/key"
 	"github.com/make-software/casper-go-sdk/types/keypair"
+	"strings"
 )
 
 // RpcResponse is a wrapper struct for an RPC Response. For a successful response the Result property
@@ -100,9 +100,9 @@ type StateGetDictionaryResult struct {
 }
 
 type QueryGlobalStateResult struct {
-	ApiVersion  string              `json:"api_version"`
-	BlockHeader types.BlockHeaderV1 `json:"block_header,omitempty"`
-	StoredValue types.StoredValue   `json:"stored_value"`
+	ApiVersion  string            `json:"api_version"`
+	BlockHeader types.BlockHeader `json:"block_header,omitempty"`
+	StoredValue types.StoredValue `json:"stored_value"`
 	//MerkleProof is a construction created using a merkle trie that allows verification of the associated hashes.
 	MerkleProof json.RawMessage `json:"merkle_proof"`
 }
@@ -220,4 +220,63 @@ type InfoGetChainspecResult struct {
 		MaybeGenesisAccountsBytes string `json:"maybe_genesis_accounts_bytes,omitempty"`
 		MaybeGlobalStateBytes     string `json:"maybe_global_state_bytes,omitempty"`
 	} `json:"chainspec_bytes"`
+}
+
+type queryGlobalStateResultV1Compatible struct {
+	ApiVersion  string              `json:"api_version"`
+	BlockHeader types.BlockHeaderV1 `json:"block_header,omitempty"`
+	StoredValue types.StoredValue   `json:"stored_value"`
+	//MerkleProof is a construction created using a merkle trie that allows verification of the associated hashes.
+	MerkleProof json.RawMessage `json:"merkle_proof"`
+}
+
+// UnmarshalJSON handle the backward compatibility logic with V1
+func (h *QueryGlobalStateResult) UnmarshalJSON(bytes []byte) error {
+	// Check the API version
+	version := struct {
+		ApiVersion string `json:"api_version"`
+	}{}
+
+	if err := json.Unmarshal(bytes, &version); err != nil {
+		return err
+	}
+
+	// handle V1 version
+	if !strings.HasPrefix(version.ApiVersion, "2") {
+		var v1Compatible queryGlobalStateResultV1Compatible
+		if err := json.Unmarshal(bytes, &v1Compatible); err != nil {
+			return err
+		}
+		*h = QueryGlobalStateResult{
+			ApiVersion:  v1Compatible.ApiVersion,
+			BlockHeader: types.NewBlockHeaderFromV1(v1Compatible.BlockHeader),
+			StoredValue: v1Compatible.StoredValue,
+			MerkleProof: v1Compatible.MerkleProof,
+		}
+		return nil
+	}
+
+	var result struct {
+		ApiVersion  string                   `json:"api_version"`
+		BlockHeader types.BlockHeaderWrapper `json:"block_header,omitempty"`
+		StoredValue types.StoredValue        `json:"stored_value"`
+		MerkleProof json.RawMessage          `json:"merkle_proof"`
+	}
+	if err := json.Unmarshal(bytes, &result); err != nil {
+		return err
+	}
+
+	if result.BlockHeader.BlockHeaderV2 == nil {
+		return errors.New("incorrect RPC response structure")
+	}
+
+	*h = QueryGlobalStateResult{
+		ApiVersion: result.ApiVersion,
+		BlockHeader: types.BlockHeader{
+			BlockHeaderV2: *result.BlockHeader.BlockHeaderV2,
+		},
+		StoredValue: result.StoredValue,
+		MerkleProof: result.MerkleProof,
+	}
+	return nil
 }

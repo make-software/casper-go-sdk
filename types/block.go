@@ -113,6 +113,54 @@ type BlockBodyV1 struct {
 	TransferHashes []key.Hash `json:"transfer_hashes"`
 }
 
+type BlockHeaderWrapper struct {
+	BlockHeaderV1 *BlockHeaderV1 `json:"Version1"`
+	BlockHeaderV2 *BlockHeaderV2 `json:"Version2"`
+}
+
+type BlockHeader struct {
+	BlockHeaderV2
+
+	// source OriginBlockHeaderV1, nil if constructed from BlockHeaderV2
+	OriginBlockHeaderV1 *BlockHeaderV1
+}
+
+func NewBlockHeaderFromV1(header BlockHeaderV1) BlockHeader {
+	var eraEnd *EraEndV2
+	if header.EraEnd != nil {
+		rewards := make(map[string]clvalue.UInt512, len(header.EraEnd.EraReport.Rewards))
+		for _, reward := range header.EraEnd.EraReport.Rewards {
+			rewards[reward.Validator.ToHex()] = reward.Amount
+		}
+
+		eraEnd = &EraEndV2{
+			Equivocators:            header.EraEnd.EraReport.Equivocators,
+			InactiveValidators:      header.EraEnd.EraReport.InactiveValidators,
+			NextEraValidatorWeights: header.EraEnd.NextEraValidatorWeights,
+			Rewards:                 rewards,
+			NextEraGasPrice:         1,
+		}
+	}
+
+	return BlockHeader{
+		BlockHeaderV2: BlockHeaderV2{
+			AccumulatedSeed: header.AccumulatedSeed,
+			BodyHash:        header.BodyHash,
+			EraID:           header.EraID,
+			CurrentGasPrice: 1,
+			Height:          header.Height,
+			ParentHash:      header.ParentHash,
+			ProtocolVersion: header.ProtocolVersion,
+			RandomBit:       header.RandomBit,
+			StateRootHash:   header.StateRootHash,
+			Timestamp:       header.Timestamp,
+			EraEnd:          eraEnd,
+		},
+		OriginBlockHeaderV1: &header,
+	}
+
+}
+
 type BlockHeaderV1 struct {
 	AccumulatedSeed *key.Hash `json:"accumulated_seed,omitempty"`
 	BodyHash        key.Hash  `json:"body_hash"`
