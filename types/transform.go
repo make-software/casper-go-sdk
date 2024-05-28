@@ -10,7 +10,24 @@ import (
 	"github.com/make-software/casper-go-sdk/types/key"
 )
 
-// Transform is an enumeration of transformation types used in the execution of a `deploy`.
+type TransformKind json.RawMessage
+
+// UnmarshalJSON sets *m to a copy of data.
+func (t *TransformKind) UnmarshalJSON(data []byte) error {
+	if t == nil {
+		return errors.New("json.RawMessage: UnmarshalJSON on nil pointer")
+	}
+	*t = append((*t)[0:0], data...)
+	return nil
+}
+
+// TransformV2 is an enumeration of transformation types used in the execution of a `deploy` for V2 version.
+type TransformV2 struct {
+	Key  key.Key       `json:"key"`
+	Kind TransformKind `json:"kind"`
+}
+
+// TransformKey is an enumeration of transformation types used in the execution of a `deploy`.
 type TransformKey struct {
 	Key       key.Key   `json:"key"`
 	Transform Transform `json:"transform"`
@@ -26,7 +43,7 @@ type WriteTransfer struct {
 	Amount     clvalue.UInt512  `json:"amount"`
 	Source     key.URef         `json:"source"`
 	Target     key.URef         `json:"target"`
-	Gas        string           `json:"gas"`
+	Gas        uint             `json:"gas,string"`
 }
 
 // MarshalJSON returns m as the JSON encoding of m.
