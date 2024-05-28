@@ -7,30 +7,31 @@ import (
 )
 
 type (
-	AuctionState    = types.AuctionState
-	Args            = types.Args
-	ValidatorBid    = types.ValidatorBid
-	AuctionBid      = types.AuctionBid
-	Block           = types.Block
-	BlockHeader     = types.BlockHeader
-	BlockBody       = types.BlockBody
-	ContractPackage = types.ContractPackage
-	ContractVersion = types.ContractVersion
-	Contract        = types.Contract
-	Deploy          = types.Deploy
-	DeployHeader    = types.DeployHeader
-	DeployApproval  = types.Approval
-	Entrypoint      = types.EntryPoint
-	ExecutionResult = types.ExecutionResultStatus
-	NamedKeys       = types.NamedKeys
-	NamedKey        = types.NamedKey
-	TransformKey    = types.TransformKey
-	Transform       = types.Transform
-	Argument        = types.Argument
-	Account         = types.Account
-	Reward          = types.Reward
-	WriteTransfer   = types.WriteTransfer
-	UnbondingPurse  = types.UnbondingPurse
+	AuctionState      = types.AuctionState
+	Args              = types.Args
+	ValidatorBid      = types.ValidatorBid
+	AuctionBid        = types.AuctionBid
+	Block             = types.Block
+	BlockHeader       = types.BlockHeader
+	BlockBody         = types.BlockBody
+	ContractPackage   = types.ContractPackage
+	ContractVersion   = types.ContractVersion
+	Contract          = types.Contract
+	Deploy            = types.Deploy
+	DeployHeader      = types.DeployHeader
+	DeployApproval    = types.Approval
+	Entrypoint        = types.EntryPoint
+	ExecutionResultV1 = types.ExecutionResultV1
+	ExecutionResultV2 = types.ExecutionResultV2
+	NamedKeys         = types.NamedKeys
+	NamedKey          = types.NamedKey
+	TransformKey      = types.TransformKey
+	Transform         = types.Transform
+	Argument          = types.Argument
+	Account           = types.Account
+	Reward            = types.Reward
+	WriteTransfer     = types.WriteTransfer
+	UnbondingPurse    = types.UnbondingPurse
 )
 
 type (

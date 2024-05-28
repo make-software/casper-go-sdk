@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/make-software/casper-go-sdk/types"
 	"github.com/make-software/casper-go-sdk/types/clvalue"
@@ -50,11 +51,50 @@ type ChainGetEraSummaryResult struct {
 }
 
 type InfoGetDeployResult struct {
+	ApiVersion       string                    `json:"api_version"`
+	Deploy           types.Deploy              `json:"deploy"`
+	ExecutionResults types.DeployExecutionInfo `json:"execution_info"`
+}
+
+type infoGetDeployResultV1Compatible struct {
 	ApiVersion       string                        `json:"api_version"`
 	Deploy           types.Deploy                  `json:"deploy"`
 	ExecutionResults []types.DeployExecutionResult `json:"execution_results"`
 	BlockHash        *key.Hash                     `json:"block_hash,omitempty"`
 	BlockHeight      *uint64                       `json:"block_height,omitempty"`
+}
+
+func (v *InfoGetDeployResult) UnmarshalJSON(data []byte) error {
+	version := struct {
+		ApiVersion string `json:"api_version"`
+	}{}
+
+	if err := json.Unmarshal(data, &version); err != nil {
+		return err
+	}
+
+	if !strings.HasPrefix(version.ApiVersion, "2") {
+		var v1Compatible infoGetDeployResultV1Compatible
+		if err := json.Unmarshal(data, &v1Compatible); err == nil {
+			*v = InfoGetDeployResult{
+				ApiVersion:       v1Compatible.ApiVersion,
+				Deploy:           v1Compatible.Deploy,
+				ExecutionResults: types.DeployExecutionInfoFromV1(v1Compatible.ExecutionResults, v1Compatible.BlockHeight),
+			}
+			return nil
+		}
+	}
+
+	var resp struct {
+		ApiVersion       string                    `json:"api_version"`
+		Deploy           types.Deploy              `json:"deploy"`
+		ExecutionResults types.DeployExecutionInfo `json:"execution_info"`
+	}
+	if err := json.Unmarshal(data, &resp); err != nil {
+		return err
+	}
+	*v = resp
+	return nil
 }
 
 type ChainGetEraInfoResult struct {
@@ -181,9 +221,9 @@ type PutDeployResult struct {
 }
 
 type SpeculativeExecResult struct {
-	ApiVersion      string                      `json:"api_version"`
-	BlockHash       key.Hash                    `json:"block_hash"`
-	ExecutionResult types.ExecutionResultStatus `json:"execution_result"`
+	ApiVersion      string                  `json:"api_version"`
+	BlockHash       key.Hash                `json:"block_hash"`
+	ExecutionResult types.ExecutionResultV1 `json:"execution_result"`
 }
 
 type QueryBalanceResult struct {
