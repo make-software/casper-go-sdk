@@ -1,6 +1,9 @@
 package types
 
 import (
+	"encoding/json"
+	"errors"
+
 	"github.com/make-software/casper-go-sdk/types/clvalue"
 	"github.com/make-software/casper-go-sdk/types/key"
 	"github.com/make-software/casper-go-sdk/types/keypair"
@@ -8,8 +11,62 @@ import (
 
 // Transfer a versioned wrapper for a transfer.
 type Transfer struct {
-	Version1 *TransferV1 `json:"Version1,omitempty"`
-	Version2 *TransferV2 `json:"Version2,omitempty"`
+	TransferV2
+
+	// source TransferV1, nil if constructed from TransferV2
+	OriginV1 *TransferV1
+}
+
+func (h *Transfer) UnmarshalJSON(bytes []byte) error {
+	versioned := struct {
+		Version1 *TransferV1 `json:"Version1,omitempty"`
+		Version2 *TransferV2 `json:"Version2,omitempty"`
+	}{}
+
+	if err := json.Unmarshal(bytes, &versioned); err != nil {
+		return err
+	}
+
+	if versioned.Version2 != nil {
+		*h = Transfer{
+			TransferV2: *versioned.Version2,
+		}
+		return nil
+	}
+
+	if versioned.Version1 != nil {
+		*h = NewTransferFromV1(*versioned.Version1)
+		return nil
+	}
+
+	//v1 compatible
+	var v1Compatible = TransferV1{}
+	if err := json.Unmarshal(bytes, &v1Compatible); err == nil {
+		*h = NewTransferFromV1(v1Compatible)
+		return nil
+	}
+
+	return errors.New("incorrect RPC response structure")
+}
+
+func NewTransferFromV1(transfer TransferV1) Transfer {
+	return Transfer{
+		TransferV2: TransferV2{
+			Amount: transfer.Amount,
+			TransactionHash: TransactionHash{
+				TransactionV1Hash: &transfer.DeployHash,
+			},
+			From: InitiatorAddr{
+				AccountHash: &transfer.From,
+			},
+			Gas:    transfer.Gas,
+			ID:     transfer.ID,
+			Source: transfer.Source,
+			Target: transfer.Target,
+			To:     transfer.To,
+		},
+		OriginV1: &transfer,
+	}
 }
 
 // TransferV1 represents a transfer from one purse to another
