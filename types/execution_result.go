@@ -66,39 +66,6 @@ func (v *ExecutionResult) UnmarshalJSON(data []byte) error {
 	return errors.New("incorrect RPC response structure")
 }
 
-//
-//func (c *ProcessExecutedDeploy) makeTransferFromTransform(transform casper.TransformKey) (*entities.Transfer, error) {
-//	writeTransfer, err := transform.Transform.ParseAsWriteTransfer()
-//	if err != nil {
-//		zap.S().Infow("failed to parse transform as WriteTransfer", zap.Error(err))
-//		return nil, err
-//	}
-//
-//	transferHash, err := casper.NewTransferHash(transform.Key.ToPrefixedString())
-//	if err != nil {
-//		zap.S().Infow("failed to parse transform key as Hash", zap.Error(err))
-//		return nil, err
-//	}
-//
-//	var toAccountHash *casper.Hash
-//	if writeTransfer.To != nil {
-//		toAccountHash = &writeTransfer.To.Hash
-//	}
-//	return entities.NewTransfer(
-//		writeTransfer.ID,
-//		writeTransfer.Amount.Value().Uint64(),
-//		writeTransfer.DeployHash,
-//		c.GetBlockHeight(),
-//		transferHash.Hash,
-//		writeTransfer.From.Hash,
-//		toAccountHash,
-//		writeTransfer.Source,
-//		writeTransfer.Target,
-//		c.rawDeploy.Deploy.Header.Timestamp.ToTime(),
-//	), nil
-//}
-//
-
 func NewExecutionResultV2FromV1(v1 ExecutionResultV1) ExecutionResultV2 {
 	if v1.Success != nil {
 		transforms := make([]TransformV2, 0)
