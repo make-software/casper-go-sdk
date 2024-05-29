@@ -94,6 +94,25 @@ func Test_DefaultClient_QueryBalanceDetails(t *testing.T) {
 		})
 	}
 }
+
+func Test_DefaultClient_QueryBalanceDetailsLatest(t *testing.T) {
+	pubKey, err := casper.NewPublicKey("0111bc2070a9af0f26f94b8549bffa5643ead0bc68eba3b1833039cfa2a9a8205d")
+	require.NoError(t, err)
+
+	entityAddr := "entity-account-" + pubKey.AccountHash().ToHex()
+	t.Run("QueryBalanceDetailsLatest", func(t *testing.T) {
+		result, err := GetRpcClient().QueryBalanceDetailsLatest(context.Background(),
+			rpc.PurseIdentifier{
+				MainPurseUnderEntityAddr: &entityAddr,
+			},
+		)
+		require.NoError(t, err)
+		assert.NotEmpty(t, result.AvailableBalance)
+		assert.NotEmpty(t, result.TotalBalance)
+		assert.NotEmpty(t, result.TotalBalanceProof)
+	})
+}
+
 func Test_DefaultClient_QueryStateByStateHash(t *testing.T) {
 	accountKey := "account-hash-bf06bdb1616050cea5862333d1f4787718f1011c95574ba92378419eefeeee59"
 	res, err := GetRpcClient().QueryGlobalStateByStateHash(context.Background(), nil, accountKey, nil)

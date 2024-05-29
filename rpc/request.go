@@ -175,6 +175,6 @@ type QueryBalanceRequest struct {
 }
 
 type QueryBalanceDetailsRequest struct {
-	PurseIdentifier PurseIdentifier        `json:"purse_identifier"`
-	StateIdentifier BalanceStateIdentifier `json:"state_identifier"`
+	PurseIdentifier PurseIdentifier         `json:"purse_identifier"`
+	StateIdentifier *BalanceStateIdentifier `json:"state_identifier,omitempty"`
 }

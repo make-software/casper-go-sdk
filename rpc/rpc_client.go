@@ -266,12 +266,12 @@ func (c *client) QueryBalance(ctx context.Context, identifier PurseIdentifier) (
 
 func (c *client) QueryBalanceDetails(ctx context.Context, purseIdentifier PurseIdentifier, stateIdentifier BalanceStateIdentifier) (QueryBalanceDetailsResult, error) {
 	var result QueryBalanceDetailsResult
-	return result, c.processRequest(ctx, MethodQueryBalanceDetails, QueryBalanceDetailsRequest{purseIdentifier, stateIdentifier}, &result)
+	return result, c.processRequest(ctx, MethodQueryBalanceDetails, QueryBalanceDetailsRequest{purseIdentifier, &stateIdentifier}, &result)
 }
 
 func (c *client) QueryBalanceDetailsByBlockHeight(ctx context.Context, purseIdentifier PurseIdentifier, height uint64) (QueryBalanceDetailsResult, error) {
 	var result QueryBalanceDetailsResult
-	return result, c.processRequest(ctx, MethodQueryBalanceDetails, QueryBalanceDetailsRequest{purseIdentifier, BalanceStateIdentifier{
+	return result, c.processRequest(ctx, MethodQueryBalanceDetails, QueryBalanceDetailsRequest{purseIdentifier, &BalanceStateIdentifier{
 		Block: &BlockIdentifier{
 			Height: &height,
 		},
@@ -280,21 +280,16 @@ func (c *client) QueryBalanceDetailsByBlockHeight(ctx context.Context, purseIden
 
 func (c *client) QueryBalanceDetailsByBlockHash(ctx context.Context, purseIdentifier PurseIdentifier, blockHash string) (QueryBalanceDetailsResult, error) {
 	var result QueryBalanceDetailsResult
-	return result, c.processRequest(ctx, MethodQueryBalanceDetails, QueryBalanceDetailsRequest{purseIdentifier, BalanceStateIdentifier{
+	return result, c.processRequest(ctx, MethodQueryBalanceDetails, QueryBalanceDetailsRequest{purseIdentifier, &BalanceStateIdentifier{
 		Block: &BlockIdentifier{
 			Hash: &blockHash,
 		},
 	}}, &result)
 }
 
-func (c *client) QueryBalanceDetailsByStateRoot(ctx context.Context, purseIdentifier PurseIdentifier, stateRootHash, timestamp string) (QueryBalanceDetailsResult, error) {
+func (c *client) QueryBalanceDetailsLatest(ctx context.Context, purseIdentifier PurseIdentifier) (QueryBalanceDetailsResult, error) {
 	var result QueryBalanceDetailsResult
-	return result, c.processRequest(ctx, MethodQueryBalanceDetails, QueryBalanceDetailsRequest{purseIdentifier, BalanceStateIdentifier{
-		StateRoot: &StateRootInfo{
-			StateRootHash: stateRootHash,
-			Timestamp:     timestamp,
-		},
-	}}, &result)
+	return result, c.processRequest(ctx, MethodQueryBalanceDetails, QueryBalanceDetailsRequest{PurseIdentifier: purseIdentifier}, &result)
 }
 
 func (c *client) GetChainspec(ctx context.Context) (InfoGetChainspecResult, error) {
