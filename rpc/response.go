@@ -243,7 +243,7 @@ func (h *QueryGlobalStateResult) UnmarshalJSON(bytes []byte) error {
 	}
 
 	// handle V1 version
-	if !strings.HasPrefix(version.ApiVersion, "2") {
+	if strings.HasPrefix(version.ApiVersion, "1") {
 		var v1Compatible queryGlobalStateResultV1Compatible
 		if err := json.Unmarshal(bytes, &v1Compatible); err != nil {
 			return err
