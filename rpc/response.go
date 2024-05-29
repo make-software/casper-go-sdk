@@ -178,6 +178,8 @@ type InfoGetStatusResult struct {
 	ReactorState string `json:"reactor_state"`
 	// Indicating the time the node last made progress
 	LastProgress types.Timestamp `json:"last_progress"`
+	// The hash of the latest switch block
+	LatestSwitchBlockHash key.Hash `json:"latest_switch_block_hash"`
 	// Indicating the highest contiguous sequence of the block chain for which the node has complete data
 	AvailableBlockRange struct {
 		Low  uint64 `json:"low"`

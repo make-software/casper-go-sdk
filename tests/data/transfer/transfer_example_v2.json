@@ -1,0 +1,14 @@
+{
+  "transaction_hash": {
+    "Deploy": "2345b42f21834e16ce2c3328cd9a1ee0c0c552c55e25bc2ebf668f94b2567c15"
+  },
+  "from": {
+    "AccountHash": "account-hash-7dd64920e60864390c810182b83b53f49310adc8d66e714c57a6e5ff0e3c6552"
+  },
+  "to": "account-hash-89009df4163298981c3b09cabf6ceac3e694c8c45b48067a497d24dea0b7c091",
+  "source": "uref-78b4958c8405a5e99ffb637f8c4b49c1807fe7eff3ce714cf3bc9672cba3e6ef-007",
+  "target": "uref-04a4e5362019c84a8a573882fb876ea10e9353acb7ab30dd6cdff24c5ad03db8-004",
+  "amount": "10000000000000",
+  "gas": "0",
+  "id": 1
+}
