@@ -119,6 +119,14 @@ type ClientInformational interface {
 	GetPeers(ctx context.Context) (InfoGetPeerResult, error)
 	// QueryBalance queries for balances under a given PurseIdentifier
 	QueryBalance(ctx context.Context, identifier PurseIdentifier) (QueryBalanceResult, error)
+	// QueryBalanceDetails query for full balance information using a purse identifier and a state identifier
+	QueryBalanceDetails(ctx context.Context, purseIdentifier PurseIdentifier, stateIdentifier BalanceStateIdentifier) (QueryBalanceDetailsResult, error)
+	// QueryBalanceDetailsByBlockHeight query for full balance information using a purse identifier and block height
+	QueryBalanceDetailsByBlockHeight(ctx context.Context, purseIdentifier PurseIdentifier, height uint64) (QueryBalanceDetailsResult, error)
+	// QueryBalanceDetailsByBlockHash query for full balance information using a purse identifier and block hash
+	QueryBalanceDetailsByBlockHash(ctx context.Context, purseIdentifier PurseIdentifier, blockHash string) (QueryBalanceDetailsResult, error)
+	// QueryBalanceDetailsLatest query for latest full balance information using a purse identifier
+	QueryBalanceDetailsLatest(ctx context.Context, purseIdentifier PurseIdentifier) (QueryBalanceDetailsResult, error)
 	// GetChainspec returns the raw bytes of the chainspec.toml, accounts.toml and global_state.toml files as read at node startup.
 	GetChainspec(ctx context.Context) (InfoGetChainspecResult, error)
 }

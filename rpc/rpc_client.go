@@ -264,6 +264,34 @@ func (c *client) QueryBalance(ctx context.Context, identifier PurseIdentifier) (
 	return result, c.processRequest(ctx, MethodQueryBalance, QueryBalanceRequest{identifier}, &result)
 }
 
+func (c *client) QueryBalanceDetails(ctx context.Context, purseIdentifier PurseIdentifier, stateIdentifier BalanceStateIdentifier) (QueryBalanceDetailsResult, error) {
+	var result QueryBalanceDetailsResult
+	return result, c.processRequest(ctx, MethodQueryBalanceDetails, QueryBalanceDetailsRequest{purseIdentifier, &stateIdentifier}, &result)
+}
+
+func (c *client) QueryBalanceDetailsByBlockHeight(ctx context.Context, purseIdentifier PurseIdentifier, height uint64) (QueryBalanceDetailsResult, error) {
+	var result QueryBalanceDetailsResult
+	return result, c.processRequest(ctx, MethodQueryBalanceDetails, QueryBalanceDetailsRequest{purseIdentifier, &BalanceStateIdentifier{
+		Block: &BlockIdentifier{
+			Height: &height,
+		},
+	}}, &result)
+}
+
+func (c *client) QueryBalanceDetailsByBlockHash(ctx context.Context, purseIdentifier PurseIdentifier, blockHash string) (QueryBalanceDetailsResult, error) {
+	var result QueryBalanceDetailsResult
+	return result, c.processRequest(ctx, MethodQueryBalanceDetails, QueryBalanceDetailsRequest{purseIdentifier, &BalanceStateIdentifier{
+		Block: &BlockIdentifier{
+			Hash: &blockHash,
+		},
+	}}, &result)
+}
+
+func (c *client) QueryBalanceDetailsLatest(ctx context.Context, purseIdentifier PurseIdentifier) (QueryBalanceDetailsResult, error) {
+	var result QueryBalanceDetailsResult
+	return result, c.processRequest(ctx, MethodQueryBalanceDetails, QueryBalanceDetailsRequest{PurseIdentifier: purseIdentifier}, &result)
+}
+
 func (c *client) GetChainspec(ctx context.Context) (InfoGetChainspecResult, error) {
 	var result InfoGetChainspecResult
 	return result, c.processRequest(ctx, MethodInfoGetChainspec, nil, &result)

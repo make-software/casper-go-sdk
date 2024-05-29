@@ -1,9 +1,30 @@
 package types
 
 import (
+	"encoding/json"
 	"github.com/make-software/casper-go-sdk/types/key"
 	"github.com/make-software/casper-go-sdk/types/keypair"
+	"time"
 )
+
+// BlockTime A newtype wrapping a [`u64`] which represents the block time
+type BlockTime struct {
+	time.Time
+}
+
+func (v BlockTime) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.Unix())
+}
+
+func (v *BlockTime) UnmarshalJSON(data []byte) error {
+	var blockTime uint64
+	if err := json.Unmarshal(data, &blockTime); err != nil {
+		return err
+	}
+
+	v.Time = time.Unix(int64(blockTime), 0)
+	return nil
+}
 
 // Block in the network
 type Block struct {
