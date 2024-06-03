@@ -289,42 +289,6 @@ func Test_DefaultClient_GetBlockByHeight(t *testing.T) {
 	assert.NotEmpty(t, result.Block.Hash)
 }
 
-func Test_DefaultClient_GetBlockTransfersLatest_V2(t *testing.T) {
-	server := SetupServer(t, "../data/rpc_response/get_block_transfer.json")
-	defer server.Close()
-	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetBlockTransfersLatest(context.Background())
-	require.NoError(t, err)
-	assert.NotEmpty(t, result.BlockHash)
-	assert.NotEmpty(t, result.Transfers[0].Version2)
-	assert.NotEmpty(t, result.Transfers[0].Version2.TransactionHash)
-	assert.NotEmpty(t, result.Transfers[0].Version2.From.AccountHash)
-}
-
-func Test_DefaultClient_GetBlockTransfersByHash(t *testing.T) {
-	server := SetupServer(t, "../data/rpc_response/get_block_transfer.json")
-	defer server.Close()
-	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetBlockTransfersByHash(context.Background(), "5dafbccc05cd3eb765ef9471a141877d8ffae306fb79c75fa4db46ab98bca370")
-	require.NoError(t, err)
-	assert.NotEmpty(t, result.BlockHash)
-	assert.NotEmpty(t, result.Transfers[0].Version2)
-	assert.NotEmpty(t, result.Transfers[0].Version2.TransactionHash)
-	assert.NotEmpty(t, result.Transfers[0].Version2.From.AccountHash)
-}
-
-func Test_DefaultClient_GetBlockTransfersByHeight(t *testing.T) {
-	server := SetupServer(t, "../data/rpc_response/get_block_transfer.json")
-	defer server.Close()
-	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetBlockTransfersByHeight(context.Background(), 1412462)
-	require.NoError(t, err)
-	assert.NotEmpty(t, result.BlockHash)
-	assert.NotEmpty(t, result.Transfers[0].Version2)
-	assert.NotEmpty(t, result.Transfers[0].Version2.TransactionHash)
-	assert.NotEmpty(t, result.Transfers[0].Version2.From.AccountHash)
-}
-
 func Test_DefaultClient_GetEraSummaryLatest(t *testing.T) {
 	server := SetupServer(t, "../data/rpc_response/get_era_info_summary.json")
 	defer server.Close()

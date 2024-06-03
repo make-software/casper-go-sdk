@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/make-software/casper-go-sdk/types"
 	"github.com/make-software/casper-go-sdk/types/clvalue"
@@ -55,6 +56,72 @@ type InfoGetDeployResult struct {
 	ExecutionResults []types.DeployExecutionResult `json:"execution_results"`
 	BlockHash        *key.Hash                     `json:"block_hash,omitempty"`
 	BlockHeight      *uint64                       `json:"block_height,omitempty"`
+}
+
+type InfoGetTransactionResult struct {
+	APIVersion      string                 `json:"api_version"`
+	Transaction     types.Transaction      `json:"transaction"`
+	ExecutionResult *types.ExecutionResult `json:"execution_result"`
+	BlockHash       *key.Hash              `json:"block_hash,omitempty"`
+	BlockHeight     *uint64                `json:"block_height,omitempty"`
+}
+
+type infoGetTransactionResultV1Compatible struct {
+	APIVersion       string                        `json:"api_version"`
+	Transaction      *types.TransactionWrapper     `json:"transaction"`
+	Deploy           *types.Deploy                 `json:"deploy"`
+	ExecutionInfo    *types.ExecutionResult        `json:"execution_result"`
+	ExecutionResults []types.DeployExecutionResult `json:"execution_results"`
+	BlockHash        *key.Hash                     `json:"block_hash,omitempty"`
+	BlockHeight      *uint64                       `json:"block_height,omitempty"`
+}
+
+func newInfoGetTransactionResultFromV1Compatible(result infoGetTransactionResultV1Compatible) (InfoGetTransactionResult, error) {
+	if result.Transaction != nil {
+		if result.Transaction.TransactionV1 != nil {
+			return InfoGetTransactionResult{
+				APIVersion: result.APIVersion,
+				Transaction: types.Transaction{
+					TransactionV1: *result.Transaction.TransactionV1,
+				},
+				ExecutionResult: result.ExecutionInfo,
+				BlockHash:       result.BlockHash,
+				BlockHeight:     result.BlockHeight,
+			}, nil
+		}
+
+		if result.Transaction.Deploy != nil {
+			info := InfoGetTransactionResult{
+				APIVersion:  result.APIVersion,
+				Transaction: types.NewTransactionFromDeploy(*result.Deploy),
+				BlockHash:   result.BlockHash,
+				BlockHeight: result.BlockHeight,
+			}
+
+			if len(result.ExecutionResults) > 0 {
+				executionInfo := types.ExecutionInfoFromV1(result.ExecutionResults, result.BlockHeight)
+				info.ExecutionResult = &executionInfo.ExecutionResult
+			}
+
+			return info, nil
+		}
+	}
+
+	if result.Deploy != nil {
+		info := InfoGetTransactionResult{
+			APIVersion:  result.APIVersion,
+			Transaction: types.NewTransactionFromDeploy(*result.Deploy),
+			BlockHash:   result.BlockHash,
+			BlockHeight: result.BlockHeight,
+		}
+
+		if len(result.ExecutionResults) > 0 {
+			executionInfo := types.ExecutionInfoFromV1(result.ExecutionResults, result.BlockHeight)
+			info.ExecutionResult = &executionInfo.ExecutionResult
+		}
+		return info, nil
+	}
+	return InfoGetTransactionResult{}, errors.New("incorrect RPC response structure")
 }
 
 type ChainGetEraInfoResult struct {
@@ -181,9 +248,9 @@ type PutDeployResult struct {
 }
 
 type SpeculativeExecResult struct {
-	ApiVersion      string                      `json:"api_version"`
-	BlockHash       key.Hash                    `json:"block_hash"`
-	ExecutionResult types.ExecutionResultStatus `json:"execution_result"`
+	ApiVersion      string                  `json:"api_version"`
+	BlockHash       key.Hash                `json:"block_hash"`
+	ExecutionResult types.ExecutionResultV1 `json:"execution_result"`
 }
 
 type QueryBalanceResult struct {
