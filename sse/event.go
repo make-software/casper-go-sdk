@@ -52,8 +52,8 @@ type APIVersionEvent struct {
 // BlockAddedEvent definition
 type (
 	BlockAdded struct {
-		BlockHash string      `json:"block_hash"`
-		Block     types.Block `json:"block"`
+		BlockHash string        `json:"block_hash"`
+		Block     types.BlockV1 `json:"block"`
 	}
 	BlockAddedEvent struct {
 		BlockAdded BlockAdded `json:"BlockAdded"`
