@@ -125,6 +125,18 @@ func Test_DefaultClient_QueryGlobalStateByBlock_GetAccount(t *testing.T) {
 	assert.NotEmpty(t, res.StoredValue.Account.AccountHash)
 }
 
+func Test_DefaultClient_QueryGlobalStateByBlock_V2(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/query_global_state_v2.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	blockHash := "bf06bdb1616050cea5862333d1f4787718f1011c95574ba92378419eefeeee59"
+	accountKey := "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c"
+	res, err := client.QueryGlobalStateByBlockHash(context.Background(), blockHash, accountKey, nil)
+	require.NoError(t, err)
+	assert.NotEmpty(t, res.BlockHeader.BodyHash)
+	assert.NotEmpty(t, res.StoredValue.Account.AccountHash)
+}
+
 func Test_DefaultClient_QueryGlobalStateByBlockHeight_GetAccount(t *testing.T) {
 	server := SetupServer(t, "../data/rpc_response/query_global_state_era.json")
 	defer server.Close()
@@ -263,30 +275,38 @@ func Test_DefaultClient_GetValidatorChanges(t *testing.T) {
 }
 
 func Test_DefaultClient_GetBlockLatest(t *testing.T) {
-	server := SetupServer(t, "../data/rpc_response/get_block.json")
-	defer server.Close()
-	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetBlockLatest(context.Background())
-	require.NoError(t, err)
-	assert.NotEmpty(t, result.Block.Hash)
-}
-
-func Test_DefaultClient_GetBlockByHash(t *testing.T) {
-	server := SetupServer(t, "../data/rpc_response/get_block.json")
-	defer server.Close()
-	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetBlockByHash(context.Background(), "5dafbccc05cd3eb765ef9471a141877d8ffae306fb79c75fa4db46ab98bca370")
-	require.NoError(t, err)
-	assert.NotEmpty(t, result.Block.Hash)
-}
-
-func Test_DefaultClient_GetBlockByHeight(t *testing.T) {
-	server := SetupServer(t, "../data/rpc_response/get_block.json")
-	defer server.Close()
-	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetBlockByHeight(context.Background(), 185)
-	require.NoError(t, err)
-	assert.NotEmpty(t, result.Block.Hash)
+	tests := []struct {
+		filePath string
+	}{
+		{
+			filePath: "../data/rpc_response/get_block_v2.json",
+		},
+		{
+			filePath: "../data/rpc_response/get_block_v2_era_end.json",
+		},
+		{
+			filePath: "../data/rpc_response/get_block_v1.json",
+		},
+	}
+	for _, tt := range tests {
+		t.Run("GetBlockLatest", func(t *testing.T) {
+			server := SetupServer(t, tt.filePath)
+			defer server.Close()
+			client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+			result, err := client.GetBlockLatest(context.Background())
+			require.NoError(t, err)
+			assert.NotEmpty(t, result.APIVersion)
+			assert.NotEmpty(t, result.Block.Hash)
+			assert.NotEmpty(t, result.Block.Body.Proposer)
+			assert.NotEmpty(t, result.Block.Header.Height)
+			assert.NotEmpty(t, result.Block.Header.ParentHash)
+			assert.NotEmpty(t, result.Block.Header.StateRootHash)
+			assert.NotEmpty(t, result.Block.Header.Timestamp)
+			assert.NotEmpty(t, result.Block.Header.EraID)
+			assert.NotEmpty(t, result.Block.Header.ProtocolVersion)
+			assert.NotEmpty(t, result.Block.Proofs)
+		})
+	}
 }
 
 func Test_DefaultClient_GetEraSummaryLatest(t *testing.T) {

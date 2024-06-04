@@ -205,18 +205,30 @@ func (c *client) GetEraInfoByBlockHash(ctx context.Context, hash string) (ChainG
 }
 
 func (c *client) GetBlockLatest(ctx context.Context) (ChainGetBlockResult, error) {
-	var result ChainGetBlockResult
-	return result, c.processRequest(ctx, MethodGetBlock, nil, &result)
+	var result chainGetBlockResultV1Compatible
+	if err := c.processRequest(ctx, MethodGetBlock, nil, &result); err != nil {
+		return ChainGetBlockResult{}, err
+	}
+
+	return newChainGetBlockResultFromV1Compatible(result)
 }
 
 func (c *client) GetBlockByHash(ctx context.Context, hash string) (ChainGetBlockResult, error) {
-	var result ChainGetBlockResult
-	return result, c.processRequest(ctx, MethodGetBlock, NewParamBlockByHash(hash), &result)
+	var result chainGetBlockResultV1Compatible
+	if err := c.processRequest(ctx, MethodGetBlock, NewParamBlockByHash(hash), &result); err != nil {
+		return ChainGetBlockResult{}, err
+	}
+
+	return newChainGetBlockResultFromV1Compatible(result)
 }
 
 func (c *client) GetBlockByHeight(ctx context.Context, height uint64) (ChainGetBlockResult, error) {
-	var result ChainGetBlockResult
-	return result, c.processRequest(ctx, MethodGetBlock, NewParamBlockByHeight(height), &result)
+	var result chainGetBlockResultV1Compatible
+	if err := c.processRequest(ctx, MethodGetBlock, NewParamBlockByHeight(height), &result); err != nil {
+		return ChainGetBlockResult{}, err
+	}
+
+	return newChainGetBlockResultFromV1Compatible(result)
 }
 
 func (c *client) GetBlockTransfersLatest(ctx context.Context) (ChainGetBlockTransfersResult, error) {
