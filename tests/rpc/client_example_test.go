@@ -22,12 +22,18 @@ import (
 
 func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 	tests := []struct {
-		filePath string
-		isDeploy bool
+		filePath      string
+		isDeploy      bool
+		withTransfers bool
 	}{
 		{
 			filePath: "../data/deploy/get_raw_rpc_deploy.json",
 			isDeploy: true,
+		},
+		{
+			filePath:      "../data/deploy/get_raw_rpc_deploy_with_transfer.json",
+			isDeploy:      true,
+			withTransfers: true,
 		},
 		{
 			filePath: "../data/rpc_response/get_transaction.json",
@@ -52,10 +58,17 @@ func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 			assert.NotEmpty(t, result.Transaction.TransactionV1Header.InitiatorAddr)
 			assert.NotEmpty(t, result.Transaction.TransactionV1Body.Target)
 			assert.NotEmpty(t, result.Transaction.TransactionV1Body.TransactionScheduling)
+			assert.NotEmpty(t, result.ExecutionResult.Initiator)
+			assert.NotEmpty(t, result.ExecutionResult.Effects)
 			assert.NotEmpty(t, result.Transaction.Approvals)
 
 			if tt.isDeploy {
 				assert.NotEmpty(t, result.Transaction.OriginDeployV1)
+				assert.NotEmpty(t, result.ExecutionResult.OriginExecutionResultV1)
+			}
+
+			if tt.withTransfers {
+				assert.NotEmpty(t, result.ExecutionResult.ExecutionResultV2.Transfers)
 			}
 		})
 	}

@@ -125,6 +125,10 @@ func newInfoGetTransactionResultFromV1Compatible(result infoGetTransactionResult
 			if len(result.ExecutionResults) > 0 {
 				executionInfo := types.ExecutionInfoFromV1(result.ExecutionResults, result.BlockHeight)
 				info.ExecutionResult = &executionInfo.ExecutionResult
+
+				info.ExecutionResult.ExecutionResultV2.Initiator = types.InitiatorAddr{
+					PublicKey: &result.Deploy.Header.Account,
+				}
 			}
 
 			return info, nil
@@ -142,6 +146,11 @@ func newInfoGetTransactionResultFromV1Compatible(result infoGetTransactionResult
 		if len(result.ExecutionResults) > 0 {
 			executionInfo := types.ExecutionInfoFromV1(result.ExecutionResults, result.BlockHeight)
 			info.ExecutionResult = &executionInfo.ExecutionResult
+
+			// Specify the data explicitly that cant be extracts from execution result
+			info.ExecutionResult.ExecutionResultV2.Initiator = types.InitiatorAddr{
+				PublicKey: &result.Deploy.Header.Account,
+			}
 		}
 		return info, nil
 	}

@@ -68,11 +68,12 @@ func (v *ExecutionResult) UnmarshalJSON(data []byte) error {
 }
 
 func NewExecutionResultV2FromV1(v1 ExecutionResultV1) ExecutionResultV2 {
+	transforms := make([]TransformV2, 0)
 	if v1.Success != nil {
-		transforms := make([]TransformV2, 0)
 		for _, transform := range v1.Success.Effect.Transforms {
 			transforms = append(transforms, TransformV2{
-				Key:  transform.Key,
+				Key: transform.Key,
+				// TODO: we should convert old Transform to new format
 				Kind: TransformKind(transform.Transform),
 			})
 		}
@@ -112,15 +113,28 @@ func NewExecutionResultV2FromV1(v1 ExecutionResultV1) ExecutionResultV2 {
 			})
 		}
 		return ExecutionResultV2{
-			Cost:      v1.Success.Cost,
+			Limit:     0, // limit is unknown field for V1 Deploy
+			Consumed:  v1.Success.Cost,
+			Cost:      0, // cost is unknown field for V1 Deploy
 			Transfers: transfers,
 			Effects:   transforms,
 		}
 	}
 
+	if v1.Failure != nil {
+		for _, transform := range v1.Failure.Effect.Transforms {
+			transforms = append(transforms, TransformV2{
+				Key: transform.Key,
+				// TODO: we should convert old Transform to new format
+				Kind: TransformKind(transform.Transform),
+			})
+		}
+	}
+
 	return ExecutionResultV2{
 		ErrorMessage: &v1.Failure.ErrorMessage,
-		Cost:         v1.Failure.Cost,
+		Consumed:     v1.Failure.Cost,
+		Effects:      transforms,
 	}
 }
 
