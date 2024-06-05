@@ -14,9 +14,22 @@ type Transaction struct {
 }
 
 func NewTransactionFromDeploy(deploy Deploy) Transaction {
-	var paymentAmount uint64
-	var standardPayment = deploy.Session.Transfer != nil
-	if args := deploy.Session.Args(); args != nil {
+	var (
+		paymentAmount         uint64
+		transactionEntryPoint TransactionEntryPoint
+	)
+
+	if deploy.Session.Transfer != nil {
+		transactionEntryPoint.Transfer = &struct{}{}
+	} else {
+		transactionEntryPoint.Custom = &struct {
+			Type string
+		}{
+			Type: "Call",
+		}
+	}
+
+	if args := deploy.Payment.Args(); args != nil {
 		argument, err := args.Find("amount")
 		if err == nil {
 			parsed, err := argument.Parsed()
@@ -28,6 +41,8 @@ func NewTransactionFromDeploy(deploy Deploy) Transaction {
 		}
 	}
 
+	// Use StandardPayment as true only for payments without explicit `payment amount`
+	var standardPayment = paymentAmount == 0
 	return Transaction{
 		TransactionV1: TransactionV1{
 			TransactionV1Hash: &deploy.Hash,
@@ -48,10 +63,9 @@ func NewTransactionFromDeploy(deploy Deploy) Transaction {
 				},
 			},
 			TransactionV1Body: TransactionV1Body{
-				Args:   deploy.Session.Args(),
-				Target: NewTransactionTargetFromSession(deploy.Session),
-				// TODO: add parsing TransactionEntryPoint
-				TransactionEntryPoint: TransactionEntryPoint{},
+				Args:                  deploy.Session.Args(),
+				Target:                NewTransactionTargetFromSession(deploy.Session),
+				TransactionEntryPoint: transactionEntryPoint,
 				TransactionScheduling: TransactionScheduling{
 					Standard: &struct{}{},
 				},
