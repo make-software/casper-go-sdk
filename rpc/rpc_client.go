@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/make-software/casper-go-sdk/types"
+	"github.com/make-software/casper-go-sdk/types/key"
 	"github.com/make-software/casper-go-sdk/types/keypair"
 )
 
@@ -39,6 +40,45 @@ func (c *client) GetDeployFinalizedApproval(ctx context.Context, hash string) (I
 		"deploy_hash":         hash,
 		"finalized_approvals": true,
 	}, &result)
+}
+
+func (c *client) GetTransaction(ctx context.Context, transactionHash string) (InfoGetTransactionResult, error) {
+	hash, err := key.NewHash(transactionHash)
+	if err != nil {
+		return InfoGetTransactionResult{}, err
+	}
+
+	var result infoGetTransactionResultV1Compatible
+	c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
+		TransactionHash: types.TransactionHash{
+			TransactionV1Hash: &hash,
+		},
+	}, &result)
+	if err != nil {
+		return InfoGetTransactionResult{}, err
+	}
+
+	return newInfoGetTransactionResultFromV1Compatible(result)
+}
+
+func (c *client) GetTransactionFinalizedApproval(ctx context.Context, transactionHash string) (InfoGetTransactionResult, error) {
+	hash, err := key.NewHash(transactionHash)
+	if err != nil {
+		return InfoGetTransactionResult{}, err
+	}
+
+	var result infoGetTransactionResultV1Compatible
+	c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
+		TransactionHash: types.TransactionHash{
+			TransactionV1Hash: &hash,
+		},
+		FinalizedApprovals: &[]bool{true}[0],
+	}, &result)
+	if err != nil {
+		return InfoGetTransactionResult{}, err
+	}
+
+	return newInfoGetTransactionResultFromV1Compatible(result)
 }
 
 func (c *client) GetStateItem(ctx context.Context, stateRootHash *string, key string, path []string) (StateGetItemResult, error) {

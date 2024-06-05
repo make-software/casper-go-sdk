@@ -31,6 +31,7 @@ type Method string
 
 const (
 	MethodGetDeploy           Method = "info_get_deploy"
+	MethodGetTransaction      Method = "info_get_transaction"
 	MethodGetStateItem        Method = "state_get_item"
 	MethodQueryGlobalState    Method = "query_global_state"
 	MethodGetDictionaryItem   Method = "state_get_dictionary_item"
@@ -86,6 +87,11 @@ type ParamQueryGlobalStateID struct {
 	StateRootHash string  `json:"StateRootHash,omitempty"`
 	BlockHash     string  `json:"BlockHash,omitempty"`
 	BlockHeight   *uint64 `json:"BlockHeight,omitempty"`
+}
+
+type ParamTransactionHash struct {
+	TransactionHash    types.TransactionHash `json:"transaction_hash,omitempty"`
+	FinalizedApprovals *bool                 `json:"finalized_approvals,omitempty"`
 }
 
 func NewQueryGlobalStateParam(key string, path []string, id *ParamQueryGlobalStateID) ParamQueryGlobalState {
