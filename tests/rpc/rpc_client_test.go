@@ -297,7 +297,7 @@ func Test_DefaultClient_GetBlockLatest(t *testing.T) {
 			require.NoError(t, err)
 			assert.NotEmpty(t, result.APIVersion)
 			assert.NotEmpty(t, result.Block.Hash)
-			assert.NotEmpty(t, result.Block.Body.Proposer)
+			assert.NotEmpty(t, result.Block.Header.Proposer)
 			assert.NotEmpty(t, result.Block.Header.Height)
 			assert.NotEmpty(t, result.Block.Header.ParentHash)
 			assert.NotEmpty(t, result.Block.Header.StateRootHash)
@@ -305,6 +305,7 @@ func Test_DefaultClient_GetBlockLatest(t *testing.T) {
 			assert.NotEmpty(t, result.Block.Header.EraID)
 			assert.NotEmpty(t, result.Block.Header.ProtocolVersion)
 			assert.NotEmpty(t, result.Block.Proofs)
+			assert.NotEmpty(t, result.Block.Body.Transactions)
 		})
 	}
 }

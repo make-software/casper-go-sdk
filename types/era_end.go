@@ -14,8 +14,8 @@ type EraEndV2 struct {
 	// The validators for the upcoming era and their respective weights
 	NextEraValidatorWeights []ValidatorWeightEraEnd `json:"next_era_validator_weights"`
 	// The rewards distributed to the validators
-	Rewards         map[string]clvalue.UInt512 `json:"rewards"`
-	NextEraGasPrice uint8                      `json:"next_era_gas_price"`
+	Rewards         map[string][]clvalue.UInt512 `json:"rewards"`
+	NextEraGasPrice uint8                        `json:"next_era_gas_price"`
 }
 
 // EraEndV1 contains a report and list of validator weights for the next era
