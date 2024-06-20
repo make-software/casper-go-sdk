@@ -1,0 +1,10 @@
+{
+  "FinalitySignature": {
+    "V2": {
+      "block_hash": "abbcdc782a18a9ba31826b07c838a69a6b790c8b36a0fd5f0818f757834d82f5",
+      "era_id": 11,
+      "signature": "01d45c16e488c3e16bb1e1134f9a92fb42492498ab2233a643a159281ea8a2a497edd19b6ae56f70c32c12f0341a9ded719033285db17c614337e363fdd8e41f05",
+      "public_key": "01601bda04ea125e2ca1881e817c46403b32862eb053370e0b93adad220378578a"
+    }
+  }
+}

@@ -45,14 +45,84 @@ func Test_RawEvent_ParseAsApiVersionEvent(t *testing.T) {
 }
 
 func Test_RawEvent_ParseAsBlockAddedEvent(t *testing.T) {
-	data, err := os.ReadFile("../data/sse/block_added_event.json")
-	require.NoError(t, err)
-	rawEvent := sse.RawEvent{
-		Data: data,
+	tests := []struct {
+		filePath     string
+		expectedHash string
+	}{
+		{
+			filePath:     "../data/sse/block_added_event.json",
+			expectedHash: "5809c6aacc3ac0573a67677743f4cb93cd487ade1c5132c1f806f75b6248f35f",
+		},
+		{
+			filePath:     "../data/sse/block_added_event_v2.json",
+			expectedHash: "cb64adaae660d227b7d7579039a75e21f1022e2c044a5ed0ce0beefb12b95758",
+		},
 	}
-	res, err := rawEvent.ParseAsBlockAddedEvent()
-	require.NoError(t, err)
-	assert.Equal(t, "5809c6aacc3ac0573a67677743f4cb93cd487ade1c5132c1f806f75b6248f35f", res.BlockAdded.Block.Hash.ToHex())
+
+	for _, tc := range tests {
+		t.Run(tc.filePath, func(t *testing.T) {
+			data, err := os.ReadFile(tc.filePath)
+			require.NoError(t, err)
+
+			rawEvent := sse.RawEvent{
+				Data: data,
+			}
+
+			res, err := rawEvent.ParseAsBlockAddedEvent()
+			require.NoError(t, err)
+			assert.Equal(t, tc.expectedHash, res.BlockAdded.Block.Hash.ToHex())
+			assert.NotEmpty(t, res.BlockAdded.Block.Header.Proposer)
+			assert.NotEmpty(t, res.BlockAdded.Block.Header.Height)
+			assert.NotEmpty(t, res.BlockAdded.Block.Header.EraID)
+			assert.NotEmpty(t, res.BlockAdded.Block.Header.BodyHash)
+			assert.NotEmpty(t, res.BlockAdded.Block.Header.StateRootHash)
+			assert.NotEmpty(t, res.BlockAdded.Block.Header.RandomBit)
+			assert.NotEmpty(t, res.BlockAdded.Block.Header.ParentHash)
+			assert.NotEmpty(t, res.BlockAdded.Block.Header.AccumulatedSeed)
+			assert.NotEmpty(t, res.BlockAdded.Block.Header.CurrentGasPrice)
+			assert.NotEmpty(t, res.BlockAdded.Block.Header.ProtocolVersion)
+		})
+	}
+}
+
+func Test_RawEvent_FinalitySignature(t *testing.T) {
+	tests := []struct {
+		filePath     string
+		expectedHash string
+		isV2         bool
+	}{
+		{
+			filePath:     "../data/sse/finality_signature_event.json",
+			expectedHash: "abbcdc782a18a9ba31826b07c838a69a6b790c8b36a0fd5f0818f757834d82f5",
+		},
+		{
+			filePath:     "../data/sse/finality_signature_event_v2.json",
+			expectedHash: "5122b986d344e4cd0ab5a2df1b3bb398de9c557a2e463391b58de82626154428",
+			isV2:         true,
+		},
+		{
+			filePath:     "../data/sse/finality_signature_event_v2_old.json",
+			expectedHash: "abbcdc782a18a9ba31826b07c838a69a6b790c8b36a0fd5f0818f757834d82f5",
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.filePath, func(t *testing.T) {
+			data, err := os.ReadFile(tc.filePath)
+			require.NoError(t, err)
+
+			rawEvent := sse.RawEvent{
+				Data: data,
+			}
+
+			res, err := rawEvent.ParseAsFinalitySignatureEvent()
+			require.NoError(t, err)
+			assert.Equal(t, tc.expectedHash, res.FinalitySignature.BlockHash.ToHex())
+			assert.NotEmpty(t, res.FinalitySignature.Signature)
+			assert.NotEmpty(t, res.FinalitySignature.PublicKey)
+			assert.NotEmpty(t, res.FinalitySignature.EraID)
+		})
+	}
 }
 
 func Test_RawEvent_ParseAsDeployProcessedEvent(t *testing.T) {

@@ -3,6 +3,7 @@ package types
 import (
 	"encoding/json"
 	"errors"
+
 	"github.com/make-software/casper-go-sdk/types/clvalue"
 	"github.com/make-software/casper-go-sdk/types/key"
 	"github.com/make-software/casper-go-sdk/types/keypair"
@@ -18,16 +19,16 @@ type Block struct {
 	Proofs []Proof `json:"proofs"`
 }
 
-// NewBlockFromBlockWithSignatures construct Block from BlockWithSignatures
-func NewBlockFromBlockWithSignatures(signBlock BlockWithSignatures) Block {
-	if blockV1 := signBlock.Block.BlockV1; blockV1 != nil {
+// NewBlockFromBlockWrapper construct Block from BlockWrapper and list of Proof
+func NewBlockFromBlockWrapper(blockWrapper BlockWrapper, proofs []Proof) Block {
+	if blockV1 := blockWrapper.BlockV1; blockV1 != nil {
 		block := NewBlockFromBlockV1(*blockV1)
-		block.Proofs = signBlock.Proofs
+		block.Proofs = proofs
 		return block
 	} else {
 		return Block{
-			BlockV2: *signBlock.Block.BlockV2,
-			Proofs:  signBlock.Proofs,
+			BlockV2: *blockWrapper.BlockV2,
+			Proofs:  proofs,
 		}
 	}
 }
