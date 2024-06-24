@@ -129,13 +129,56 @@ type (
 	DeployAcceptedEvent struct {
 		DeployAccepted types.Deploy `json:"DeployAccepted"`
 	}
-	DeployExpiredPayload struct {
+
+	deployExpiredPayload struct {
 		DeployHash key.Hash `json:"deploy_hash"`
 	}
-	DeployExpiredEvent struct {
-		DeployExpired DeployExpiredPayload `json:"DeployExpired"`
+
+	deployExpiredEvent struct {
+		DeployExpired deployExpiredPayload `json:"DeployExpired"`
+	}
+
+	TransactionExpiredPayload struct {
+		TransactionHash types.TransactionHash `json:"transaction_hash"`
+	}
+
+	TransactionExpiredEvent struct {
+		TransactionExpiredPayload TransactionExpiredPayload `json:"TransactionExpired"`
 	}
 )
+
+func (t *TransactionExpiredEvent) UnmarshalJSON(data []byte) error {
+	if t == nil {
+		return errors.New("json.RawMessage: UnmarshalJSON on nil pointer")
+	}
+
+	transactionEvent := struct {
+		TransactionExpiredPayload TransactionExpiredPayload `json:"TransactionExpired"`
+	}{}
+	if err := json.Unmarshal(data, &transactionEvent); err != nil {
+		return err
+	}
+
+	if transactionEvent.TransactionExpiredPayload.TransactionHash.Transaction != nil ||
+		transactionEvent.TransactionExpiredPayload.TransactionHash.Deploy != nil {
+		*t = transactionEvent
+		return nil
+	}
+
+	deployEvent := deployExpiredEvent{}
+	if err := json.Unmarshal(data, &deployEvent); err != nil {
+		return err
+	}
+
+	*t = TransactionExpiredEvent{
+		TransactionExpiredPayload: TransactionExpiredPayload{
+			TransactionHash: types.TransactionHash{
+				Deploy: &deployEvent.DeployExpired.DeployHash,
+			},
+		},
+	}
+	return nil
+}
 
 type (
 	FinalitySignatureV1 struct {
@@ -168,7 +211,12 @@ type (
 	}
 
 	FinalitySignature struct {
-		FinalitySignatureV2
+		BlockHash     key.Hash          `json:"block_hash"`
+		BlockHeight   *uint64           `json:"block_height"`
+		ChainNameHash *key.Hash         `json:"chain_name_hash"`
+		EraID         uint64            `json:"era_id"`
+		Signature     types.HexBytes    `json:"signature"`
+		PublicKey     keypair.PublicKey `json:"public_key"`
 
 		OriginFinalitySignatureV1 *FinalitySignatureV1
 	}
@@ -191,12 +239,10 @@ func (t *FinalitySignatureEvent) UnmarshalJSON(data []byte) error {
 	if wrapped.FinalitySignature.V1 != nil {
 		*t = FinalitySignatureEvent{
 			FinalitySignature: FinalitySignature{
-				FinalitySignatureV2: FinalitySignatureV2{
-					BlockHash: wrapped.FinalitySignature.V1.BlockHash,
-					EraID:     wrapped.FinalitySignature.V1.EraID,
-					Signature: wrapped.FinalitySignature.V1.Signature,
-					PublicKey: wrapped.FinalitySignature.V1.PublicKey,
-				},
+				BlockHash:                 wrapped.FinalitySignature.V1.BlockHash,
+				EraID:                     wrapped.FinalitySignature.V1.EraID,
+				Signature:                 wrapped.FinalitySignature.V1.Signature,
+				PublicKey:                 wrapped.FinalitySignature.V1.PublicKey,
 				OriginFinalitySignatureV1: wrapped.FinalitySignature.V1,
 			},
 		}
@@ -206,7 +252,12 @@ func (t *FinalitySignatureEvent) UnmarshalJSON(data []byte) error {
 	if wrapped.FinalitySignature.V2 != nil {
 		*t = FinalitySignatureEvent{
 			FinalitySignature: FinalitySignature{
-				FinalitySignatureV2: *wrapped.FinalitySignature.V2,
+				BlockHash:     wrapped.FinalitySignature.V2.BlockHash,
+				BlockHeight:   wrapped.FinalitySignature.V2.BlockHeight,
+				ChainNameHash: wrapped.FinalitySignature.V2.ChainNameHash,
+				EraID:         wrapped.FinalitySignature.V2.EraID,
+				Signature:     wrapped.FinalitySignature.V2.Signature,
+				PublicKey:     wrapped.FinalitySignature.V2.PublicKey,
 			},
 		}
 		return nil
@@ -219,12 +270,10 @@ func (t *FinalitySignatureEvent) UnmarshalJSON(data []byte) error {
 
 	*t = FinalitySignatureEvent{
 		FinalitySignature: FinalitySignature{
-			FinalitySignatureV2: FinalitySignatureV2{
-				BlockHash: v1Event.FinalitySignature.BlockHash,
-				EraID:     v1Event.FinalitySignature.EraID,
-				Signature: v1Event.FinalitySignature.Signature,
-				PublicKey: v1Event.FinalitySignature.PublicKey,
-			},
+			BlockHash:                 v1Event.FinalitySignature.BlockHash,
+			EraID:                     v1Event.FinalitySignature.EraID,
+			Signature:                 v1Event.FinalitySignature.Signature,
+			PublicKey:                 v1Event.FinalitySignature.PublicKey,
 			OriginFinalitySignatureV1: &v1Event.FinalitySignature,
 		},
 	}
@@ -246,10 +295,6 @@ type (
 	StepPayload struct {
 		EraID           uint64       `json:"era_id"`
 		ExecutionEffect types.Effect `json:"execution_effect"`
-		// Todo: not sure, didn't found example to test
-		Operations *[]types.Operation `json:"operations,omitempty"`
-		// Todo: not sure, didn't found example to test
-		Transform *types.TransformKey `json:"transform,omitempty"`
 	}
 	StepEvent struct {
 		Step StepPayload `json:"step"`
@@ -276,8 +321,8 @@ func (d *RawEvent) ParseAsFinalitySignatureEvent() (FinalitySignatureEvent, erro
 	return ParseEvent[FinalitySignatureEvent](d.Data)
 }
 
-func (d *RawEvent) ParseAsDeployExpiredEvent() (DeployExpiredEvent, error) {
-	return ParseEvent[DeployExpiredEvent](d.Data)
+func (d *RawEvent) ParseAsTransactionExpiredEvent() (TransactionExpiredEvent, error) {
+	return ParseEvent[TransactionExpiredEvent](d.Data)
 }
 
 func (d *RawEvent) ParseAsFaultEvent() (FaultEvent, error) {

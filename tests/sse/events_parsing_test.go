@@ -136,15 +136,40 @@ func Test_RawEvent_ParseAsDeployProcessedEvent(t *testing.T) {
 	assert.Equal(t, "f19e3b63678ca5aa9fa8b30377275c83f8c1a041902b38ce7f4de50f02dbf396", res.DeployProcessed.BlockHash.ToHex())
 }
 
-func Test_RawEvent_ParseAsDeployExpiredEvent(t *testing.T) {
-	data, err := os.ReadFile("../data/sse/deploy_expired_event.json")
-	require.NoError(t, err)
-	rawEvent := sse.RawEvent{
-		Data: data,
+func Test_RawEvent_ParseAsTransactionExpiredEvent(t *testing.T) {
+	tests := []struct {
+		filePath      string
+		isTransaction bool
+	}{
+		{
+			filePath: "../data/sse/deploy_expired_event.json",
+		},
+		{
+			filePath:      "../data/sse/transaction_expired_event.json",
+			isTransaction: true,
+		},
 	}
-	res, err := rawEvent.ParseAsDeployExpiredEvent()
-	require.NoError(t, err)
-	assert.Equal(t, "7ecf22fc284526c6db16fb6455f489e0a9cbf782834131c010cf3078fb9be353", res.DeployExpired.DeployHash.ToHex())
+
+	for _, tc := range tests {
+		t.Run(tc.filePath, func(t *testing.T) {
+			data, err := os.ReadFile(tc.filePath)
+			require.NoError(t, err)
+
+			rawEvent := sse.RawEvent{
+				Data: data,
+			}
+
+			res, err := rawEvent.ParseAsTransactionExpiredEvent()
+			require.NoError(t, err)
+			require.NotEmpty(t, res.TransactionExpiredPayload.TransactionHash)
+
+			if tc.isTransaction {
+				require.NotEmpty(t, res.TransactionExpiredPayload.TransactionHash.Transaction)
+			} else {
+				require.NotEmpty(t, res.TransactionExpiredPayload.TransactionHash.Deploy)
+			}
+		})
+	}
 }
 
 func Test_RawEvent_ParseAsFaultEvent(t *testing.T) {

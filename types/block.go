@@ -262,8 +262,8 @@ func getBlockTransactionsFromTransactionHashes(hashes []TransactionHash, categor
 		blockTransaction := BlockTransaction{
 			Category: category,
 		}
-		if hashes[i].TransactionV1Hash != nil {
-			blockTransaction.Hash = *hashes[i].TransactionV1Hash
+		if hashes[i].Transaction != nil {
+			blockTransaction.Hash = *hashes[i].Transaction
 			blockTransaction.Version = BlockTransactionVersionV1
 		} else {
 			blockTransaction.Hash = *hashes[i].Deploy
