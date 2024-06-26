@@ -97,7 +97,7 @@ func NewBlockFromBlockV1(blockV1 BlockV1) Block {
 		EraID:           blockV1.Header.EraID,
 		Timestamp:       blockV1.Header.Timestamp,
 		AccumulatedSeed: blockV1.Header.AccumulatedSeed,
-		RandomBit:       false,
+		RandomBit:       blockV1.Header.RandomBit,
 		CurrentGasPrice: 1,
 		Proposer:        blockV1.Body.Proposer,
 		ProtocolVersion: blockV1.Header.ProtocolVersion,
