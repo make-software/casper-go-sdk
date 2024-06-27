@@ -4,29 +4,28 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/make-software/casper-go-sdk/types/clvalue"
 	"github.com/make-software/casper-go-sdk/types/key"
 	"github.com/make-software/casper-go-sdk/types/keypair"
 )
 
 // Block represents a common object returned as result from RPC response unifying BlockV2 and BlockV1
-// Block is inherited from BlockV2, BlockV1 should be matched to the view of BlockV2 to achieve backward compatibility
 type Block struct {
-	Hash               key.Hash                        `json:"hash"`
-	Height             uint64                          `json:"height"`
-	StateRootHash      key.Hash                        `json:"state_root_hash"`
-	ParentHash         key.Hash                        `json:"parent_hash"`
-	EraID              uint32                          `json:"era_id"`
-	Timestamp          Timestamp                       `json:"timestamp"`
-	AccumulatedSeed    *key.Hash                       `json:"accumulated_seed,omitempty"`
-	RandomBit          bool                            `json:"random_bit"`
-	CurrentGasPrice    uint8                           `json:"current_gas_price"`
-	Proposer           Proposer                        `json:"proposer"`
-	ProtocolVersion    string                          `json:"protocol_version,omitempty"`
-	EraEnd             *EraEnd                         `json:"era_end"`
-	Transactions       BlockTransactions               `json:"transactions"`
-	RewardedSignatures []SingleBlockRewardedSignatures `json:"rewarded_signatures"`
-	Proofs             []Proof                         `json:"proofs"`
+	Hash                key.Hash                        `json:"hash"`
+	Height              uint64                          `json:"height"`
+	StateRootHash       key.Hash                        `json:"state_root_hash"`
+	LastSwitchBlockHash key.Hash                        `json:"last_switch_block_hash"`
+	ParentHash          key.Hash                        `json:"parent_hash"`
+	EraID               uint32                          `json:"era_id"`
+	Timestamp           Timestamp                       `json:"timestamp"`
+	AccumulatedSeed     *key.Hash                       `json:"accumulated_seed,omitempty"`
+	RandomBit           bool                            `json:"random_bit"`
+	CurrentGasPrice     uint8                           `json:"current_gas_price"`
+	Proposer            Proposer                        `json:"proposer"`
+	ProtocolVersion     string                          `json:"protocol_version,omitempty"`
+	EraEnd              *EraEnd                         `json:"era_end"`
+	Transactions        BlockTransactions               `json:"transactions"`
+	RewardedSignatures  []SingleBlockRewardedSignatures `json:"rewarded_signatures"`
+	Proofs              []Proof                         `json:"proofs"`
 
 	// source BlockV1, nil if constructed from BlockV2
 	originBlockV1 *BlockV1
@@ -50,22 +49,23 @@ func NewBlockFromBlockWithSignatures(signBlock BlockWithSignatures) Block {
 		return block
 	} else {
 		return Block{
-			Hash:               signBlock.Block.BlockV2.Hash,
-			Height:             signBlock.Block.BlockV2.Header.Height,
-			StateRootHash:      signBlock.Block.BlockV2.Header.StateRootHash,
-			ParentHash:         signBlock.Block.BlockV2.Header.ParentHash,
-			EraID:              signBlock.Block.BlockV2.Header.EraID,
-			Timestamp:          signBlock.Block.BlockV2.Header.Timestamp,
-			AccumulatedSeed:    signBlock.Block.BlockV2.Header.AccumulatedSeed,
-			RandomBit:          signBlock.Block.BlockV2.Header.RandomBit,
-			CurrentGasPrice:    signBlock.Block.BlockV2.Header.CurrentGasPrice,
-			Proposer:           signBlock.Block.BlockV2.Header.Proposer,
-			ProtocolVersion:    signBlock.Block.BlockV2.Header.ProtocolVersion,
-			EraEnd:             NewEraEndFromV2(signBlock.Block.BlockV2.Header.EraEnd),
-			Transactions:       signBlock.Block.BlockV2.Body.Transactions,
-			RewardedSignatures: signBlock.Block.BlockV2.Body.RewardedSignatures,
-			Proofs:             signBlock.Proofs,
-			originBlockV2:      signBlock.Block.BlockV2,
+			Hash:                signBlock.Block.BlockV2.Hash,
+			Height:              signBlock.Block.BlockV2.Header.Height,
+			StateRootHash:       signBlock.Block.BlockV2.Header.StateRootHash,
+			LastSwitchBlockHash: signBlock.Block.BlockV2.Header.LastSwitchBlockHash,
+			ParentHash:          signBlock.Block.BlockV2.Header.ParentHash,
+			EraID:               signBlock.Block.BlockV2.Header.EraID,
+			Timestamp:           signBlock.Block.BlockV2.Header.Timestamp,
+			AccumulatedSeed:     signBlock.Block.BlockV2.Header.AccumulatedSeed,
+			RandomBit:           signBlock.Block.BlockV2.Header.RandomBit,
+			CurrentGasPrice:     signBlock.Block.BlockV2.Header.CurrentGasPrice,
+			Proposer:            signBlock.Block.BlockV2.Header.Proposer,
+			ProtocolVersion:     signBlock.Block.BlockV2.Header.ProtocolVersion,
+			EraEnd:              NewEraEndFromV2(signBlock.Block.BlockV2.Header.EraEnd),
+			Transactions:        signBlock.Block.BlockV2.Body.Transactions,
+			RewardedSignatures:  signBlock.Block.BlockV2.Body.RewardedSignatures,
+			Proofs:              signBlock.Proofs,
+			originBlockV2:       signBlock.Block.BlockV2,
 		}
 	}
 }
@@ -168,15 +168,6 @@ func (b BlockHeader) GetBlockHeaderV2() *BlockHeaderV2 {
 }
 
 func NewBlockHeaderFromV1(header BlockHeaderV1) BlockHeader {
-	if header.EraEnd != nil {
-		rewards := make(map[string][]clvalue.UInt512, len(header.EraEnd.EraReport.Rewards))
-		for _, reward := range header.EraEnd.EraReport.Rewards {
-			list := rewards[reward.Validator.ToHex()]
-			list = append(list, reward.Amount)
-			rewards[reward.Validator.ToHex()] = list
-		}
-	}
-
 	return BlockHeader{
 		AccumulatedSeed:     header.AccumulatedSeed,
 		BodyHash:            header.BodyHash,
@@ -234,7 +225,7 @@ type BlockV2 struct {
 // List of identifiers for finality signatures for a particular past block.
 // That past block height is current_height - signature_rewards_max_delay, the latter being defined in the chainspec.
 // We need to wait for a few blocks to pass (`signature_rewards_max_delay`) to store the finality signers because we need a bit of time to get the block finality.
-type SingleBlockRewardedSignatures []uint16
+type SingleBlockRewardedSignatures []uint8
 
 type BlockTransactionCategory uint
 
@@ -299,18 +290,19 @@ type BlockBodyV2 struct {
 }
 
 type BlockHeaderV2 struct {
-	AccumulatedSeed *key.Hash `json:"accumulated_seed,omitempty"`
-	BodyHash        key.Hash  `json:"body_hash"`
-	EraID           uint32    `json:"era_id"`
-	CurrentGasPrice uint8     `json:"current_gas_price"`
-	Height          uint64    `json:"height"`
-	ParentHash      key.Hash  `json:"parent_hash"`
-	Proposer        Proposer  `json:"proposer"`
-	ProtocolVersion string    `json:"protocol_version,omitempty"`
-	RandomBit       bool      `json:"random_bit"`
-	StateRootHash   key.Hash  `json:"state_root_hash"`
-	Timestamp       Timestamp `json:"timestamp"`
-	EraEnd          *EraEndV2 `json:"era_end"`
+	AccumulatedSeed     *key.Hash `json:"accumulated_seed,omitempty"`
+	BodyHash            key.Hash  `json:"body_hash"`
+	EraID               uint32    `json:"era_id"`
+	CurrentGasPrice     uint8     `json:"current_gas_price"`
+	Height              uint64    `json:"height"`
+	ParentHash          key.Hash  `json:"parent_hash"`
+	Proposer            Proposer  `json:"proposer"`
+	ProtocolVersion     string    `json:"protocol_version,omitempty"`
+	RandomBit           bool      `json:"random_bit"`
+	StateRootHash       key.Hash  `json:"state_root_hash"`
+	LastSwitchBlockHash key.Hash  `json:"last_switch_block_hash"`
+	Timestamp           Timestamp `json:"timestamp"`
+	EraEnd              *EraEndV2 `json:"era_end"`
 }
 
 // Proof is a `BlockV1`'s finality signature.
