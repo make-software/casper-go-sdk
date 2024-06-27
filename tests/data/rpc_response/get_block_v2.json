@@ -68,7 +68,17 @@
                 }
               ]
             },
-            "rewarded_signatures": []
+            "rewarded_signatures": [
+              [
+                240
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ]
+            ]
           }
         }
       },

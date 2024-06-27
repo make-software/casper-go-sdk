@@ -11,8 +11,8 @@ import (
 	"github.com/make-software/casper-go-sdk/types"
 )
 
-func Test_Block_V1_MarshalUnmarshal_ShouldReturnSameResult(t *testing.T) {
-	fixture, err := os.ReadFile("../data/block/block_v1_example.json")
+func Test_BlockSwitch_MarshalUnmarshal_ShouldReturnSameResult(t *testing.T) {
+	fixture, err := os.ReadFile("../data/block/block_switch_example.json")
 	assert.NoError(t, err)
 
 	var block types.BlockV1
