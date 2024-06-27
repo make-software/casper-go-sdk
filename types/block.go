@@ -41,31 +41,32 @@ func (b Block) GetBlockV2() *BlockV2 {
 	return b.originBlockV2
 }
 
-// NewBlockFromBlockWithSignatures construct Block from BlockWithSignatures
-func NewBlockFromBlockWithSignatures(signBlock BlockWithSignatures) Block {
-	if blockV1 := signBlock.Block.BlockV1; blockV1 != nil {
+// NewBlockFromBlockWrapper construct Block from BlockWithSignatures
+func NewBlockFromBlockWrapper(blockWrapper BlockWrapper, proofs []Proof) Block {
+	if blockV1 := blockWrapper.BlockV1; blockV1 != nil {
 		block := NewBlockFromBlockV1(*blockV1)
-		block.Proofs = signBlock.Proofs
+		block.Proofs = proofs
 		return block
 	} else {
+		blockV2 := blockWrapper.BlockV2
 		return Block{
-			Hash:                signBlock.Block.BlockV2.Hash,
-			Height:              signBlock.Block.BlockV2.Header.Height,
-			StateRootHash:       signBlock.Block.BlockV2.Header.StateRootHash,
-			LastSwitchBlockHash: signBlock.Block.BlockV2.Header.LastSwitchBlockHash,
-			ParentHash:          signBlock.Block.BlockV2.Header.ParentHash,
-			EraID:               signBlock.Block.BlockV2.Header.EraID,
-			Timestamp:           signBlock.Block.BlockV2.Header.Timestamp,
-			AccumulatedSeed:     signBlock.Block.BlockV2.Header.AccumulatedSeed,
-			RandomBit:           signBlock.Block.BlockV2.Header.RandomBit,
-			CurrentGasPrice:     signBlock.Block.BlockV2.Header.CurrentGasPrice,
-			Proposer:            signBlock.Block.BlockV2.Header.Proposer,
-			ProtocolVersion:     signBlock.Block.BlockV2.Header.ProtocolVersion,
-			EraEnd:              NewEraEndFromV2(signBlock.Block.BlockV2.Header.EraEnd),
-			Transactions:        signBlock.Block.BlockV2.Body.Transactions,
-			RewardedSignatures:  signBlock.Block.BlockV2.Body.RewardedSignatures,
-			Proofs:              signBlock.Proofs,
-			originBlockV2:       signBlock.Block.BlockV2,
+			Hash:                blockV2.Hash,
+			Height:              blockV2.Header.Height,
+			StateRootHash:       blockV2.Header.StateRootHash,
+			LastSwitchBlockHash: blockV2.Header.LastSwitchBlockHash,
+			ParentHash:          blockV2.Header.ParentHash,
+			EraID:               blockV2.Header.EraID,
+			Timestamp:           blockV2.Header.Timestamp,
+			AccumulatedSeed:     blockV2.Header.AccumulatedSeed,
+			RandomBit:           blockV2.Header.RandomBit,
+			CurrentGasPrice:     blockV2.Header.CurrentGasPrice,
+			Proposer:            blockV2.Header.Proposer,
+			ProtocolVersion:     blockV2.Header.ProtocolVersion,
+			EraEnd:              NewEraEndFromV2(blockV2.Header.EraEnd),
+			Transactions:        blockV2.Body.Transactions,
+			RewardedSignatures:  blockV2.Body.RewardedSignatures,
+			Proofs:              proofs,
+			originBlockV2:       blockV2,
 		}
 	}
 }
@@ -323,8 +324,8 @@ func getBlockTransactionsFromTransactionHashes(hashes []TransactionHash, categor
 		blockTransaction := BlockTransaction{
 			Category: category,
 		}
-		if hashes[i].TransactionV1Hash != nil {
-			blockTransaction.Hash = *hashes[i].TransactionV1Hash
+		if hashes[i].Transaction != nil {
+			blockTransaction.Hash = *hashes[i].Transaction
 			blockTransaction.Version = BlockTransactionVersionV1
 		} else {
 			blockTransaction.Hash = *hashes[i].Deploy

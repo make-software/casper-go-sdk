@@ -82,7 +82,7 @@ func newChainGetBlockResultFromV1Compatible(result chainGetBlockResultV1Compatib
 	if result.BlockWithSignatures != nil {
 		return ChainGetBlockResult{
 			APIVersion: result.APIVersion,
-			Block:      types.NewBlockFromBlockWithSignatures(*result.BlockWithSignatures),
+			Block:      types.NewBlockFromBlockWrapper(result.BlockWithSignatures.Block, result.BlockWithSignatures.Proofs),
 			rawJSON:    rawJSON,
 		}, nil
 	}
