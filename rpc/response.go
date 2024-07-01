@@ -67,6 +67,8 @@ type StateGetEntity struct {
 	Entity EntityOrAccount `json:"entity"`
 	//MerkleProof is a construction created using a merkle trie that allows verification of the associated hashes.
 	MerkleProof json.RawMessage `json:"merkle_proof"`
+
+	rawJSON json.RawMessage
 }
 
 type ChainGetBlockResult struct {

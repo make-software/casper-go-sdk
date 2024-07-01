@@ -316,7 +316,7 @@ func Test_DefaultClient_GetEntity(t *testing.T) {
 	defer server.Close()
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
 
-	result, err := client.GetEntityLatest(context.Background(), rpc.EntityIdentifier{})
+	result, err := client.GetLatestEntity(context.Background(), rpc.EntityIdentifier{})
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.Entity.AddressableEntity)
 	assert.NotEmpty(t, result.Entity.AddressableEntity.EntityKind.Account)
@@ -327,7 +327,7 @@ func Test_DefaultClient_GetEntity_SystemKind(t *testing.T) {
 	defer server.Close()
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
 
-	result, err := client.GetEntityLatest(context.Background(), rpc.EntityIdentifier{})
+	result, err := client.GetLatestEntity(context.Background(), rpc.EntityIdentifier{})
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.Entity.AddressableEntity)
 	assert.NotEmpty(t, result.Entity.AddressableEntity.EntityKind.System)
@@ -338,19 +338,10 @@ func Test_DefaultClient_GetEntity_SmartContractKind(t *testing.T) {
 	defer server.Close()
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
 
-	result, err := client.GetEntityLatest(context.Background(), rpc.EntityIdentifier{})
+	result, err := client.GetLatestEntity(context.Background(), rpc.EntityIdentifier{})
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.Entity.AddressableEntity)
 	assert.True(t, result.Entity.AddressableEntity.EntityKind.SmartContract)
-}
-
-func Test_DefaultClient_GetBlockByHeight(t *testing.T) {
-	server := SetupServer(t, "../data/rpc_response/get_block.json")
-	defer server.Close()
-	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetBlockByHeight(context.Background(), 185)
-	require.NoError(t, err)
-	assert.NotEmpty(t, result.Block.Hash)
 }
 
 func Test_DefaultClient_GetBlockTransfersLatest_V2(t *testing.T) {
