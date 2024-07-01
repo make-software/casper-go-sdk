@@ -1,0 +1,20 @@
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "result": {
+    "api_version": "1.5.6",
+    "block_hash": "617d1103f8b5bf79dec092926eeb1af254fa24adc030033a2ce2e935951c8d89",
+    "transfers": [
+      {
+        "deploy_hash": "68334636a883b74c28758a83f142eb78b165ec3effd72864c433f8f8f8437dc6",
+        "from": "account-hash-69a68c3eac4f855ab6258d17e6db2b376198e866739df4aa0f48e6bab6432004",
+        "to": "account-hash-102803f72be160c63422103853da0e6630ef99dbd667b37323e4112853dd4b1a",
+        "source": "uref-3c247f28d0c4541de996b2f2968980e7bf1473333cdc98ac03e51da164d0bee0-007",
+        "target": "uref-10ce3ce549f6895dee17d8a767c0d419eeebfdabec92c69f2d5f06cdca4fe957-004",
+        "amount": "10000000000",
+        "gas": "0",
+        "id": 2
+      }
+    ]
+  }
+}
