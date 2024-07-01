@@ -10,7 +10,7 @@ type (
 	AuctionState    = types.AuctionState
 	Args            = types.Args
 	ValidatorBid    = types.ValidatorBid
-	AuctionBid      = types.AuctionBid
+	Bid             = types.Bid
 	BlockV1         = types.BlockV1
 	BlockHeaderV1   = types.BlockHeaderV1
 	BlockBodyV1     = types.BlockBodyV1

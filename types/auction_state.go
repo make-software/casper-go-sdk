@@ -17,7 +17,7 @@ type AuctionState struct {
 type ValidatorBid struct {
 	// Validator public key
 	PublicKey keypair.PublicKey `json:"public_key"`
-	Bid       AuctionBid        `json:"bid"`
+	Bid       Bid               `json:"bid"`
 }
 
 // EraValidators contains validators and weights for an Era.

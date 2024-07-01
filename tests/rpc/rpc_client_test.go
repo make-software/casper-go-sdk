@@ -289,11 +289,11 @@ func Test_DefaultClient_GetBlockLatest(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run("GetBlockLatest", func(t *testing.T) {
+		t.Run("GetLatestBlock", func(t *testing.T) {
 			server := SetupServer(t, tt.filePath)
 			defer server.Close()
 			client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-			result, err := client.GetBlockLatest(context.Background())
+			result, err := client.GetLatestBlock(context.Background())
 			require.NoError(t, err)
 			assert.NotEmpty(t, result.APIVersion)
 			assert.NotEmpty(t, result.Block.Hash)
@@ -374,13 +374,43 @@ func Test_DefaultClient_GetEraSummaryLatest_byHeight(t *testing.T) {
 	assert.NotEmpty(t, result.EraSummary.StoredValue.EraInfo.SeigniorageAllocations)
 }
 
-func Test_DefaultClient_GetAuctionInfoLatest(t *testing.T) {
-	server := SetupServer(t, "../data/rpc_response/get_auction_info.json")
-	defer server.Close()
-	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetAuctionInfoLatest(context.Background())
-	require.NoError(t, err)
-	assert.NotEmpty(t, result.AuctionState.Bids)
+func Test_DefaultClient_GetAuctionInfoLatest_Comaptible(t *testing.T) {
+	tests := []struct {
+		filePath string
+		isV2     bool
+	}{
+		{
+			filePath: "../data/rpc_response/get_auction_info.json",
+		},
+		{
+			filePath: "../data/rpc_response/get_auction_info_v2.json",
+			isV2:     true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run("GetLatestAuctionInfo", func(t *testing.T) {
+			server := SetupServer(t, tt.filePath)
+			defer server.Close()
+			client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+			result, err := client.GetLatestAuctionInfo(context.Background())
+			require.NoError(t, err)
+			assert.NotEmpty(t, result.Version)
+			assert.NotEmpty(t, result.AuctionState.Bids)
+			for _, bid := range result.AuctionState.Bids {
+				assert.NotEmpty(t, bid.PublicKey)
+				if tt.isV2 {
+					assert.NotEmpty(t, bid.Bid.Delegators)
+					assert.NotEmpty(t, bid.Bid.ValidatorPublicKey)
+				}
+				assert.NotEmpty(t, bid.Bid.BondingPurse)
+				assert.NotEmpty(t, bid.Bid.StakedAmount)
+			}
+			assert.NotEmpty(t, result.AuctionState.StateRootHash)
+			assert.NotEmpty(t, result.AuctionState.BlockHeight)
+			assert.NotEmpty(t, result.AuctionState.EraValidators)
+			assert.NotEmpty(t, result.GetRawJSON())
+		})
+	}
 }
 
 func Test_DefaultClient_GetAuctionInfoByHash(t *testing.T) {
