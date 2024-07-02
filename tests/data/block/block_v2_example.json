@@ -1,0 +1,34 @@
+{
+  "hash": "f5d1edce2458dd89a4276b1450a49abb911de0ef57728394a294fceb776bac54",
+  "header": {
+    "parent_hash": "e3e3e7d93b990436b6d24f296ef47f59d309da6be6b55bbce42a723dc86d63d2",
+    "state_root_hash": "522fee0ae6d98556a475b89e7c45b6004dcf2d1ec748982120e16d1c42891871",
+    "body_hash": "460a0b13de1e8a95d3746256766d437cfea1165423a179c23a607c395e91105f",
+    "random_bit": false,
+    "accumulated_seed": "2bf24e098e15b8e597fc0f2441b0d18454ca4e84b9adcc8dee7ead15ce60c5bd",
+    "era_end": null,
+    "timestamp": "2024-05-15T09:46:57.067Z",
+    "era_id": 387,
+    "height": 170442,
+    "protocol_version": "2.0.0",
+    "current_gas_price": 1
+  },
+  "body": {
+    "proposer": "0140afe8f752e5ff100e0189c080bc207e8805b3e5e82f792ec608de2f11f39f6c",
+    "mint": [],
+    "auction": [],
+    "install_upgrade": [],
+    "standard": [],
+    "rewarded_signatures": [
+      [
+        240
+      ],
+      [
+        0
+      ],
+      [
+        0
+      ]
+    ]
+  }
+}
