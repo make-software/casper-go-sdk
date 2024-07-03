@@ -115,7 +115,7 @@ type EntityIdentifier struct {
 	// The public key of an account.
 	PublicKey *keypair.PublicKey `json:"PublicKey,omitempty"`
 	// The address of an addressable entity.
-	EntityAddr *string `json:"EntityAddr,omitempty"`
+	EntityAddr *key.EntityAddr `json:"EntityAddr,omitempty"`
 }
 
 type PutDeployRequest struct {
