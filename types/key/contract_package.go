@@ -11,7 +11,7 @@ type ContractPackageHash struct {
 }
 
 func (h ContractPackageHash) MarshalJSON() ([]byte, error) {
-	return []byte(`"` + h.originPrefix + h.ToHex() + `"`), nil
+	return json.Marshal(h.originPrefix + h.ToHex())
 }
 
 func (h ContractPackageHash) ToPrefixedString() string {

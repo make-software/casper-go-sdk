@@ -51,7 +51,7 @@ func (h *NamedKeyAddr) UnmarshalJSON(data []byte) error {
 }
 
 func (h NamedKeyAddr) MarshalJSON() ([]byte, error) {
-	return []byte(h.ToPrefixedString()), nil
+	return json.Marshal(h.ToPrefixedString())
 }
 
 func (h NamedKeyAddr) ToPrefixedString() string {

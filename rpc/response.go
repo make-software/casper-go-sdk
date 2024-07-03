@@ -343,11 +343,17 @@ type QueryBalanceDetailsResult struct {
 	AvailableBalance  clvalue.UInt512        `json:"available_balance"`
 	TotalBalanceProof string                 `json:"total_balance_proof"`
 	Holds             []BalanceHoldWithProof `json:"holds"`
+
+	rawJSON json.RawMessage
+}
+
+func (b QueryBalanceDetailsResult) GetRawJSON() json.RawMessage {
+	return b.rawJSON
 }
 
 // BalanceHoldWithProof The block time at which the hold was created.
 type BalanceHoldWithProof struct {
-	Time   types.BlockTime `json:"time"`
+	//Time   types.BlockTime `json:"time"`
 	Amount clvalue.UInt512 `json:"amount"`
 	Proof  string          `json:"proof"`
 }

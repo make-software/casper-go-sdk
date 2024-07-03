@@ -14,6 +14,7 @@ import (
 
 	"github.com/make-software/casper-go-sdk/casper"
 	"github.com/make-software/casper-go-sdk/rpc"
+	"github.com/make-software/casper-go-sdk/types/key"
 )
 
 func GetRpcClient() rpc.Client {
@@ -46,71 +47,40 @@ func Test_DefaultClient_QueryBalanceDetails(t *testing.T) {
 
 	ctx := context.Background()
 
-	tests := []struct {
-		name       string
-		identifier rpc.BalanceStateIdentifier
-	}{
-		{
-			name: "ByBlock",
-			identifier: rpc.BalanceStateIdentifier{
-				Block: &rpc.BlockIdentifier{
-					Height: &[]uint64{165520}[0],
-				},
-			},
-		},
-		{
-			name: "ByBlockHash",
-			identifier: rpc.BalanceStateIdentifier{
-				Block: &rpc.BlockIdentifier{
-					Hash: &[]string{"ba48f6c4211a98ec0db3e62e95133a5b3cbd521107112cc115ed0ad84bd1083f"}[0],
-				},
-			},
-		},
-		{
-			name: "ByStateRoot",
-			identifier: rpc.BalanceStateIdentifier{
-				StateRoot: &rpc.StateRootInfo{
-					StateRootHash: "281da1208effdfe4df196ddb83b862e4d11c5f58ddb1de4bfca4f8d43a51b6b4",
-					Timestamp:     "2024-05-14T11:39:50.921Z",
-				},
-			},
-		},
-	}
-
-	entityAddr := "entity-account-" + pubKey.AccountHash().ToHex()
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			result, err := GetRpcClient().QueryBalanceDetails(ctx,
-				rpc.PurseIdentifier{
-					MainPurseUnderEntityAddr: &entityAddr,
-				},
-				tt.identifier,
-			)
-			require.NoError(t, err)
-			assert.NotEmpty(t, result.AvailableBalance)
-			assert.NotEmpty(t, result.TotalBalance)
-			assert.NotEmpty(t, result.TotalBalanceProof)
-			assert.Empty(t, result.Holds)
-		})
-	}
-}
-
-func Test_DefaultClient_QueryBalanceDetailsLatest(t *testing.T) {
-	pubKey, err := casper.NewPublicKey("0111bc2070a9af0f26f94b8549bffa5643ead0bc68eba3b1833039cfa2a9a8205d")
+	res, err := GetRpcClient().GetBlockLatest(ctx)
 	require.NoError(t, err)
 
-	entityAddr := "entity-account-" + pubKey.AccountHash().ToHex()
-	t.Run("QueryBalanceDetailsLatest", func(t *testing.T) {
-		result, err := GetRpcClient().QueryBalanceDetailsLatest(context.Background(),
-			rpc.PurseIdentifier{
-				MainPurseUnderEntityAddr: &entityAddr,
-			},
-		)
+	accountHash := pubKey.AccountHash()
+	assertResponse := func(result rpc.QueryBalanceDetailsResult, err error) {
 		require.NoError(t, err)
 		assert.NotEmpty(t, result.AvailableBalance)
 		assert.NotEmpty(t, result.TotalBalance)
 		assert.NotEmpty(t, result.TotalBalanceProof)
-	})
+		assert.Empty(t, result.Holds)
+	}
+
+	// latest call
+	assertResponse(GetRpcClient().QueryLatestBalanceDetails(ctx, rpc.NewPurseIdentifierFromAccountHash(accountHash)))
+
+	// by BlockHeight and MainPurseUnderAccountHash
+	assertResponse(GetRpcClient().QueryBalanceDetailsByBlockHeight(ctx,
+		rpc.NewPurseIdentifierFromPublicKey(pubKey),
+		res.Block.Height,
+	))
+
+	// by BlockHash and MainPurseUnderEntityAddr
+	assertResponse(GetRpcClient().QueryBalanceDetailsByBlockHash(ctx,
+		rpc.NewPurseIdentifierFromAccountHash(accountHash),
+		res.Block.Hash.ToHex(),
+	))
+
+	// by StateRootHash and MainPurseUnderEntityAddr
+	assertResponse(GetRpcClient().QueryBalanceDetailsByStateRootHash(ctx,
+		rpc.NewPurseIdentifierFromEntityAddr(key.EntityAddr{
+			Account: &accountHash.Hash,
+		}),
+		res.Block.StateRootHash.ToHex(),
+	))
 }
 
 func Test_DefaultClient_QueryStateByStateHash(t *testing.T) {

@@ -23,7 +23,7 @@ func NewAccountHash(source string) (AccountHash, error) {
 		return AccountHash{}, err
 	}
 
-	return AccountHash{Hash: hexBytes, originPrefix: originPrefix}, err
+	return AccountHash{Hash: hexBytes, originPrefix: originPrefix}, nil
 }
 
 func (h *AccountHash) UnmarshalJSON(data []byte) error {
