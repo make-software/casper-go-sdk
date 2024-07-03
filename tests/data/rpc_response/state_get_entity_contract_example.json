@@ -1,0 +1,267 @@
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "result": {
+    "api_version": "2.0.0",
+    "entity": {
+      "AddressableEntity": {
+        "protocol_version": "2.0.0",
+        "entity_kind": "SmartContract",
+        "package_hash": "contract-package-a002bfa1d31ab32e8933a2e3334be2c77c6a41fa1d4c352c57b4995713d6930f",
+        "byte_code_hash": "byte-code-1b1e23596b8c901a65a13e9d314ca2fff440e69df42f226a76a9bbfbb90df1fa",
+        "main_purse": "uref-aed7eabdce5ed94588a3d56773329758794020c77045ec626259cdcb0d3b23a9-007",
+        "entry_points": [
+          {
+            "name": "allowance",
+            "entry_point": {
+              "name": "allowance",
+              "args": [
+                {
+                  "name": "owner",
+                  "cl_type": "Key"
+                },
+                {
+                  "name": "spender",
+                  "cl_type": "Key"
+                }
+              ],
+              "ret": "U256",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "approve",
+            "entry_point": {
+              "name": "approve",
+              "args": [
+                {
+                  "name": "spender",
+                  "cl_type": "Key"
+                },
+                {
+                  "name": "amount",
+                  "cl_type": "U256"
+                }
+              ],
+              "ret": "Unit",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "balance_of",
+            "entry_point": {
+              "name": "balance_of",
+              "args": [
+                {
+                  "name": "address",
+                  "cl_type": "Key"
+                }
+              ],
+              "ret": "U256",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "burn",
+            "entry_point": {
+              "name": "burn",
+              "args": [
+                {
+                  "name": "owner",
+                  "cl_type": "Key"
+                },
+                {
+                  "name": "amount",
+                  "cl_type": "U256"
+                }
+              ],
+              "ret": "Unit",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "change_security",
+            "entry_point": {
+              "name": "change_security",
+              "args": [],
+              "ret": "Unit",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "decimals",
+            "entry_point": {
+              "name": "decimals",
+              "args": [],
+              "ret": "U8",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "decrease_allowance",
+            "entry_point": {
+              "name": "decrease_allowance",
+              "args": [
+                {
+                  "name": "spender",
+                  "cl_type": "Key"
+                },
+                {
+                  "name": "amount",
+                  "cl_type": "U256"
+                }
+              ],
+              "ret": "Unit",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "increase_allowance",
+            "entry_point": {
+              "name": "increase_allowance",
+              "args": [
+                {
+                  "name": "spender",
+                  "cl_type": "Key"
+                },
+                {
+                  "name": "amount",
+                  "cl_type": "U256"
+                }
+              ],
+              "ret": "Unit",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "init",
+            "entry_point": {
+              "name": "init",
+              "args": [],
+              "ret": "Unit",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "mint",
+            "entry_point": {
+              "name": "mint",
+              "args": [
+                {
+                  "name": "owner",
+                  "cl_type": "Key"
+                },
+                {
+                  "name": "amount",
+                  "cl_type": "U256"
+                }
+              ],
+              "ret": "Unit",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "name",
+            "entry_point": {
+              "name": "name",
+              "args": [],
+              "ret": "String",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "symbol",
+            "entry_point": {
+              "name": "symbol",
+              "args": [],
+              "ret": "String",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "total_supply",
+            "entry_point": {
+              "name": "total_supply",
+              "args": [],
+              "ret": "U256",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "transfer",
+            "entry_point": {
+              "name": "transfer",
+              "args": [
+                {
+                  "name": "recipient",
+                  "cl_type": "Key"
+                },
+                {
+                  "name": "amount",
+                  "cl_type": "U256"
+                }
+              ],
+              "ret": "Unit",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "transfer_from",
+            "entry_point": {
+              "name": "transfer_from",
+              "args": [
+                {
+                  "name": "owner",
+                  "cl_type": "Key"
+                },
+                {
+                  "name": "recipient",
+                  "cl_type": "Key"
+                },
+                {
+                  "name": "amount",
+                  "cl_type": "U256"
+                }
+              ],
+              "ret": "Unit",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          }
+        ],
+        "associated_keys": [
+          {
+            "account_hash": "account-hash-989ca079a5e446071866331468ab949483162588d57ec13ba6bb051f1e15f8b7",
+            "weight": 1
+          }
+        ],
+        "action_thresholds": {
+          "deployment": 1,
+          "upgrade_management": 1,
+          "key_management": 1
+        },
+        "message_topics": [
+          {
+            "topic_name": "events",
+            "topic_name_hash": "5721a6d9d7a9afe5dfdb35276fb823bed0f825350e4d865a5ec0110c380de4e1"
+          }
+        ]
+      }
+    },
+    "merkle_proof": "01000000110255d4a6915291da12afded37fa5bc01f0803a2f0faf6acb7ec4c7ca6ab76f33300da002bfa1d31ab32e8933a2e3334be2c77c6a41fa1d4c352c57b4995713d6930f1b1e23596b8c901a65a13e9d314ca2fff440e69df42f226a76a9bbfbb90df1fa0f00000009000000616c6c6f77616e636509000000616c6c6f77616e636502000000050000006f776e65720b070000007370656e6465720b07010107000000617070726f766507000000617070726f766502000000070000007370656e6465720b06000000616d6f756e74070901010a00000062616c616e63655f6f660a00000062616c616e63655f6f660100000007000000616464726573730b070101040000006275726e040000006275726e02000000050000006f776e65720b06000000616d6f756e74070901010f0000006368616e67655f73656375726974790f0000006368616e67655f73656375726974790000000009010108000000646563696d616c7308000000646563696d616c73000000000301011200000064656372656173655f616c6c6f77616e63651200000064656372656173655f616c6c6f77616e636502000000070000007370656e6465720b06000000616d6f756e740709010112000000696e6372656173655f616c6c6f77616e636512000000696e6372656173655f616c6c6f77616e636502000000070000007370656e6465720b06000000616d6f756e740709010104000000696e697404000000696e697400000000090101040000006d696e74040000006d696e7402000000050000006f776e65720b06000000616d6f756e7407090101040000006e616d65040000006e616d65000000000a01010600000073796d626f6c0600000073796d626f6c000000000a01010c000000746f74616c5f737570706c790c000000746f74616c5f737570706c7900000000070101080000007472616e73666572080000007472616e736665720200000009000000726563697069656e740b06000000616d6f756e74070901010d0000007472616e736665725f66726f6d0d0000007472616e736665725f66726f6d03000000050000006f776e65720b09000000726563697069656e740b06000000616d6f756e7407090101020000000000000000000000aed7eabdce5ed94588a3d56773329758794020c77045ec626259cdcb0d3b23a90701000000989ca079a5e446071866331468ab949483162588d57ec13ba6bb051f1e15f8b70101010101000000060000006576656e74735721a6d9d7a9afe5dfdb35276fb823bed0f825350e4d865a5ec0110c380de4e1020400000000d401000000ae00c2f147888307db74a2ea520cf24dbd1223c8a69f929fedf9d09ec993a1a3587a01010000005500020200000000016d38e52b77fbd81786f3738f38f0f144b97fd0661c2a268c2fcb9438f1c34bec0101f25720457fd4e144c9d90655a514a055a45588145f7fde13a63faca1e78ddb4f00110f000000000104d05c1a94f98fac773653b8a792b9479c0b8b1846aacc28e9a72f30cf92799e0201bc8c5b5d8c731211c8f978cec01bff08d64452d57f64c7850809f06c05050fcb0601930e5342f5dbcfb4aab008b32c7067686b5a964b0613cf7fb41c43124eaa3f1a0901d36e4054e1faad09082314ed2fd28c00138040759783b4c0a4a41fc7cede628f0a00c94d4f06a4389288386e53d4023bade6e18c38716ab1cfbabd7c4097bbe106750b00a20b3f782f11a381f86c4b293371cd732b439b48837abd526cf0e609f20467cf0d000b2cd09d68704b0318fa8762df773d24f21acd87987a39c70e555dce7645d37d0e0043d39741a6e7b395eace3b1fbbbd5bbf288f7a788e80745a2e2bb0f2173a8b4f0f012f4eda1c5cb00d6371573b2150f7edbabfcab1e8f304123a6b3dcb8bcf5066361001d8d426632847392589c6206dd057b8054ace57b5d7b48d030eb4551f09e399f612011db0e939877b23e863400c032bc2a4836248fa3fe2fad4780835607b720c63031301430712ad60807033372f46b6adee75bf6bbe86c02222254e90477da70360b9711401767e06c00439b67de8e99096d0ef46e246ce4cbc97be61d8d72abc85442e72f215000993d0f3e0ce6e7897bfb2085b9abcd55cc31ac5766a5767fd0ba1286c5deaee16013d7a078ac3b3f72b3060bf98e756a008e6e8c03f3e96e3c69ebe5705800f9955"
+  }
+}

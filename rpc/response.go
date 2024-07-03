@@ -53,6 +53,24 @@ func (b StateGetAccountInfo) GetRawJSON() json.RawMessage {
 	return b.rawJSON
 }
 
+// EntityOrAccount An addressable entity or a legacy account.
+type EntityOrAccount struct {
+	// An addressable entity.
+	AddressableEntity *types.AddressableEntity
+	// A legacy account.
+	LegacyAccount *types.Account
+}
+
+type StateGetEntity struct {
+	ApiVersion string `json:"api_version"`
+	// The addressable entity or a legacy account.
+	Entity EntityOrAccount `json:"entity"`
+	//MerkleProof is a construction created using a merkle trie that allows verification of the associated hashes.
+	MerkleProof json.RawMessage `json:"merkle_proof"`
+
+	rawJSON json.RawMessage
+}
+
 type ChainGetBlockResult struct {
 	APIVersion string `json:"api_version"`
 	Block      types.Block

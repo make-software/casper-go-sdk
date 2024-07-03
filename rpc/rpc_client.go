@@ -127,6 +127,42 @@ func (c *client) QueryGlobalStateByStateHash(ctx context.Context, stateRootHash 
 	return result, nil
 }
 
+func (c *client) GetLatestEntity(ctx context.Context, entityIdentifier EntityIdentifier) (StateGetEntity, error) {
+	var result StateGetEntity
+
+	resp, err := c.processRequest(ctx, MethodGetStateEntity, ParamGetStateEntity{EntityIdentifier: entityIdentifier}, &result)
+	if err != nil {
+		return StateGetEntity{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetEntityByBlockHash(ctx context.Context, entityIdentifier EntityIdentifier, hash string) (StateGetEntity, error) {
+	var result StateGetEntity
+
+	resp, err := c.processRequest(ctx, MethodGetStateEntity, ParamGetStateEntity{EntityIdentifier: entityIdentifier, BlockIdentifier: &BlockIdentifier{Hash: &hash}}, &result)
+	if err != nil {
+		return StateGetEntity{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetEntityByBlockHeight(ctx context.Context, entityIdentifier EntityIdentifier, height uint64) (StateGetEntity, error) {
+	var result StateGetEntity
+
+	resp, err := c.processRequest(ctx, MethodGetStateEntity, ParamGetStateEntity{EntityIdentifier: entityIdentifier, BlockIdentifier: &BlockIdentifier{Height: &height}}, &result)
+	if err != nil {
+		return StateGetEntity{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
 func (c *client) GetAccountInfoByBlochHash(ctx context.Context, blockHash string, pub keypair.PublicKey) (StateGetAccountInfo, error) {
 	var result StateGetAccountInfo
 

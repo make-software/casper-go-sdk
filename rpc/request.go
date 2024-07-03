@@ -36,6 +36,7 @@ const (
 	MethodGetDictionaryItem   Method = "state_get_dictionary_item"
 	MethodGetStateBalance     Method = "state_get_balance"
 	MethodGetStateAccount     Method = "state_get_account_info"
+	MethodGetStateEntity      Method = "state_get_entity"
 	MethodGetEraInfo          Method = "chain_get_era_info_by_switch_block"
 	MethodGetBlock            Method = "chain_get_block"
 	MethodGetBlockTransfers   Method = "chain_get_block_transfers"
@@ -97,9 +98,42 @@ type ParamGetAccountInfoBalance struct {
 	ParamBlockIdentifier
 }
 
+type ParamGetStateEntity struct {
+	EntityIdentifier EntityIdentifier `json:"entity_identifier"`
+	BlockIdentifier  *BlockIdentifier `json:"block_identifier,omitempty"`
+}
+
 type AccountIdentifier struct {
 	AccountHash *key.AccountHash
 	PublicKey   *keypair.PublicKey
+}
+
+// EntityIdentifier Identifier of an addressable entity.
+type EntityIdentifier struct {
+	// The account hash of an account.
+	AccountHash *key.AccountHash `json:"AccountHash,omitempty"`
+	// The public key of an account.
+	PublicKey *keypair.PublicKey `json:"PublicKey,omitempty"`
+	// The address of an addressable entity.
+	EntityAddr *key.EntityAddr `json:"EntityAddr,omitempty"`
+}
+
+func NewEntityIdentifierFromAccountHash(accountHash key.AccountHash) EntityIdentifier {
+	return EntityIdentifier{
+		AccountHash: &accountHash,
+	}
+}
+
+func NewEntityIdentifierFromPublicKey(pubKey keypair.PublicKey) EntityIdentifier {
+	return EntityIdentifier{
+		PublicKey: &pubKey,
+	}
+}
+
+func NewEntityIdentifierFromEntityAddr(entityAddr key.EntityAddr) EntityIdentifier {
+	return EntityIdentifier{
+		EntityAddr: &entityAddr,
+	}
 }
 
 type PutDeployRequest struct {
