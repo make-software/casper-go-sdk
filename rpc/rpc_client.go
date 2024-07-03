@@ -240,18 +240,29 @@ func (c *client) GetDictionaryItemByIdentifier(ctx context.Context, stateRootHas
 	return result, nil
 }
 
-func (c *client) GetAccountBalance(ctx context.Context, stateRootHash *string, purseURef string) (StateGetBalanceResult, error) {
-	if stateRootHash == nil {
-		latestHashResult, err := c.GetStateRootHashLatest(ctx)
-		if err != nil {
-			return StateGetBalanceResult{}, err
-		}
-		latestHashString := latestHashResult.StateRootHash.String()
-		stateRootHash = &latestHashString
+func (c *client) GetLatestBalance(ctx context.Context, purseURef string) (StateGetBalanceResult, error) {
+	latestHashResult, err := c.GetStateRootHashLatest(ctx)
+	if err != nil {
+		return StateGetBalanceResult{}, err
 	}
+
 	var result StateGetBalanceResult
 	resp, err := c.processRequest(ctx, MethodGetStateBalance, map[string]string{
-		"state_root_hash": *stateRootHash,
+		"state_root_hash": latestHashResult.StateRootHash.String(),
+		"purse_uref":      purseURef,
+	}, &result)
+	if err != nil {
+		return StateGetBalanceResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetBalanceByStateRootHash(ctx context.Context, purseURef string, stateRootHash string) (StateGetBalanceResult, error) {
+	var result StateGetBalanceResult
+	resp, err := c.processRequest(ctx, MethodGetStateBalance, map[string]string{
+		"state_root_hash": stateRootHash,
 		"purse_uref":      purseURef,
 	}, &result)
 	if err != nil {
@@ -538,12 +549,108 @@ func (c *client) PutDeploy(ctx context.Context, deploy types.Deploy) (PutDeployR
 	return result, nil
 }
 
-func (c *client) QueryBalance(ctx context.Context, identifier PurseIdentifier) (QueryBalanceResult, error) {
+func (c *client) QueryLatestBalance(ctx context.Context, identifier PurseIdentifier) (QueryBalanceResult, error) {
 	var result QueryBalanceResult
 
-	resp, err := c.processRequest(ctx, MethodQueryBalance, QueryBalanceRequest{identifier}, &result)
+	resp, err := c.processRequest(ctx, MethodQueryBalance, QueryBalanceRequest{PurseIdentifier: identifier}, &result)
 	if err != nil {
 		return QueryBalanceResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) QueryBalanceByBlockHeight(ctx context.Context, purseIdentifier PurseIdentifier, height uint64) (QueryBalanceResult, error) {
+	var result QueryBalanceResult
+
+	resp, err := c.processRequest(ctx, MethodQueryBalance, QueryBalanceRequest{PurseIdentifier: purseIdentifier, StateIdentifier: &GlobalStateIdentifier{
+		BlockHeight: &height,
+	}}, &result)
+	if err != nil {
+		return QueryBalanceResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) QueryBalanceByBlockHash(ctx context.Context, purseIdentifier PurseIdentifier, blockHash string) (QueryBalanceResult, error) {
+	var result QueryBalanceResult
+
+	resp, err := c.processRequest(ctx, MethodQueryBalance, QueryBalanceRequest{PurseIdentifier: purseIdentifier, StateIdentifier: &GlobalStateIdentifier{
+		BlockHash: &blockHash,
+	}}, &result)
+	if err != nil {
+		return QueryBalanceResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) QueryBalanceByStateRootHash(ctx context.Context, purseIdentifier PurseIdentifier, stateRootHash string) (QueryBalanceResult, error) {
+	var result QueryBalanceResult
+
+	resp, err := c.processRequest(ctx, MethodQueryBalance, QueryBalanceRequest{PurseIdentifier: purseIdentifier, StateIdentifier: &GlobalStateIdentifier{
+		StateRoot: &stateRootHash,
+	}}, &result)
+	if err != nil {
+		return QueryBalanceResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) QueryLatestBalanceDetails(ctx context.Context, purseIdentifier PurseIdentifier) (QueryBalanceDetailsResult, error) {
+	var result QueryBalanceDetailsResult
+
+	resp, err := c.processRequest(ctx, MethodQueryBalanceDetails, QueryBalanceDetailsRequest{PurseIdentifier: purseIdentifier}, &result)
+	if err != nil {
+		return QueryBalanceDetailsResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) QueryBalanceDetailsByStateRootHash(ctx context.Context, purseIdentifier PurseIdentifier, stateRootHash string) (QueryBalanceDetailsResult, error) {
+	var result QueryBalanceDetailsResult
+
+	resp, err := c.processRequest(ctx, MethodQueryBalanceDetails, QueryBalanceDetailsRequest{purseIdentifier, &GlobalStateIdentifier{
+		StateRoot: &stateRootHash,
+	}}, &result)
+	if err != nil {
+		return QueryBalanceDetailsResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) QueryBalanceDetailsByBlockHeight(ctx context.Context, purseIdentifier PurseIdentifier, height uint64) (QueryBalanceDetailsResult, error) {
+	var result QueryBalanceDetailsResult
+
+	resp, err := c.processRequest(ctx, MethodQueryBalanceDetails, QueryBalanceDetailsRequest{purseIdentifier, &GlobalStateIdentifier{
+		BlockHeight: &height,
+	}}, &result)
+	if err != nil {
+		return QueryBalanceDetailsResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) QueryBalanceDetailsByBlockHash(ctx context.Context, purseIdentifier PurseIdentifier, blockHash string) (QueryBalanceDetailsResult, error) {
+	var result QueryBalanceDetailsResult
+
+	resp, err := c.processRequest(ctx, MethodQueryBalanceDetails, QueryBalanceDetailsRequest{purseIdentifier, &GlobalStateIdentifier{
+		BlockHash: &blockHash,
+	}}, &result)
+	if err != nil {
+		return QueryBalanceDetailsResult{}, err
 	}
 
 	result.rawJSON = resp.Result

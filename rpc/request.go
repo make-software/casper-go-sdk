@@ -49,6 +49,7 @@ const (
 	MethodPutDeploy           Method = "account_put_deploy"
 	MethodSpeculativeExec     Method = "speculative_exec"
 	MethodQueryBalance        Method = "query_balance"
+	MethodQueryBalanceDetails Method = "query_balance_details"
 	MethodInfoGetChainspec    Method = "info_get_chainspec"
 )
 
@@ -145,6 +146,12 @@ type BlockIdentifier struct {
 	Height *uint64 `json:"Height,omitempty"`
 }
 
+type GlobalStateIdentifier struct {
+	BlockHash   *string `json:"BlockHash,omitempty"`
+	BlockHeight *uint64 `json:"BlockHeight,omitempty"`
+	StateRoot   *string `json:"StateRootHash,omitempty"`
+}
+
 type ParamBlockIdentifier struct {
 	BlockIdentifier *BlockIdentifier `json:"block_identifier"`
 }
@@ -188,10 +195,41 @@ type SpeculativeExecParams struct {
 
 type PurseIdentifier struct {
 	MainPurseUnderPublicKey   *keypair.PublicKey `json:"main_purse_under_public_key,omitempty"`
-	MainPurseUnderAccountHash *string            `json:"main_purse_under_account_hash,omitempty"`
-	PurseUref                 *string            `json:"purse_uref,omitempty"`
+	MainPurseUnderAccountHash *key.AccountHash   `json:"main_purse_under_account_hash,omitempty"`
+	MainPurseUnderEntityAddr  *key.EntityAddr    `json:"main_purse_under_entity_addr,omitempty"`
+	PurseUref                 *key.URef          `json:"purse_uref,omitempty"`
+}
+
+func NewPurseIdentifierFromPublicKey(pubKey keypair.PublicKey) PurseIdentifier {
+	return PurseIdentifier{
+		MainPurseUnderPublicKey: &pubKey,
+	}
+}
+
+func NewPurseIdentifierFromAccountHash(accountHash key.AccountHash) PurseIdentifier {
+	return PurseIdentifier{
+		MainPurseUnderAccountHash: &accountHash,
+	}
+}
+
+func NewPurseIdentifierFromEntityAddr(entityAddr key.EntityAddr) PurseIdentifier {
+	return PurseIdentifier{
+		MainPurseUnderEntityAddr: &entityAddr,
+	}
+}
+
+func NewPurseIdentifierFromUref(uref key.URef) PurseIdentifier {
+	return PurseIdentifier{
+		PurseUref: &uref,
+	}
 }
 
 type QueryBalanceRequest struct {
-	PurseIdentifier PurseIdentifier `json:"purse_identifier"`
+	PurseIdentifier PurseIdentifier        `json:"purse_identifier"`
+	StateIdentifier *GlobalStateIdentifier `json:"state_identifier,omitempty"`
+}
+
+type QueryBalanceDetailsRequest struct {
+	PurseIdentifier PurseIdentifier        `json:"purse_identifier"`
+	StateIdentifier *GlobalStateIdentifier `json:"state_identifier,omitempty"`
 }

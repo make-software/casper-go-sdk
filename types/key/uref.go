@@ -70,8 +70,7 @@ func (v *URef) UnmarshalText(text []byte) error {
 }
 
 func (v URef) MarshalJSON() ([]byte, error) {
-	s := v.ToPrefixedString()
-	return []byte(`"` + s + `"`), nil
+	return json.Marshal(v.ToPrefixedString())
 }
 
 func (v *URef) GobDecode(i []byte) error {

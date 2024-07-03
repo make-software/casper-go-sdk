@@ -45,10 +45,12 @@ type ClientPOS interface {
 // The response should be identical, regardless of the node queried,
 // as the information in question is objective and common to all nodes within a network.
 type ClientInformational interface {
-	// GetAccountBalance returns a purse's balance from a network.
+	// GetLatestBalance returns a purse's balance from a network.
 	// The request takes in the formatted representation of a purse URef as a parameter.
-	// If the param stateRootHash is nil, the client will make an additional RPC call to retrieve the latest stateRootHash.
-	GetAccountBalance(ctx context.Context, stateRootHash *string, purseURef string) (StateGetBalanceResult, error)
+	// The client will make an additional RPC call to retrieve the latest stateRootHash.
+	GetLatestBalance(ctx context.Context, purseURef string) (StateGetBalanceResult, error)
+	// GetBalanceByStateRootHash returns a purse's balance and state root hash from a network.
+	GetBalanceByStateRootHash(ctx context.Context, purseURef string, stateRootHash string) (StateGetBalanceResult, error)
 	// GetDeploy retrieves a Deploy from a network. It requires a deploy_hash to query the Deploy.
 	GetDeploy(ctx context.Context, hash string) (InfoGetDeployResult, error)
 	// GetDeployFinalizedApproval returns Deploy with the finalized approvals substituted.
@@ -124,8 +126,25 @@ type ClientInformational interface {
 	// GetPeers return a list of peers connected to the node on a Casper network.
 	// The responses return information specific to the queried node, and as such, will vary.
 	GetPeers(ctx context.Context) (InfoGetPeerResult, error)
-	// QueryBalance queries for balances under a given PurseIdentifier
-	QueryBalance(ctx context.Context, identifier PurseIdentifier) (QueryBalanceResult, error)
+
+	// QueryLatestBalance queries for balances under a given PurseIdentifier
+	QueryLatestBalance(ctx context.Context, identifier PurseIdentifier) (QueryBalanceResult, error)
+	// QueryBalanceByBlockHeight query for balance information using a purse identifier and block height
+	QueryBalanceByBlockHeight(ctx context.Context, purseIdentifier PurseIdentifier, height uint64) (QueryBalanceResult, error)
+	// QueryBalanceByBlockHash query for balance information using a purse identifier and block hash
+	QueryBalanceByBlockHash(ctx context.Context, purseIdentifier PurseIdentifier, blockHash string) (QueryBalanceResult, error)
+	// QueryBalanceByStateRootHash query for full balance information using a purse identifier and state root hash
+	QueryBalanceByStateRootHash(ctx context.Context, purseIdentifier PurseIdentifier, stateRootHash string) (QueryBalanceResult, error)
+
+	// QueryLatestBalanceDetails query for full balance information using a purse identifier
+	QueryLatestBalanceDetails(ctx context.Context, purseIdentifier PurseIdentifier) (QueryBalanceDetailsResult, error)
+	// QueryBalanceDetailsByBlockHeight query for full balance information using a purse identifier and block height
+	QueryBalanceDetailsByBlockHeight(ctx context.Context, purseIdentifier PurseIdentifier, height uint64) (QueryBalanceDetailsResult, error)
+	// QueryBalanceDetailsByBlockHash query for full balance information using a purse identifier and block hash
+	QueryBalanceDetailsByBlockHash(ctx context.Context, purseIdentifier PurseIdentifier, blockHash string) (QueryBalanceDetailsResult, error)
+	// QueryBalanceDetailsByStateRootHash query for full balance information using a purse identifier and state root hash
+	QueryBalanceDetailsByStateRootHash(ctx context.Context, purseIdentifier PurseIdentifier, stateRootHash string) (QueryBalanceDetailsResult, error)
+
 	// GetChainspec returns the raw bytes of the chainspec.toml, accounts.toml and global_state.toml files as read at node startup.
 	GetChainspec(ctx context.Context) (InfoGetChainspecResult, error)
 }
