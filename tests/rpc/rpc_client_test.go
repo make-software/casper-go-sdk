@@ -209,10 +209,10 @@ func Test_DefaultClient_GetStateBalance(t *testing.T) {
 	defer server.Close()
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
 	hash := "fb9c42717769d72442ff17a5ff1574b4bc1c83aedf5992b14e4d071423f86240"
-	result, err := client.GetBalance(
+	result, err := client.GetBalanceByStateRootHash(
 		context.Background(),
 		"uref-7b12008bb757ee32caefb3f7a1f77d9f659ee7a4e21ad4950c4e0294000492eb-007",
-		&hash,
+		hash,
 	)
 	require.NoError(t, err)
 	assert.Equal(t, "93000000000", result.BalanceValue.String())
@@ -222,10 +222,9 @@ func Test_DefaultClient_GetStateBalance_WithEmptyStateRootHash(t *testing.T) {
 	server := SetupServer(t, "../data/rpc_response/get_account_balance.json")
 	defer server.Close()
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetBalance(
+	result, err := client.GetLatestBalance(
 		context.Background(),
 		"uref-7b12008bb757ee32caefb3f7a1f77d9f659ee7a4e21ad4950c4e0294000492eb-007",
-		nil,
 	)
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.BalanceValue)

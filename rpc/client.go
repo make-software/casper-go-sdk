@@ -45,10 +45,12 @@ type ClientPOS interface {
 // The response should be identical, regardless of the node queried,
 // as the information in question is objective and common to all nodes within a network.
 type ClientInformational interface {
-	// GetBalance returns a purse's balance from a network.
+	// GetLatestBalance returns a purse's balance from a network.
 	// The request takes in the formatted representation of a purse URef as a parameter.
-	// If the param stateRootHash is nil, the client will make an additional RPC call to retrieve the latest stateRootHash.
-	GetBalance(ctx context.Context, purseURef string, stateRootHash *string) (StateGetBalanceResult, error)
+	// The client will make an additional RPC call to retrieve the latest stateRootHash.
+	GetLatestBalance(ctx context.Context, purseURef string) (StateGetBalanceResult, error)
+	// GetBalanceByStateRootHash returns a purse's balance and state root hash from a network.
+	GetBalanceByStateRootHash(ctx context.Context, purseURef string, stateRootHash string) (StateGetBalanceResult, error)
 	// GetDeploy retrieves a Deploy from a network. It requires a deploy_hash to query the Deploy.
 	GetDeploy(ctx context.Context, hash string) (InfoGetDeployResult, error)
 	// GetDeployFinalizedApproval returns Deploy with the finalized approvals substituted.

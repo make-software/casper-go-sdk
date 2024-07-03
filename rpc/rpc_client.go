@@ -204,18 +204,29 @@ func (c *client) GetDictionaryItemByIdentifier(ctx context.Context, stateRootHas
 	return result, nil
 }
 
-func (c *client) GetBalance(ctx context.Context, purseURef string, stateRootHash *string) (StateGetBalanceResult, error) {
-	if stateRootHash == nil {
-		latestHashResult, err := c.GetStateRootHashLatest(ctx)
-		if err != nil {
-			return StateGetBalanceResult{}, err
-		}
-		latestHashString := latestHashResult.StateRootHash.String()
-		stateRootHash = &latestHashString
+func (c *client) GetLatestBalance(ctx context.Context, purseURef string) (StateGetBalanceResult, error) {
+	latestHashResult, err := c.GetStateRootHashLatest(ctx)
+	if err != nil {
+		return StateGetBalanceResult{}, err
 	}
+
 	var result StateGetBalanceResult
 	resp, err := c.processRequest(ctx, MethodGetStateBalance, map[string]string{
-		"state_root_hash": *stateRootHash,
+		"state_root_hash": latestHashResult.StateRootHash.String(),
+		"purse_uref":      purseURef,
+	}, &result)
+	if err != nil {
+		return StateGetBalanceResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetBalanceByStateRootHash(ctx context.Context, purseURef string, stateRootHash string) (StateGetBalanceResult, error) {
+	var result StateGetBalanceResult
+	resp, err := c.processRequest(ctx, MethodGetStateBalance, map[string]string{
+		"state_root_hash": stateRootHash,
 		"purse_uref":      purseURef,
 	}, &result)
 	if err != nil {
