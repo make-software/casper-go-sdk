@@ -118,6 +118,24 @@ type EntityIdentifier struct {
 	EntityAddr *key.EntityAddr `json:"EntityAddr,omitempty"`
 }
 
+func NewEntityIdentifierFromAccountHash(accountHash key.AccountHash) EntityIdentifier {
+	return EntityIdentifier{
+		AccountHash: &accountHash,
+	}
+}
+
+func NewEntityIdentifierFromPublicKey(pubKey keypair.PublicKey) EntityIdentifier {
+	return EntityIdentifier{
+		PublicKey: &pubKey,
+	}
+}
+
+func NewEntityIdentifierFromEntityAddr(entityAddr key.EntityAddr) EntityIdentifier {
+	return EntityIdentifier{
+		EntityAddr: &entityAddr,
+	}
+}
+
 type PutDeployRequest struct {
 	Deploy types.Deploy `json:"deploy"`
 }

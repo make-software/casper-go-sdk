@@ -139,7 +139,7 @@ func (c *client) GetLatestEntity(ctx context.Context, entityIdentifier EntityIde
 	return result, nil
 }
 
-func (c *client) GetEntityByHash(ctx context.Context, entityIdentifier EntityIdentifier, hash string) (StateGetEntity, error) {
+func (c *client) GetEntityByBlockHash(ctx context.Context, entityIdentifier EntityIdentifier, hash string) (StateGetEntity, error) {
 	var result StateGetEntity
 
 	resp, err := c.processRequest(ctx, MethodGetStateEntity, ParamGetStateEntity{EntityIdentifier: entityIdentifier, BlockIdentifier: &BlockIdentifier{Hash: &hash}}, &result)
@@ -151,7 +151,7 @@ func (c *client) GetEntityByHash(ctx context.Context, entityIdentifier EntityIde
 	return result, nil
 }
 
-func (c *client) GetEntityByHeight(ctx context.Context, entityIdentifier EntityIdentifier, height uint64) (StateGetEntity, error) {
+func (c *client) GetEntityByBlockHeight(ctx context.Context, entityIdentifier EntityIdentifier, height uint64) (StateGetEntity, error) {
 	var result StateGetEntity
 
 	resp, err := c.processRequest(ctx, MethodGetStateEntity, ParamGetStateEntity{EntityIdentifier: entityIdentifier, BlockIdentifier: &BlockIdentifier{Height: &height}}, &result)
