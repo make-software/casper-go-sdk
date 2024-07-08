@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 )
 
 var (
@@ -72,8 +71,6 @@ func (c *HttpHandler) ProcessCall(ctx context.Context, params RpcRequest) (RpcRe
 	if err != nil {
 		return RpcResponse{}, fmt.Errorf("%w, details: %s", ErrReadHttpResponseBody, err.Error())
 	}
-
-	os.WriteFile("test.json", b, 0666)
 
 	err = json.Unmarshal(b, &rpcResponse)
 	if err != nil {
