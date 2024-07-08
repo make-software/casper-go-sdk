@@ -309,7 +309,7 @@ func (c *client) GetEraInfoByBlockHash(ctx context.Context, hash string) (ChainG
 	return result, nil
 }
 
-func (c *client) GetBlockLatest(ctx context.Context) (ChainGetBlockResult, error) {
+func (c *client) GetLatestBlock(ctx context.Context) (ChainGetBlockResult, error) {
 	var result chainGetBlockResultV1Compatible
 
 	resp, err := c.processRequest(ctx, MethodGetBlock, nil, &result)
@@ -432,7 +432,7 @@ func (c *client) GetEraSummaryByHeight(ctx context.Context, height uint64) (Chai
 	return result, nil
 }
 
-func (c *client) GetAuctionInfoLatest(ctx context.Context) (StateGetAuctionInfoResult, error) {
+func (c *client) GetLatestAuctionInfo(ctx context.Context) (StateGetAuctionInfoResult, error) {
 	var result StateGetAuctionInfoResult
 
 	resp, err := c.processRequest(ctx, MethodGetAuctionInfo, nil, &result)
