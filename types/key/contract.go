@@ -24,7 +24,7 @@ func (h *ContractHash) UnmarshalJSON(data []byte) error {
 }
 
 func (h ContractHash) MarshalJSON() ([]byte, error) {
-	return []byte(`"` + h.originPrefix + h.ToHex() + `"`), nil
+	return json.Marshal(h.originPrefix + h.ToHex())
 }
 
 func (h ContractHash) ToPrefixedWasmString() string {

@@ -59,7 +59,7 @@ func (h ByteCode) IsEmpty() bool {
 }
 
 func (h ByteCode) MarshalJSON() ([]byte, error) {
-	return []byte(h.ToPrefixedString()), nil
+	return json.Marshal(h.ToPrefixedString())
 }
 
 func (h ByteCode) ToPrefixedString() string {

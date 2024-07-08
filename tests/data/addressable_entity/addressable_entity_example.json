@@ -1,0 +1,38 @@
+{
+  "protocol_version": "2.0.0",
+  "entity_kind": {
+    "Account": "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c"
+  },
+  "package_hash": "contract-package-0000000000000000000000000000000000000000000000000000000000000000",
+  "byte_code_hash": "byte-code-0000000000000000000000000000000000000000000000000000000000000000",
+  "main_purse": "uref-78b4958c8405a5e99ffb637f8c4b49c1807fe7eff3ce714cf3bc9672cba3e6ef-007",
+  "entry_points": [
+    {
+      "name": "call",
+      "entry_point": {
+        "name": "call",
+        "args": [],
+        "ret": "Unit",
+        "access": "Public",
+        "entry_point_type": "Caller"
+      }
+    }
+  ],
+  "associated_keys": [
+    {
+      "account_hash": "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c",
+      "weight": 1
+    }
+  ],
+  "action_thresholds": {
+    "deployment": 1,
+    "upgrade_management": 1,
+    "key_management": 1
+  },
+  "message_topics": [
+    {
+      "topic_name": "topic",
+      "topic_name_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ]
+}

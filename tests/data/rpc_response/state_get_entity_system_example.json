@@ -1,0 +1,230 @@
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "result": {
+    "api_version": "2.0.0",
+    "entity": {
+      "AddressableEntity": {
+        "protocol_version": "2.0.0",
+        "entity_kind": {
+          "System": "Auction"
+        },
+        "package_hash": "contract-package-1dab3658ead05d09c7e0299dc67d67079d43d58a759d29102265f689b31c5f51",
+        "byte_code_hash": "byte-code-0000000000000000000000000000000000000000000000000000000000000000",
+        "main_purse": "uref-578fa40861eab39214144f6117b486ed743b2a811ed3e9afc1a5886f0df644ea-007",
+        "entry_points": [
+          {
+            "name": "activate_bid",
+            "entry_point": {
+              "name": "activate_bid",
+              "args": [
+                {
+                  "name": "validator",
+                  "cl_type": "PublicKey"
+                }
+              ],
+              "ret": "Unit",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "add_bid",
+            "entry_point": {
+              "name": "add_bid",
+              "args": [
+                {
+                  "name": "public_key",
+                  "cl_type": "PublicKey"
+                },
+                {
+                  "name": "delegation_rate",
+                  "cl_type": "U8"
+                },
+                {
+                  "name": "amount",
+                  "cl_type": "U512"
+                }
+              ],
+              "ret": "U512",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "delegate",
+            "entry_point": {
+              "name": "delegate",
+              "args": [
+                {
+                  "name": "delegator",
+                  "cl_type": "PublicKey"
+                },
+                {
+                  "name": "validator",
+                  "cl_type": "PublicKey"
+                },
+                {
+                  "name": "amount",
+                  "cl_type": "U512"
+                }
+              ],
+              "ret": "U512",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "distribute",
+            "entry_point": {
+              "name": "distribute",
+              "args": [
+                {
+                  "name": "rewards_map",
+                  "cl_type": {
+                    "Map": {
+                      "key": "PublicKey",
+                      "value": "U512"
+                    }
+                  }
+                }
+              ],
+              "ret": "Unit",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "get_era_validators",
+            "entry_point": {
+              "name": "get_era_validators",
+              "args": [],
+              "ret": {
+                "Option": {
+                  "Map": {
+                    "key": "PublicKey",
+                    "value": "U512"
+                  }
+                }
+              },
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "read_era_id",
+            "entry_point": {
+              "name": "read_era_id",
+              "args": [],
+              "ret": "U64",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "redelegate",
+            "entry_point": {
+              "name": "redelegate",
+              "args": [
+                {
+                  "name": "delegator",
+                  "cl_type": "PublicKey"
+                },
+                {
+                  "name": "validator",
+                  "cl_type": "PublicKey"
+                },
+                {
+                  "name": "amount",
+                  "cl_type": "U512"
+                },
+                {
+                  "name": "new_validator",
+                  "cl_type": "PublicKey"
+                }
+              ],
+              "ret": "U512",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "run_auction",
+            "entry_point": {
+              "name": "run_auction",
+              "args": [
+                {
+                  "name": "era_end_timestamp_millis",
+                  "cl_type": "U64"
+                }
+              ],
+              "ret": "Unit",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "slash",
+            "entry_point": {
+              "name": "slash",
+              "args": [],
+              "ret": "Unit",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "undelegate",
+            "entry_point": {
+              "name": "undelegate",
+              "args": [
+                {
+                  "name": "delegator",
+                  "cl_type": "PublicKey"
+                },
+                {
+                  "name": "validator",
+                  "cl_type": "PublicKey"
+                },
+                {
+                  "name": "amount",
+                  "cl_type": "U512"
+                }
+              ],
+              "ret": "U512",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          },
+          {
+            "name": "withdraw_bid",
+            "entry_point": {
+              "name": "withdraw_bid",
+              "args": [
+                {
+                  "name": "public_key",
+                  "cl_type": "PublicKey"
+                },
+                {
+                  "name": "amount",
+                  "cl_type": "U512"
+                }
+              ],
+              "ret": "U512",
+              "access": "Public",
+              "entry_point_type": "Called"
+            }
+          }
+        ],
+        "associated_keys": [],
+        "action_thresholds": {
+          "deployment": 1,
+          "upgrade_management": 1,
+          "key_management": 1
+        },
+        "message_topics": []
+      }
+    },
+    "merkle_proof": "010000001100737a56b8f526a32e7d0fca6769652451da6cf9f3efe98e8a7c57509313a64b9f0d1dab3658ead05d09c7e0299dc67d67079d43d58a759d29102265f689b31c5f5100000000000000000000000000000000000000000000000000000000000000000b0000000c00000061637469766174655f6269640c00000061637469766174655f626964010000000900000076616c696461746f7216090101070000006164645f626964070000006164645f626964030000000a0000007075626c69635f6b6579160f00000064656c65676174696f6e5f726174650306000000616d6f756e74080801010800000064656c65676174650800000064656c6567617465030000000900000064656c656761746f72160900000076616c696461746f721606000000616d6f756e74080801010a000000646973747269627574650a00000064697374726962757465010000000b000000726577617264735f6d6170111608090101120000006765745f6572615f76616c696461746f7273120000006765745f6572615f76616c696461746f7273000000000d11160801010b000000726561645f6572615f69640b000000726561645f6572615f6964000000000501010a000000726564656c65676174650a000000726564656c6567617465040000000900000064656c656761746f72160900000076616c696461746f721606000000616d6f756e74080d0000006e65775f76616c696461746f72160801010b00000072756e5f61756374696f6e0b00000072756e5f61756374696f6e01000000180000006572615f656e645f74696d657374616d705f6d696c6c69730509010105000000736c61736805000000736c617368000000000901010a000000756e64656c65676174650a000000756e64656c6567617465030000000900000064656c656761746f72160900000076616c696461746f721606000000616d6f756e74080801010c00000077697468647261775f6269640c00000077697468647261775f626964020000000a0000007075626c69635f6b65791606000000616d6f756e7408080101020000000000000000000000578fa40861eab39214144f6117b486ed743b2a811ed3e9afc1a5886f0df644ea0700000000010101000000000003030000000073020000008400e570be4cbf353a4ede3197ecb40e594599b541391a6d321a1be08db42360331baa00e46668c24897ea141c8ea7060859d29de181ac7e1c84a16767b06e7291fd4d4400000100000001014ae38af8f7f3a1c01fcf4097ce8838cc78baa3961594adc1649dd9391a155d0e00110b00000000017c461a9e582c8ec934f8738c6f9bce8946cafb764375a05025e2f256208adc5b02013c4e587db27267e848ffaeb6eacd32c342dd5572688af6eff060277c7f04f6650601c123034ab57dc800eb224f08de71d5c51c5d78629fc6d38a25f87ccd712fecb20a00c94d4f06a4389288386e53d4023bade6e18c38716ab1cfbabd7c4097bbe106750b006dc1dbd8368640a80862c2708298e02deb29df7954b73b55b18f6e22796a6da10d000b2cd09d68704b0318fa8762df773d24f21acd87987a39c70e555dce7645d37d0e0043d39741a6e7b395eace3b1fbbbd5bbf288f7a788e80745a2e2bb0f2173a8b4f0f01f28806056800fd0f79b761c5d10710af5bd1055734317d00a430b8386f3cf61010011f57699c7aafcab145fc7bb3d4ee979f30f9cae3577278c05c57d851b3f9ba651200693fff58318fbd94674eb111fbc49ea8ab66ece1cd614b0008d387f228d778ee1401251e581dd48a8de63a90436d0cdb61423176ef792101aa91933b00290267906e"
+  }
+}

@@ -155,7 +155,7 @@ func (h *BidAddr) UnmarshalJSON(data []byte) error {
 }
 
 func (h BidAddr) MarshalJSON() ([]byte, error) {
-	return []byte(h.ToPrefixedString()), nil
+	return json.Marshal(h.ToPrefixedString())
 }
 
 func (h BidAddr) ToPrefixedString() string {
