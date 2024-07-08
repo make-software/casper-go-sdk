@@ -18,11 +18,22 @@ type baseBid struct {
 	StakedAmount clvalue.UInt512 `json:"staked_amount"`
 }
 
+// ValidatorBid is an entry in the validator map.
+type ValidatorBid struct {
+	baseBid
+	// Minimum allowed delegation amount in motes
+	MinimumDelegationAmount uint64 `json:"minimum_delegation_amount"`
+	// Maximum allowed delegation amount in motes
+	MaximumDelegationAmount uint64 `json:"maximum_delegation_amount"`
+	// Vesting schedule for a genesis validator. `None` if non-genesis validator.
+	VestingSchedule *VestingSchedule `json:"vesting_schedule"`
+}
+
 // Bid is an entry stored in the Global state and representing a bid.
 type Bid struct {
 	baseBid
 	// Validator's public key.
-	PublicKey keypair.PublicKey `json:"validator_public_key"`
+	ValidatorPublicKey keypair.PublicKey `json:"validator_public_key"`
 	// The delegators.
 	Delegators map[string]Delegator `json:"delegators"`
 	// Vesting schedule for a genesis validator. `None` if non-genesis validator.
@@ -56,6 +67,25 @@ type Delegator struct {
 	PublicKey keypair.PublicKey `json:"validator_public_key"`
 	// Vesting schedule for a genesis validator. `None` if non-genesis validator.
 	VestingSchedule *VestingSchedule `json:"vesting_schedule"`
+}
+
+// Credit is a bridge record pointing to a new `ValidatorBid` after the public key was changed.
+type Credit struct {
+	// The era id the credit was created.
+	EraID uint32 `json:"era_id"`
+	// Validator's public key.
+	ValidatorPublicKey keypair.PublicKey `json:"validator_public_key"`
+	// The credit amount.
+	Amount clvalue.UInt512 `json:"amount"`
+}
+
+// Bridge is a bridge record pointing to a new `ValidatorBid` after the public key was changed.
+type Bridge struct {
+	EraID uint32 `json:"era_id"`
+	// Previous validator public key associated with the bid."
+	OldValidatorPublicKey keypair.PublicKey `json:"old_validator_public_key"`
+	// New validator public key associated with the bid.
+	NewValidatorPublicKey keypair.PublicKey `json:"new_validator_public_key"`
 }
 
 // AuctionDelegators is associated with the given validator.

@@ -402,11 +402,23 @@ type queryGlobalStateResultV1Compatible struct {
 func (h *QueryGlobalStateResult) UnmarshalJSON(bytes []byte) error {
 	// Check the API version
 	version := struct {
-		ApiVersion string `json:"api_version"`
+		ApiVersion  string            `json:"api_version"`
+		BlockHeader *struct{}         `json:"block_header,omitempty"`
+		StoredValue types.StoredValue `json:"stored_value"`
+		MerkleProof json.RawMessage   `json:"merkle_proof"`
 	}{}
 
 	if err := json.Unmarshal(bytes, &version); err != nil {
 		return err
+	}
+
+	if version.BlockHeader == nil {
+		*h = QueryGlobalStateResult{
+			ApiVersion:  version.ApiVersion,
+			StoredValue: version.StoredValue,
+			MerkleProof: version.MerkleProof,
+		}
+		return nil
 	}
 
 	// handle V1 version

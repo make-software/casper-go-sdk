@@ -6,7 +6,9 @@
     "entity": {
       "AddressableEntity": {
         "protocol_version": "2.0.0",
-        "entity_kind": "SmartContract",
+        "entity_kind": {
+          "SmartContract": "VmCasperV1"
+        },
         "package_hash": "contract-package-a002bfa1d31ab32e8933a2e3334be2c77c6a41fa1d4c352c57b4995713d6930f",
         "byte_code_hash": "byte-code-1b1e23596b8c901a65a13e9d314ca2fff440e69df42f226a76a9bbfbb90df1fa",
         "main_purse": "uref-aed7eabdce5ed94588a3d56773329758794020c77045ec626259cdcb0d3b23a9-007",

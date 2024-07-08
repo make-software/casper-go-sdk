@@ -1,13 +1,8 @@
 package types
 
 import (
-	"encoding/json"
-	"errors"
-
 	"github.com/make-software/casper-go-sdk/types/key"
 )
-
-var ErrUnknownEntityKind = errors.New("unknown entity kind")
 
 type AddressableEntity struct {
 	// The type of Package.
@@ -15,7 +10,7 @@ type AddressableEntity struct {
 	PackageHash string     `json:"package_hash"`
 	// The hash address of the contract wasm
 	ByteCodeHash string            `json:"byte_code_hash"`
-	EntryPoints  []NamedEntryPoint `json:"entry_points"`
+	EntryPoints  []EntryPointValue `json:"entry_points,omitempty"`
 	// A collection of weighted public keys (represented as account hashes) associated with an account.
 	AssociatedKeys []AssociatedKey `json:"associated_keys"`
 	// Thresholds that have to be met when executing an action of a certain type.
@@ -33,8 +28,8 @@ type MessageTopic struct {
 }
 
 type NamedEntryPoint struct {
-	EntryPoint EntryPoint `json:"entry_point"`
-	Name       string     `json:"name"`
+	EntryPoint EntryPointV1 `json:"entry_point"`
+	Name       string       `json:"name"`
 }
 
 // EntityActionThresholds Thresholds that have to be met when executing an action of a certain type.
@@ -50,58 +45,16 @@ type EntityActionThresholds struct {
 // SystemEntityType System contract types.
 type SystemEntityType string
 
-const SmartContractEntityKind = "SmartContract"
+// TransactionRuntime SmartContract transaction types.
+type TransactionRuntime string
+
+const (
+	TransactionRuntimeVmCasperV1 TransactionRuntime = "VmCasperV1"
+	TransactionRuntimeVmCasperV2 TransactionRuntime = "VmCasperV2"
+)
 
 type EntityKind struct {
-	System        *SystemEntityType `json:"System,omitempty"`
-	Account       *key.AccountHash  `json:"Account,omitempty"`
-	SmartContract bool              `json:"SmartContract,omitempty"`
-}
-
-// EntityKind represent a complex type
-// 1. Account ->         "entity_kind": { "Account": "account-hash-7dd64920e60864390c810182b83b53f49310adc8d66e714c57a6e5ff0e3c6552" }
-// 2. SmartContract ->  "entity_kind": "SmartContract"
-// 2. System ->         "entity_kind": { "System": "Auction" }
-
-func (k *EntityKind) UnmarshalJSON(data []byte) error {
-	var kind struct {
-		System  *SystemEntityType `json:"System,omitempty"`
-		Account *key.AccountHash  `json:"Account,omitempty"`
-	}
-	if err := json.Unmarshal(data, &kind); err == nil {
-		*k = EntityKind{
-			System:  kind.System,
-			Account: kind.Account,
-		}
-		return nil
-	}
-
-	var value string
-	if err := json.Unmarshal(data, &value); err == nil {
-		if value == SmartContractEntityKind {
-			*k = EntityKind{
-				SmartContract: true,
-			}
-			return nil
-		}
-	}
-
-	return ErrUnknownEntityKind
-}
-
-func (k EntityKind) MarshalJSON() ([]byte, error) {
-	if k.System != nil {
-		return json.Marshal(map[string]*SystemEntityType{
-			"System": k.System,
-		})
-	}
-	if k.Account != nil {
-		return json.Marshal(map[string]*key.AccountHash{
-			"Account": k.Account,
-		})
-	}
-	if k.SmartContract {
-		return json.Marshal("SmartContract")
-	}
-	return nil, ErrUnknownEntityKind
+	System        *SystemEntityType   `json:"System,omitempty"`
+	Account       *key.AccountHash    `json:"Account,omitempty"`
+	SmartContract *TransactionRuntime `json:"SmartContract,omitempty"`
 }

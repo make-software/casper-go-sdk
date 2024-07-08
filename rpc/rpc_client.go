@@ -93,11 +93,9 @@ func (c *client) QueryGlobalStateByBlockHash(ctx context.Context, blockHash, key
 
 func (c *client) QueryGlobalStateByBlockHeight(ctx context.Context, blockHeight uint64, key string, path []string) (QueryGlobalStateResult, error) {
 	var result QueryGlobalStateResult
-	resp, err := c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, &ParamQueryGlobalStateID{
-		BlockHeight: &blockHeight,
-	}), &result)
+	resp, err := c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, nil), &result)
 	if err != nil {
-		return QueryGlobalStateResult{}, nil
+		return QueryGlobalStateResult{}, err
 	}
 
 	result.rawJSON = resp.Result
