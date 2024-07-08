@@ -91,18 +91,6 @@ type Delegator struct {
 	VestingSchedule *VestingSchedule `json:"vesting_schedule"`
 }
 
-// DelegatorV1 is associated with the given validator for V1 network version.
-type DelegatorV1 struct {
-	// The purse that was used for delegating.
-	BondingPurse key.URef `json:"bonding_purse"`
-	// Amount of Casper token (in motes) delegated
-	StakedAmount clvalue.UInt512 `json:"staked_amount"`
-	// Public Key of the delegator
-	Delegatee keypair.PublicKey `json:"delegatee"`
-	// Public key of the validator
-	PublicKey keypair.PublicKey `json:"public_key"`
-}
-
 // Credit is a bridge record pointing to a new `ValidatorBid` after the public key was changed.
 type Credit struct {
 	// The era id the credit was created.
