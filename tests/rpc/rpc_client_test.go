@@ -3,7 +3,6 @@ package rpc
 import (
 	"context"
 	"encoding/json"
-	"github.com/make-software/casper-go-sdk/types"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -14,6 +13,7 @@ import (
 
 	"github.com/make-software/casper-go-sdk/casper"
 	"github.com/make-software/casper-go-sdk/rpc"
+	"github.com/make-software/casper-go-sdk/types"
 )
 
 func SetupServer(t *testing.T, filePath string) *httptest.Server {

@@ -3,8 +3,8 @@ package types
 import (
 	"encoding/json"
 	"errors"
-	"github.com/make-software/casper-go-sdk/types/clvalue"
 
+	"github.com/make-software/casper-go-sdk/types/clvalue"
 	"github.com/make-software/casper-go-sdk/types/key"
 )
 
