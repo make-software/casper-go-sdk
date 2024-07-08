@@ -16,8 +16,8 @@ import (
 // They return information related to auctions, bids and validators.
 // This information is necessary for users involved with node operations and validation.
 type ClientPOS interface {
-	// GetAuctionInfoLatest returns the types.ValidatorBid and types.EraValidators from the most recent Block.
-	GetAuctionInfoLatest(ctx context.Context) (StateGetAuctionInfoResult, error)
+	// GetLatestAuctionInfo returns the types.ValidatorBid and types.EraValidators from the most recent Block.
+	GetLatestAuctionInfo(ctx context.Context) (StateGetAuctionInfoResult, error)
 	// GetAuctionInfoByHash returns the types.ValidatorBid and types.EraValidators of either a specific Block by hash
 	GetAuctionInfoByHash(ctx context.Context, blockHash string) (StateGetAuctionInfoResult, error)
 	// GetAuctionInfoByHeight returns the types.ValidatorBid and types.EraValidators of either a specific Block by height
@@ -92,8 +92,8 @@ type ClientInformational interface {
 	// GetEntityByHeight returns an AddressableEntity by block height from the network.
 	GetEntityByBlockHeight(ctx context.Context, entityIdentifier EntityIdentifier, height uint64) (StateGetEntity, error)
 
-	// GetBlockLatest returns the latest types.Block from the network.
-	GetBlockLatest(ctx context.Context) (ChainGetBlockResult, error)
+	// GetLatestBlock returns the latest types.Block from the network.
+	GetLatestBlock(ctx context.Context) (ChainGetBlockResult, error)
 	// GetBlockByHash returns the types.Block from the network the requested block hash.
 	GetBlockByHash(ctx context.Context, hash string) (ChainGetBlockResult, error)
 	// GetBlockByHeight returns the types.Block from the network the requested block height.
