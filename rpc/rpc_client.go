@@ -371,7 +371,7 @@ func (c *client) GetBlockByHeight(ctx context.Context, height uint64) (ChainGetB
 	return blockResult, nil
 }
 
-func (c *client) GetBlockTransfersLatest(ctx context.Context) (ChainGetBlockTransfersResult, error) {
+func (c *client) GetLatestBlockTransfers(ctx context.Context) (ChainGetBlockTransfersResult, error) {
 	var result ChainGetBlockTransfersResult
 
 	resp, err := c.processRequest(ctx, MethodGetBlockTransfers, nil, &result)
