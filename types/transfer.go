@@ -78,7 +78,7 @@ func NewTransferFromV1(transfer TransferV1) Transfer {
 	return Transfer{
 		Amount: transfer.Amount,
 		TransactionHash: TransactionHash{
-			TransactionV1Hash: &transfer.DeployHash,
+			Deploy: &transfer.DeployHash,
 		},
 		From: InitiatorAddr{
 			AccountHash: &transfer.From,
