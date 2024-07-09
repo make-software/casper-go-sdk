@@ -78,6 +78,17 @@ func (c *client) GetStateItem(ctx context.Context, stateRootHash *string, key st
 	return result, nil
 }
 
+func (c *client) QueryLatestGlobalState(ctx context.Context, key string, path []string) (QueryGlobalStateResult, error) {
+	var result QueryGlobalStateResult
+	resp, err := c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, nil), &result)
+	if err != nil {
+		return QueryGlobalStateResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
 func (c *client) QueryGlobalStateByBlockHash(ctx context.Context, blockHash, key string, path []string) (QueryGlobalStateResult, error) {
 	var result QueryGlobalStateResult
 	resp, err := c.processRequest(ctx, MethodQueryGlobalState, NewQueryGlobalStateParam(key, path, &ParamQueryGlobalStateID{
@@ -97,7 +108,7 @@ func (c *client) QueryGlobalStateByBlockHeight(ctx context.Context, blockHeight 
 		BlockHeight: &blockHeight,
 	}), &result)
 	if err != nil {
-		return QueryGlobalStateResult{}, nil
+		return QueryGlobalStateResult{}, err
 	}
 
 	result.rawJSON = resp.Result

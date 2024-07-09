@@ -23,7 +23,8 @@ type (
 	Deploy          = types.Deploy
 	DeployHeader    = types.DeployHeader
 	DeployApproval  = types.Approval
-	Entrypoint      = types.EntryPoint
+	EntryPointV1    = types.EntryPointV1
+	EntryPointV2    = types.EntryPointV2
 	ExecutionResult = types.ExecutionResultStatus
 	NamedKeys       = types.NamedKeys
 	NamedKey        = types.NamedKey

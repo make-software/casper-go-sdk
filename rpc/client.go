@@ -67,6 +67,8 @@ type ClientInformational interface {
 	// Deprecated: use QueryGlobalStateByStateHash instead
 	GetStateItem(ctx context.Context, stateRootHash *string, key string, path []string) (StateGetItemResult, error)
 
+	// QueryLatestGlobalState allows for you to query for the latest value stored under certain keys in global state.
+	QueryLatestGlobalState(ctx context.Context, key string, path []string) (QueryGlobalStateResult, error)
 	// QueryGlobalStateByBlockHash allows for you to query for a value stored under certain keys in global state.
 	QueryGlobalStateByBlockHash(ctx context.Context, blockHash, key string, path []string) (QueryGlobalStateResult, error)
 	// QueryGlobalStateByBlockHeight allows for you to query for a value stored under certain keys in global state.
