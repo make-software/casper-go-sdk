@@ -56,9 +56,16 @@ func (b StateGetAccountInfo) GetRawJSON() json.RawMessage {
 // EntityOrAccount An addressable entity or a legacy account.
 type EntityOrAccount struct {
 	// An addressable entity.
-	AddressableEntity *types.AddressableEntity
+	AddressableEntity *AddressableEntity `json:"AddressableEntity"`
 	// A legacy account.
-	LegacyAccount *types.Account
+	LegacyAccount *types.Account `json:"LegacyAccount"`
+}
+
+// AddressableEntity The addressable entity response.
+type AddressableEntity struct {
+	Entity      types.AddressableEntity `json:"entity"`
+	NamedKeys   []types.NamedKey        `json:"named_keys"`
+	EntryPoints []types.EntryPointValue `json:"entry_points,omitempty"`
 }
 
 type StateGetEntity struct {

@@ -9,8 +9,7 @@ type AddressableEntity struct {
 	EntityKind  EntityKind `json:"entity_kind"`
 	PackageHash string     `json:"package_hash"`
 	// The hash address of the contract wasm
-	ByteCodeHash string            `json:"byte_code_hash"`
-	EntryPoints  []EntryPointValue `json:"entry_points,omitempty"`
+	ByteCodeHash string `json:"byte_code_hash"`
 	// A collection of weighted public keys (represented as account hashes) associated with an account.
 	AssociatedKeys []AssociatedKey `json:"associated_keys"`
 	// Thresholds that have to be met when executing an action of a certain type.

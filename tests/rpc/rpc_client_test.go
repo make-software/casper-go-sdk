@@ -474,7 +474,10 @@ func Test_DefaultClient_GetEntity(t *testing.T) {
 	result, err := client.GetLatestEntity(context.Background(), rpc.EntityIdentifier{})
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.Entity.AddressableEntity)
-	assert.NotEmpty(t, result.Entity.AddressableEntity.EntityKind.Account)
+	assert.NotEmpty(t, result.Entity.AddressableEntity.Entity.EntityKind.Account)
+	assert.NotEmpty(t, result.Entity.AddressableEntity.Entity.PackageHash)
+	assert.NotEmpty(t, result.Entity.AddressableEntity.Entity.ByteCodeHash)
+	assert.NotEmpty(t, result.Entity.AddressableEntity.Entity.AssociatedKeys)
 }
 
 func Test_DefaultClient_GetEntity_SystemKind(t *testing.T) {
@@ -485,7 +488,11 @@ func Test_DefaultClient_GetEntity_SystemKind(t *testing.T) {
 	result, err := client.GetLatestEntity(context.Background(), rpc.EntityIdentifier{})
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.Entity.AddressableEntity)
-	assert.NotEmpty(t, result.Entity.AddressableEntity.EntityKind.System)
+	assert.NotEmpty(t, result.Entity.AddressableEntity.Entity.EntityKind.System)
+	assert.NotEmpty(t, result.Entity.AddressableEntity.Entity.PackageHash)
+	assert.NotEmpty(t, result.Entity.AddressableEntity.Entity.ByteCodeHash)
+	assert.NotEmpty(t, result.Entity.AddressableEntity.EntryPoints)
+	assert.NotEmpty(t, result.Entity.AddressableEntity.NamedKeys)
 }
 
 func Test_DefaultClient_GetEntity_SmartContractKind(t *testing.T) {
@@ -496,7 +503,12 @@ func Test_DefaultClient_GetEntity_SmartContractKind(t *testing.T) {
 	result, err := client.GetLatestEntity(context.Background(), rpc.EntityIdentifier{})
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.Entity.AddressableEntity)
-	assert.NotEmpty(t, result.Entity.AddressableEntity.EntityKind.SmartContract)
+	assert.NotEmpty(t, result.Entity.AddressableEntity.Entity.EntityKind.SmartContract)
+	assert.NotEmpty(t, result.Entity.AddressableEntity.Entity.PackageHash)
+	assert.NotEmpty(t, result.Entity.AddressableEntity.Entity.ByteCodeHash)
+	assert.NotEmpty(t, result.Entity.AddressableEntity.Entity.MainPurse)
+	assert.NotEmpty(t, result.Entity.AddressableEntity.EntryPoints)
+	assert.NotEmpty(t, result.Entity.AddressableEntity.NamedKeys)
 }
 
 func Test_DefaultClient_GetBlockTransfersLatest_V2(t *testing.T) {
