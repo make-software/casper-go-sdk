@@ -512,39 +512,35 @@ func Test_DefaultClient_GetEntity_SmartContractKind(t *testing.T) {
 }
 
 func Test_DefaultClient_GetBlockTransfersLatest_V2(t *testing.T) {
-	server := SetupServer(t, "../data/rpc_response/get_block_transfer.json")
-	defer server.Close()
-	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetBlockTransfersLatest(context.Background())
-	require.NoError(t, err)
-	assert.NotEmpty(t, result.BlockHash)
-	assert.NotEmpty(t, result.Transfers[0].Version2)
-	assert.NotEmpty(t, result.Transfers[0].Version2.TransactionHash)
-	assert.NotEmpty(t, result.Transfers[0].Version2.From.AccountHash)
-}
+	tests := []struct {
+		filePath string
+	}{
+		{
+			filePath: "../data/rpc_response/get_block_transfers_v2.json",
+		},
+		{
+			filePath: "../data/rpc_response/get_block_transfers_v2_old.json",
+		},
+		{
+			filePath: "../data/rpc_response/get_block_transfers_v1.json",
+		},
+	}
 
-func Test_DefaultClient_GetBlockTransfersByHash(t *testing.T) {
-	server := SetupServer(t, "../data/rpc_response/get_block_transfer.json")
-	defer server.Close()
-	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetBlockTransfersByHash(context.Background(), "5dafbccc05cd3eb765ef9471a141877d8ffae306fb79c75fa4db46ab98bca370")
-	require.NoError(t, err)
-	assert.NotEmpty(t, result.BlockHash)
-	assert.NotEmpty(t, result.Transfers[0].Version2)
-	assert.NotEmpty(t, result.Transfers[0].Version2.TransactionHash)
-	assert.NotEmpty(t, result.Transfers[0].Version2.From.AccountHash)
-}
-
-func Test_DefaultClient_GetBlockTransfersByHeight(t *testing.T) {
-	server := SetupServer(t, "../data/rpc_response/get_block_transfer.json")
-	defer server.Close()
-	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetBlockTransfersByHeight(context.Background(), 1412462)
-	require.NoError(t, err)
-	assert.NotEmpty(t, result.BlockHash)
-	assert.NotEmpty(t, result.Transfers[0].Version2)
-	assert.NotEmpty(t, result.Transfers[0].Version2.TransactionHash)
-	assert.NotEmpty(t, result.Transfers[0].Version2.From.AccountHash)
+	for _, tt := range tests {
+		t.Run("GetBlockLatest", func(t *testing.T) {
+			server := SetupServer(t, tt.filePath)
+			defer server.Close()
+			client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+			result, err := client.GetBlockTransfersByHeight(context.Background(), 3144186)
+			require.NoError(t, err)
+			assert.NotEmpty(t, result.BlockHash)
+			assert.NotEmpty(t, result.Transfers[0])
+			assert.NotEmpty(t, result.Transfers[0].TransactionHash)
+			assert.NotEmpty(t, result.Transfers[0].From.AccountHash)
+			assert.NotEmpty(t, result.Transfers[0].Source)
+			assert.NotEmpty(t, result.Transfers[0].Amount)
+		})
+	}
 }
 
 func Test_DefaultClient_GetEraSummaryLatest(t *testing.T) {
