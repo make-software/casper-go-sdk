@@ -67,7 +67,7 @@ func (h *MessageAddr) UnmarshalJSON(data []byte) error {
 }
 
 func (h MessageAddr) MarshalJSON() ([]byte, error) {
-	return []byte(h.ToPrefixedString()), nil
+	return json.Marshal(h.ToPrefixedString())
 }
 
 func (h MessageAddr) ToPrefixedString() string {

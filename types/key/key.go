@@ -14,6 +14,7 @@ type PrefixName = string
 
 const (
 	PrefixNameAccount                PrefixName = "account-hash-"
+	PrefixAddressableEntity          PrefixName = "addressable-entity-"
 	PrefixNameHash                   PrefixName = "hash-"
 	PrefixNameContractPackageWasm    PrefixName = "contract-package-wasm"
 	PrefixNameContractPackage        PrefixName = "contract-package-"

@@ -42,5 +42,5 @@ func (h TransferHash) ToPrefixedString() string {
 }
 
 func (h TransferHash) MarshalJSON() ([]byte, error) {
-	return []byte(`"` + h.originPrefix + h.ToHex() + `"`), nil
+	return json.Marshal(h.originPrefix + h.ToHex())
 }

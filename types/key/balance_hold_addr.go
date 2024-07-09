@@ -124,7 +124,7 @@ func (h *BalanceHoldAddr) UnmarshalJSON(data []byte) error {
 }
 
 func (h BalanceHoldAddr) MarshalJSON() ([]byte, error) {
-	return []byte(h.ToPrefixedString()), nil
+	return json.Marshal(h.ToPrefixedString())
 }
 
 func (h BalanceHoldAddr) ToPrefixedString() string {

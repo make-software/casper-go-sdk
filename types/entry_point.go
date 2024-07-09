@@ -12,9 +12,23 @@ const (
 	EntryPointTypeContract EntryPointType = "Contract"
 )
 
-// EntryPoint is a type signature of a method.
+// EntryPointValue The encapsulated representation of entrypoints.
+type EntryPointValue struct {
+	V1CasperVm *EntryPointV1 `json:"V1CasperVm"`
+	V2CasperVm *EntryPointV2 `json:"V2CasperVm"`
+}
+
+// EntryPointV2 Entrypoints to be executed against the V2 Casper VM.
+type EntryPointV2 struct {
+	// The flags
+	Flags uint32 `json:"flags"`
+	// The selector.
+	FunctionIndex uint32 `json:"functionIndex"`
+}
+
+// EntryPointV1 is a type signature of a method.
 // Order of arguments matter since can be referenced by index as well as name.
-type EntryPoint struct {
+type EntryPointV1 struct {
 	// Access control options for a contract entry point
 	Access EntryPointAccess `json:"access"`
 	// List of input parameters to the method.

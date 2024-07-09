@@ -72,7 +72,7 @@ func (h *EntryPointAddr) UnmarshalJSON(data []byte) error {
 }
 
 func (h EntryPointAddr) MarshalJSON() ([]byte, error) {
-	return []byte(h.ToPrefixedString()), nil
+	return json.Marshal(h.ToPrefixedString())
 }
 
 func (h EntryPointAddr) ToPrefixedString() string {

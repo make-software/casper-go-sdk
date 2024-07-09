@@ -1,0 +1,77 @@
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "result": {
+    "api_version": "2.0.0",
+    "entity": {
+      "AddressableEntity": {
+        "entity": {
+          "protocol_version": "2.0.1",
+          "entity_kind": {
+            "System": "HandlePayment"
+          },
+          "package_hash": "package-e32c3e0c240af8b0b8e7a19afc9a0aeabeeb75399f02b24147c7d6988cf1262c",
+          "byte_code_hash": "byte-code-0000000000000000000000000000000000000000000000000000000000000000",
+          "main_purse": "uref-0000000000000000000000000000000000000000000000000000000000000000-000",
+          "associated_keys": [],
+          "action_thresholds": {
+            "deployment": 1,
+            "upgrade_management": 1,
+            "key_management": 1
+          },
+          "message_topics": []
+        },
+        "named_keys": [
+          {
+            "name": "accumulation_purse",
+            "key": "uref-ef0d956807669eea919c49a6d5fbde8ab7ac652f65192c9a85751a6a713fa10c-007"
+          },
+          {
+            "name": "payment_purse",
+            "key": "uref-8da30b479c08318cf778254ac5c2fd05df0b1abffb769a5b7d1e00db21aa8c04-007"
+          }
+        ],
+        "entry_points": [
+          {
+            "V1CasperVm": {
+              "name": "get_payment_purse",
+              "args": [],
+              "ret": "URef",
+              "access": "Public",
+              "entry_point_type": "Called",
+              "entry_point_payment": "Caller"
+            }
+          },
+          {
+            "V1CasperVm": {
+              "name": "get_refund_purse",
+              "args": [],
+              "ret": {
+                "Option": "URef"
+              },
+              "access": "Public",
+              "entry_point_type": "Called",
+              "entry_point_payment": "Caller"
+            }
+          },
+          {
+            "V1CasperVm": {
+              "name": "set_refund_purse",
+              "args": [
+                {
+                  "name": "purse",
+                  "cl_type": "URef"
+                }
+              ],
+              "ret": "Unit",
+              "access": "Public",
+              "entry_point_type": "Called",
+              "entry_point_payment": "Caller"
+            }
+          }
+        ]
+      }
+    },
+    "merkle_proof": "010000001100a1b5f200a58533875ef83cb98de14f128342b34162cbc14d4f41f3ccbc451dc30de32c3e0c240af8b0b8e7a19afc9a0aeabeeb75399f02b24147c7d6988cf1262c0000000000000000000000000000000000000000000000000000000000000000020000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000101010000000000010300000000a102000000070020a4dd8f1e97a8116fb36c70671734d1e836ba802bd4524206a0da02e07d6cf0c5000a3b329a3d3383424fbeea5a3f5dd162ee1465d4e7bc4be032c24e7a47a6ed67000002000000010153c5d163b6c05c4b53320c59cf28f893f19065a14c30603d632a7cd5da5d10c402010ab8c1ac8c4553a9ae56e5fc8d8e960af46039e9c2c918c92f65345118f08c4b0011100000000001e8abce6afeb088f2d3429e3b052bbccd1852d712d880ccc35b51b43006059dd10201f5103df236d9adc53464324b09613f57193341adcca9896842d9dd843c57574e060110046d631ab3b1f0e9ec75101053a71c0a87d921bf41857819ff764d521e3de2090123e87515d5bc2cefdf1d85906e6a9e870830f9d971ca1709c8887c0e935d842a0a00a88a2ec26e14b9984f2f7588fc27dcbde754144ac8991fcdcb1555e05d5a3c720b00000854892c6c76fa92626c0ca71f96a460941a1d6bf0902cb0754b07c7bee92c0d009f8aacc0ef174fce35805337a386e3651bc5460955b034a1056aa806305c59810e0043d39741a6e7b395eace3b1fbbbd5bbf288f7a788e80745a2e2bb0f2173a8b4f0f017e2f01446211a69799d393db66fac50d37194797a4521ca83e0516ba18bb7db11001a6da90d464bdcbf3a942f09e9e4ab2edaa829eafc50584cd5c801774209c383e1201e9f7dc0aa05de84ad5849a505ccb9c79e8c06c852b60d96bce4148450d52f3ff13014f3413c9f924afd0c6000a21c74350facb08cb01370d79cb6d43070253e2eb1714019ce1023d8350badb0d0018842a43c9aa2ad6ed65c8b16e92c0439dfb373106ec15010be66c1a24fb0ce05c1e95a328f6f0ab132fc320a3af062e25ccd33a54e683f51601ca9c9becfda660153c6c1122da46e4c6de331a7c2c1ea9d613364864d71e0ab21701bef71b71a38446f3759d6d2540b5ef0b96f5c635eb8201ddb125b19bd87b61ad"
+  }
+}

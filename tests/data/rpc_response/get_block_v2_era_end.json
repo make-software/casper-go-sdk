@@ -6,13 +6,13 @@
     "block_with_signatures": {
       "block": {
         "Version2": {
-          "hash": "9edb04c89f80344ede5c62ca0d319b00170b6a037887e7a3625360a20d5c4747",
+          "hash": "57443064e4e46c6afcb7e60c855cc10ad212752b3c9d72ba87bdf34154573767",
           "header": {
-            "parent_hash": "0340757db98b4c493808fce629183316465f30bba5925afb27d013bad91fe1a7",
-            "state_root_hash": "745713905226334b5b013aac3422772d770e70f6e7f3f1608ccd4bc160d0c3ef",
-            "body_hash": "8c9f072d66a8673a9f0d8928e0d174dba39775a851f2c05bdca50e2fe4d8ce27",
+            "parent_hash": "6872358e1386c84df1c9f581493bfd54e223708226dc8613038f30f92329042b",
+            "state_root_hash": "a71fab87e491ba8164d0a097c9bdf5a20b7469f077cdbff88656fc2e9bf43a87",
+            "body_hash": "98121b93ca97b2f08a63dbb6f06f218ad6d1890b4505d23d7c3ccfb8193b8eed",
             "random_bit": true,
-            "accumulated_seed": "3a78f73be2a3cce8c4092b2f82961ea803e3292c9e61383b4fc2c0712518bef8",
+            "accumulated_seed": "884d89271e215edcbe55300049e8f55587b4176d991a64a64ddf713ee7e88392",
             "era_end": {
               "equivocators": [],
               "inactive_validators": [],
@@ -35,25 +35,66 @@
                 }
               ],
               "rewards": {
-                "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c": "45940949803992",
-                "0126d4637eb0c0769274f03a696df1112383fa621c9f73f57af4c5c0fbadafa8cf": "45461148761653",
-                "0140afe8f752e5ff100e0189c080bc207e8805b3e5e82f792ec608de2f11f39f6c": "41622740422938",
-                "017536433a73f7562526f3e9fcb8d720428ae2d28788a9909f3c6f637a9d848a4b": "43302044071126"
+                "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c": [
+                  "45900966383797",
+                  "39983420194"
+                ],
+                "0126d4637eb0c0769274f03a696df1112383fa621c9f73f57af4c5c0fbadafa8cf": [
+                  "45421165341458",
+                  "39983420194"
+                ],
+                "0140afe8f752e5ff100e0189c080bc207e8805b3e5e82f792ec608de2f11f39f6c": [
+                  "41542773582548",
+                  "79966840389"
+                ],
+                "017536433a73f7562526f3e9fcb8d720428ae2d28788a9909f3c6f637a9d848a4b": [
+                  "43262060650931",
+                  "39983420194"
+                ]
               },
               "next_era_gas_price": 1
             },
-            "timestamp": "2024-04-13T05:40:10.580Z",
+            "timestamp": "2024-06-03T14:55:10.573Z",
             "era_id": 1,
             "height": 441,
             "protocol_version": "2.0.0",
-            "current_gas_price": 1
+            "proposer": "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c",
+            "current_gas_price": 1,
+            "last_switch_block_hash": "f0fcb110952a07d85c4e815774c3a29b41c06907db87e8694f79cc34b2238699"
           },
           "body": {
-            "proposer": "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c",
-            "mint": [],
-            "auction": [],
-            "install_upgrade": [],
-            "standard": [],
+            "transactions": {
+              "0": [
+                {
+                  "Version1": "1414141414141414141414141414141414141414141414141414141414141414"
+                }
+              ],
+              "1": [
+                {
+                  "Version1": "1515151515151515151515151515151515151515151515151515151515151515"
+                }
+              ],
+              "2": [
+                {
+                  "Version1": "1616161616161616161616161616161616161616161616161616161616161616"
+                }
+              ],
+              "3": [
+                {
+                  "Version1": "1717171717171717171717171717171717171717171717171717171717171717"
+                }
+              ],
+              "4": [
+                {
+                  "Version1": "1717171717171717171717171717171717171717171717171717171717171717"
+                }
+              ],
+              "5": [
+                {
+                  "Version1": "1717171717171717171717171717171717171717171717171717171717171717"
+                }
+              ]
+            },
             "rewarded_signatures": [
               [
                 240
@@ -71,19 +112,19 @@
       "proofs": [
         {
           "public_key": "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c",
-          "signature": "01a3f86241962ee76c0ac639585d9e6e020bd5783c3c4b8e0201772aadd116307392ac9872e0ce81e9c68dea840f04a9d0e88d404f736bd455aacce2b3d0b1a207"
+          "signature": "01b113256c16a31a5fadd9c4314bb626cdd0e7944f100c37fdb012623173e917b97a62a28c0e9c9f4137a4bc5c437b32b3922f3a9db1abd44f7eeb3b36f064e305"
         },
         {
           "public_key": "0126d4637eb0c0769274f03a696df1112383fa621c9f73f57af4c5c0fbadafa8cf",
-          "signature": "0121a3c368d4ec679f52f982db042f1b732e14921196877344e7cbd7fefc5157f59b1d338f10f7b4f4acf97cfa839568e039e738d0af597e7b79cc9472262f0f05"
+          "signature": "01cb6a8d6ea436229e0a379217c34fbc0537327e36f5a3fcc73679950173a08630cd4ee1faafcb8e53f7c38b3bf184eab31ffffac8422b537cfbbe8ad6318daa01"
         },
         {
           "public_key": "0140afe8f752e5ff100e0189c080bc207e8805b3e5e82f792ec608de2f11f39f6c",
-          "signature": "01c200d906251e48dfde535cafb96f4562edd8c7eeff12fc55f9f7fe8f98f4c65bd67fa283a9cebe0179ff5757a8c6cef8c02b801a104aab0bfc6a714c8d515a0a"
+          "signature": "017e9eab36d3ac41c66e6843c1ea3b380f9d6d6b58c2b5b7baa7301c728170dc0a7365de2ca0c3f21111f0d4fb02cab9e7e754af1056d7e8eab0209a3fd9e07407"
         },
         {
           "public_key": "017536433a73f7562526f3e9fcb8d720428ae2d28788a9909f3c6f637a9d848a4b",
-          "signature": "0191e9bbd126b4885764e3765d7b925cf153da08fed28f8263f455cc36e611ff910ad63549465b0300382443d5555a81522f62d2513960b895ba8896e8c746ec00"
+          "signature": "014a68596f906ba6ee9d4dcf684a09db997718d384af923a9607035c6f9f85728651c3283c8e9c01455cdfdb86537a619e5b83c27c340ad5247cd63fce18aa7e03"
         }
       ]
     }
