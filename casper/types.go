@@ -10,7 +10,7 @@ type (
 	AuctionState    = types.AuctionState
 	Args            = types.Args
 	ValidatorBid    = types.ValidatorBid
-	AuctionBid      = types.AuctionBid
+	Bid             = types.Bid
 	BlockV1         = types.BlockV1
 	BlockHeaderV1   = types.BlockHeaderV1
 	BlockBodyV1     = types.BlockBodyV1
@@ -23,7 +23,8 @@ type (
 	Deploy          = types.Deploy
 	DeployHeader    = types.DeployHeader
 	DeployApproval  = types.Approval
-	Entrypoint      = types.EntryPoint
+	EntryPointV1    = types.EntryPointV1
+	EntryPointV2    = types.EntryPointV2
 	ExecutionResult = types.ExecutionResultStatus
 	NamedKeys       = types.NamedKeys
 	NamedKey        = types.NamedKey

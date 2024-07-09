@@ -53,6 +53,31 @@ func (b StateGetAccountInfo) GetRawJSON() json.RawMessage {
 	return b.rawJSON
 }
 
+// EntityOrAccount An addressable entity or a legacy account.
+type EntityOrAccount struct {
+	// An addressable entity.
+	AddressableEntity *AddressableEntity `json:"AddressableEntity"`
+	// A legacy account.
+	LegacyAccount *types.Account `json:"LegacyAccount"`
+}
+
+// AddressableEntity The addressable entity response.
+type AddressableEntity struct {
+	Entity      types.AddressableEntity `json:"entity"`
+	NamedKeys   []types.NamedKey        `json:"named_keys"`
+	EntryPoints []types.EntryPointValue `json:"entry_points,omitempty"`
+}
+
+type StateGetEntity struct {
+	ApiVersion string `json:"api_version"`
+	// The addressable entity or a legacy account.
+	Entity EntityOrAccount `json:"entity"`
+	//MerkleProof is a construction created using a merkle trie that allows verification of the associated hashes.
+	MerkleProof json.RawMessage `json:"merkle_proof"`
+
+	rawJSON json.RawMessage
+}
+
 type ChainGetBlockResult struct {
 	APIVersion string `json:"api_version"`
 	Block      types.Block
@@ -82,7 +107,7 @@ func newChainGetBlockResultFromV1Compatible(result chainGetBlockResultV1Compatib
 	if result.BlockWithSignatures != nil {
 		return ChainGetBlockResult{
 			APIVersion: result.APIVersion,
-			Block:      types.NewBlockFromBlockWithSignatures(*result.BlockWithSignatures),
+			Block:      types.NewBlockFromBlockWrapper(result.BlockWithSignatures.Block, result.BlockWithSignatures.Proofs),
 			rawJSON:    rawJSON,
 		}, nil
 	}
@@ -337,6 +362,27 @@ func (b QueryBalanceResult) GetRawJSON() json.RawMessage {
 	return b.rawJSON
 }
 
+type QueryBalanceDetailsResult struct {
+	APIVersion        string                 `json:"api_version"`
+	TotalBalance      clvalue.UInt512        `json:"total_balance"`
+	AvailableBalance  clvalue.UInt512        `json:"available_balance"`
+	TotalBalanceProof string                 `json:"total_balance_proof"`
+	Holds             []BalanceHoldWithProof `json:"holds"`
+
+	rawJSON json.RawMessage
+}
+
+func (b QueryBalanceDetailsResult) GetRawJSON() json.RawMessage {
+	return b.rawJSON
+}
+
+// BalanceHoldWithProof The block time at which the hold was created.
+type BalanceHoldWithProof struct {
+	//Time   types.BlockTime `json:"time"`
+	Amount clvalue.UInt512 `json:"amount"`
+	Proof  string          `json:"proof"`
+}
+
 type InfoGetChainspecResult struct {
 	ApiVersion     string `json:"api_version"`
 	ChainspecBytes struct {
@@ -363,11 +409,23 @@ type queryGlobalStateResultV1Compatible struct {
 func (h *QueryGlobalStateResult) UnmarshalJSON(bytes []byte) error {
 	// Check the API version
 	version := struct {
-		ApiVersion string `json:"api_version"`
+		ApiVersion  string            `json:"api_version"`
+		BlockHeader *struct{}         `json:"block_header,omitempty"`
+		StoredValue types.StoredValue `json:"stored_value"`
+		MerkleProof json.RawMessage   `json:"merkle_proof"`
 	}{}
 
 	if err := json.Unmarshal(bytes, &version); err != nil {
 		return err
+	}
+
+	if version.BlockHeader == nil {
+		*h = QueryGlobalStateResult{
+			ApiVersion:  version.ApiVersion,
+			StoredValue: version.StoredValue,
+			MerkleProof: version.MerkleProof,
+		}
+		return nil
 	}
 
 	// handle V1 version

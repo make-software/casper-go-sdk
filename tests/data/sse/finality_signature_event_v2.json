@@ -1,0 +1,12 @@
+{
+  "FinalitySignature": {
+    "V2": {
+      "block_hash": "5122b986d344e4cd0ab5a2df1b3bb398de9c557a2e463391b58de82626154428",
+      "block_height": 89177,
+      "era_id": 203,
+      "chain_name_hash": "f087a92e6e7077b3deb5e00b14a904e34c7068a9410365435bc7ca5d3ac64301",
+      "signature": "01fd9b2cb5bea6cd89b1316e936649eeb298b3c6456d5447ba660f01a88be1ce6a224057eaab7d99cd78444213ebf5d19cfb235359d4d0a7fa002cab433e943001",
+      "public_key": "017536433a73f7562526f3e9fcb8d720428ae2d28788a9909f3c6f637a9d848a4b"
+    }
+  }
+}
