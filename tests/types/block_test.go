@@ -11,24 +11,11 @@ import (
 	"github.com/make-software/casper-go-sdk/types"
 )
 
-func Test_Block_MarshalUnmarshal_ShouldReturnSameResult(t *testing.T) {
-	fixture, err := os.ReadFile("../data/block/block_example.json")
-	assert.NoError(t, err)
-
-	var block types.Block
-	err = json.Unmarshal(fixture, &block)
-	assert.NoError(t, err)
-
-	result, err := json.Marshal(block)
-	assert.NoError(t, err)
-	assert.JSONEq(t, string(fixture), string(result))
-}
-
 func Test_BlockSwitch_MarshalUnmarshal_ShouldReturnSameResult(t *testing.T) {
 	fixture, err := os.ReadFile("../data/block/block_switch_example.json")
 	assert.NoError(t, err)
 
-	var block types.Block
+	var block types.BlockV1
 	err = json.Unmarshal(fixture, &block)
 	assert.NoError(t, err)
 
@@ -41,7 +28,7 @@ func Test_BlockSwitch_WithSystemProposal_MarshalUnmarshal_ShouldReturnSameResult
 	fixture, err := os.ReadFile("../data/block/block_switch_system_proposer.json")
 	assert.NoError(t, err)
 
-	var block types.Block
+	var block types.BlockV1
 	err = json.Unmarshal(fixture, &block)
 	assert.NoError(t, err)
 
@@ -54,7 +41,7 @@ func Test_BlockSwitch_WithSystemProposal_IsSystem_ShouldReturnTrue(t *testing.T)
 	fixture, err := os.ReadFile("../data/block/block_switch_system_proposer.json")
 	assert.NoError(t, err)
 
-	var block types.Block
+	var block types.BlockV1
 	err = json.Unmarshal(fixture, &block)
 	require.NoError(t, err)
 	assert.True(t, block.Body.Proposer.IsSystem())
@@ -65,10 +52,10 @@ func Test_BlockSwitch_WithSystemProposal_IsSystem_ShouldReturnTrue(t *testing.T)
 }
 
 func Test_BlockProposal_PublicKey_ShouldWorkForNormalBlock(t *testing.T) {
-	fixture, err := os.ReadFile("../data/block/block_example.json")
+	fixture, err := os.ReadFile("../data/block/block_v1_example.json")
 	assert.NoError(t, err)
 
-	var block types.Block
+	var block types.BlockV1
 	err = json.Unmarshal(fixture, &block)
 	require.NoError(t, err)
 	assert.False(t, block.Body.Proposer.IsSystem())

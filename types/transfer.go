@@ -11,10 +11,28 @@ import (
 
 // Transfer a versioned wrapper for a transfer.
 type Transfer struct {
-	TransferV2
+	// Transfer amount
+	Amount clvalue.UInt512 `json:"amount"`
+	// Deploy that created the transfer
+	TransactionHash TransactionHash `json:"transaction_hash"`
+	// Account hash from which transfer was executed
+	From InitiatorAddr `json:"from"`
+	Gas  uint          `json:"gas,string"`
+	// User-defined id
+	ID uint64 `json:"id,omitempty"`
+	// Source purse
+	Source key.URef `json:"source"`
+	// Target purse
+	Target key.URef `json:"target"`
+	// Account to which funds are transferred
+	To *key.AccountHash `json:"to"`
 
-	// source TransferV1, nil if constructed from TransferV2
-	OriginV1 *TransferV1
+	// source originTransferV1, nil if constructed from TransferV2
+	originTransferV1 *TransferV1
+}
+
+func (h *Transfer) GetTransferV1() *TransferV1 {
+	return h.originTransferV1
 }
 
 func (h *Transfer) UnmarshalJSON(bytes []byte) error {
@@ -29,7 +47,14 @@ func (h *Transfer) UnmarshalJSON(bytes []byte) error {
 
 	if versioned.Version2 != nil {
 		*h = Transfer{
-			TransferV2: *versioned.Version2,
+			Amount:          versioned.Version2.Amount,
+			TransactionHash: versioned.Version2.TransactionHash,
+			From:            versioned.Version2.From,
+			Gas:             versioned.Version2.Gas,
+			ID:              versioned.Version2.ID,
+			Source:          versioned.Version2.Source,
+			Target:          versioned.Version2.Target,
+			To:              versioned.Version2.To,
 		}
 		return nil
 	}
@@ -40,7 +65,7 @@ func (h *Transfer) UnmarshalJSON(bytes []byte) error {
 	}
 
 	//v1 compatible
-	var v1Compatible TransferV1
+	var v1Compatible = TransferV1{}
 	if err := json.Unmarshal(bytes, &v1Compatible); err == nil {
 		*h = NewTransferFromV1(v1Compatible)
 		return nil
@@ -51,21 +76,19 @@ func (h *Transfer) UnmarshalJSON(bytes []byte) error {
 
 func NewTransferFromV1(transfer TransferV1) Transfer {
 	return Transfer{
-		TransferV2: TransferV2{
-			Amount: transfer.Amount,
-			TransactionHash: TransactionHash{
-				TransactionV1Hash: &transfer.DeployHash,
-			},
-			From: InitiatorAddr{
-				AccountHash: &transfer.From,
-			},
-			Gas:    transfer.Gas,
-			ID:     transfer.ID,
-			Source: transfer.Source,
-			Target: transfer.Target,
-			To:     transfer.To,
+		Amount: transfer.Amount,
+		TransactionHash: TransactionHash{
+			Deploy: &transfer.DeployHash,
 		},
-		OriginV1: &transfer,
+		From: InitiatorAddr{
+			AccountHash: &transfer.From,
+		},
+		Gas:              transfer.Gas,
+		ID:               transfer.ID,
+		Source:           transfer.Source,
+		Target:           transfer.Target,
+		To:               transfer.To,
+		originTransferV1: &transfer,
 	}
 }
 

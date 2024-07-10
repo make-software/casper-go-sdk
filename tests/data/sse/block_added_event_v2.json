@@ -1,0 +1,39 @@
+{
+  "BlockAdded": {
+    "block_hash": "cb64adaae660d227b7d7579039a75e21f1022e2c044a5ed0ce0beefb12b95758",
+    "block": {
+      "Version2": {
+        "hash": "cb64adaae660d227b7d7579039a75e21f1022e2c044a5ed0ce0beefb12b95758",
+        "header": {
+          "parent_hash": "0932fbb493af51a23be4b3c523474d7de72830ac956a233a50e51e2d86ca6cde",
+          "state_root_hash": "b89293d38a2add17d36758bae215b67070f7eda7b5957b6e53c980139bf7f5d0",
+          "body_hash": "98121b93ca97b2f08a63dbb6f06f218ad6d1890b4505d23d7c3ccfb8193b8eed",
+          "random_bit": true,
+          "accumulated_seed": "e75e1f49ec7d17bbb315e4330a26aab714d14b6882429862c97abdfc9b5be275",
+          "era_end": null,
+          "timestamp": "2024-06-20T09:21:29.898Z",
+          "era_id": 202,
+          "height": 89049,
+          "protocol_version": "2.0.0",
+          "proposer": "0140afe8f752e5ff100e0189c080bc207e8805b3e5e82f792ec608de2f11f39f6c",
+          "current_gas_price": 1,
+          "last_switch_block_hash": "bad1013308731530684949bf51b27d1415a35a240dd782379409025a3d1be533"
+        },
+        "body": {
+          "transactions": {},
+          "rewarded_signatures": [
+            [
+              240
+            ],
+            [
+              0
+            ],
+            [
+              0
+            ]
+          ]
+        }
+      }
+    }
+  }
+}

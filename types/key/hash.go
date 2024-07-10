@@ -53,7 +53,7 @@ func (h *Hash) UnmarshalText(text []byte) error {
 }
 
 func (h Hash) MarshalJSON() ([]byte, error) {
-	return []byte(`"` + h.ToHex() + `"`), nil
+	return json.Marshal(h.ToHex())
 }
 
 func (h Hash) Bytes() []byte {

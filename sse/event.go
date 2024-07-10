@@ -2,6 +2,7 @@ package sse
 
 import (
 	"encoding/json"
+	"errors"
 	"time"
 
 	"github.com/make-software/casper-go-sdk/types"
@@ -55,10 +56,63 @@ type (
 		BlockHash string      `json:"block_hash"`
 		Block     types.Block `json:"block"`
 	}
+
 	BlockAddedEvent struct {
 		BlockAdded BlockAdded `json:"BlockAdded"`
 	}
+
+	blockAddedV1 struct {
+		BlockHash string        `json:"block_hash"`
+		Block     types.BlockV1 `json:"block"`
+	}
+
+	blockAddedEventV1 struct {
+		BlockAdded blockAddedV1 `json:"BlockAdded"`
+	}
+
+	blockAddedWrapper struct {
+		BlockHash string             `json:"block_hash"`
+		Block     types.BlockWrapper `json:"block"`
+	}
+
+	blockAddedEventWrapper struct {
+		BlockAdded blockAddedWrapper `json:"BlockAdded"`
+	}
 )
+
+func (t *BlockAddedEvent) UnmarshalJSON(data []byte) error {
+	if t == nil {
+		return errors.New("json.RawMessage: UnmarshalJSON on nil pointer")
+	}
+
+	wrapped := blockAddedEventWrapper{}
+	if err := json.Unmarshal(data, &wrapped); err != nil {
+		return err
+	}
+
+	if wrapped.BlockAdded.Block.BlockV1 != nil || wrapped.BlockAdded.Block.BlockV2 != nil {
+		*t = BlockAddedEvent{
+			BlockAdded: BlockAdded{
+				BlockHash: wrapped.BlockAdded.BlockHash,
+				Block:     types.NewBlockFromBlockWrapper(wrapped.BlockAdded.Block, nil),
+			},
+		}
+		return nil
+	}
+
+	v1Event := blockAddedEventV1{}
+	if err := json.Unmarshal(data, &v1Event); err != nil {
+		return err
+	}
+
+	*t = BlockAddedEvent{
+		BlockAdded: BlockAdded{
+			BlockHash: wrapped.BlockAdded.BlockHash,
+			Block:     types.NewBlockFromBlockV1(v1Event.BlockAdded.Block),
+		},
+	}
+	return nil
+}
 
 type (
 	DeployProcessedPayload struct {
@@ -75,25 +129,156 @@ type (
 	DeployAcceptedEvent struct {
 		DeployAccepted types.Deploy `json:"DeployAccepted"`
 	}
-	DeployExpiredPayload struct {
+
+	deployExpiredPayload struct {
 		DeployHash key.Hash `json:"deploy_hash"`
 	}
-	DeployExpiredEvent struct {
-		DeployExpired DeployExpiredPayload `json:"DeployExpired"`
+
+	deployExpiredEvent struct {
+		DeployExpired deployExpiredPayload `json:"DeployExpired"`
+	}
+
+	TransactionExpiredPayload struct {
+		TransactionHash types.TransactionHash `json:"transaction_hash"`
+	}
+
+	TransactionExpiredEvent struct {
+		TransactionExpiredPayload TransactionExpiredPayload `json:"TransactionExpired"`
 	}
 )
 
+func (t *TransactionExpiredEvent) UnmarshalJSON(data []byte) error {
+	if t == nil {
+		return errors.New("json.RawMessage: UnmarshalJSON on nil pointer")
+	}
+
+	transactionEvent := struct {
+		TransactionExpiredPayload TransactionExpiredPayload `json:"TransactionExpired"`
+	}{}
+	if err := json.Unmarshal(data, &transactionEvent); err != nil {
+		return err
+	}
+
+	if transactionEvent.TransactionExpiredPayload.TransactionHash.Transaction != nil ||
+		transactionEvent.TransactionExpiredPayload.TransactionHash.Deploy != nil {
+		*t = transactionEvent
+		return nil
+	}
+
+	deployEvent := deployExpiredEvent{}
+	if err := json.Unmarshal(data, &deployEvent); err != nil {
+		return err
+	}
+
+	*t = TransactionExpiredEvent{
+		TransactionExpiredPayload: TransactionExpiredPayload{
+			TransactionHash: types.TransactionHash{
+				Deploy: &deployEvent.DeployExpired.DeployHash,
+			},
+		},
+	}
+	return nil
+}
+
 type (
-	FinalitySignaturePayload struct {
+	FinalitySignatureV1 struct {
 		BlockHash key.Hash          `json:"block_hash"`
 		EraID     uint64            `json:"era_id"`
 		Signature types.HexBytes    `json:"signature"`
 		PublicKey keypair.PublicKey `json:"public_key"`
 	}
+
+	FinalitySignatureV2 struct {
+		BlockHash     key.Hash          `json:"block_hash"`
+		BlockHeight   *uint64           `json:"block_height"`
+		ChainNameHash *key.Hash         `json:"chain_name_hash"`
+		EraID         uint64            `json:"era_id"`
+		Signature     types.HexBytes    `json:"signature"`
+		PublicKey     keypair.PublicKey `json:"public_key"`
+	}
+
+	finalitySignatureWrapper struct {
+		V1 *FinalitySignatureV1 `json:"V1"`
+		V2 *FinalitySignatureV2 `json:"V2"`
+	}
+
+	finalitySignatureWrapperEvent struct {
+		FinalitySignature finalitySignatureWrapper `json:"FinalitySignature"`
+	}
+
+	finalitySignatureV1Event struct {
+		FinalitySignature FinalitySignatureV1 `json:"FinalitySignature"`
+	}
+
+	FinalitySignature struct {
+		BlockHash     key.Hash          `json:"block_hash"`
+		BlockHeight   *uint64           `json:"block_height"`
+		ChainNameHash *key.Hash         `json:"chain_name_hash"`
+		EraID         uint64            `json:"era_id"`
+		Signature     types.HexBytes    `json:"signature"`
+		PublicKey     keypair.PublicKey `json:"public_key"`
+
+		OriginFinalitySignatureV1 *FinalitySignatureV1
+	}
+
 	FinalitySignatureEvent struct {
-		FinalitySignature FinalitySignaturePayload `json:"FinalitySignature"`
+		FinalitySignature FinalitySignature `json:"FinalitySignature"`
 	}
 )
+
+func (t *FinalitySignatureEvent) UnmarshalJSON(data []byte) error {
+	if t == nil {
+		return errors.New("json.RawMessage: UnmarshalJSON on nil pointer")
+	}
+
+	wrapped := finalitySignatureWrapperEvent{}
+	if err := json.Unmarshal(data, &wrapped); err != nil {
+		return err
+	}
+
+	if wrapped.FinalitySignature.V1 != nil {
+		*t = FinalitySignatureEvent{
+			FinalitySignature: FinalitySignature{
+				BlockHash:                 wrapped.FinalitySignature.V1.BlockHash,
+				EraID:                     wrapped.FinalitySignature.V1.EraID,
+				Signature:                 wrapped.FinalitySignature.V1.Signature,
+				PublicKey:                 wrapped.FinalitySignature.V1.PublicKey,
+				OriginFinalitySignatureV1: wrapped.FinalitySignature.V1,
+			},
+		}
+		return nil
+	}
+
+	if wrapped.FinalitySignature.V2 != nil {
+		*t = FinalitySignatureEvent{
+			FinalitySignature: FinalitySignature{
+				BlockHash:     wrapped.FinalitySignature.V2.BlockHash,
+				BlockHeight:   wrapped.FinalitySignature.V2.BlockHeight,
+				ChainNameHash: wrapped.FinalitySignature.V2.ChainNameHash,
+				EraID:         wrapped.FinalitySignature.V2.EraID,
+				Signature:     wrapped.FinalitySignature.V2.Signature,
+				PublicKey:     wrapped.FinalitySignature.V2.PublicKey,
+			},
+		}
+		return nil
+	}
+
+	v1Event := finalitySignatureV1Event{}
+	if err := json.Unmarshal(data, &v1Event); err != nil {
+		return err
+	}
+
+	*t = FinalitySignatureEvent{
+		FinalitySignature: FinalitySignature{
+			BlockHash:                 v1Event.FinalitySignature.BlockHash,
+			EraID:                     v1Event.FinalitySignature.EraID,
+			Signature:                 v1Event.FinalitySignature.Signature,
+			PublicKey:                 v1Event.FinalitySignature.PublicKey,
+			OriginFinalitySignatureV1: &v1Event.FinalitySignature,
+		},
+	}
+	return nil
+}
 
 type (
 	FaultPayload struct {
@@ -110,10 +295,6 @@ type (
 	StepPayload struct {
 		EraID           uint64       `json:"era_id"`
 		ExecutionEffect types.Effect `json:"execution_effect"`
-		// Todo: not sure, didn't found example to test
-		Operations *[]types.Operation `json:"operations,omitempty"`
-		// Todo: not sure, didn't found example to test
-		Transform *types.TransformKey `json:"transform,omitempty"`
 	}
 	StepEvent struct {
 		Step StepPayload `json:"step"`
@@ -140,8 +321,8 @@ func (d *RawEvent) ParseAsFinalitySignatureEvent() (FinalitySignatureEvent, erro
 	return ParseEvent[FinalitySignatureEvent](d.Data)
 }
 
-func (d *RawEvent) ParseAsDeployExpiredEvent() (DeployExpiredEvent, error) {
-	return ParseEvent[DeployExpiredEvent](d.Data)
+func (d *RawEvent) ParseAsTransactionExpiredEvent() (TransactionExpiredEvent, error) {
+	return ParseEvent[TransactionExpiredEvent](d.Data)
 }
 
 func (d *RawEvent) ParseAsFaultEvent() (FaultEvent, error) {

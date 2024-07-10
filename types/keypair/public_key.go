@@ -97,7 +97,8 @@ func (v PublicKey) AccountHash() key.AccountHash {
 	blakeHash := blake2b.Sum256(bytesToHash)
 	data, _ := key.NewByteHashFromBuffer(bytes.NewBuffer(blakeHash[:]))
 
-	return key.AccountHash{Hash: data}
+	accountHash, _ := key.NewAccountHash(key.PrefixNameAccount + data.ToHex())
+	return accountHash
 }
 
 func (v PublicKey) Value() (driver.Value, error) {
