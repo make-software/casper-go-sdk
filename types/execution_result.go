@@ -3,7 +3,6 @@ package types
 import (
 	"encoding/json"
 	"errors"
-
 	"github.com/make-software/casper-go-sdk/types/key"
 )
 
@@ -26,18 +25,33 @@ func ExecutionInfoFromV1(results []DeployExecutionResult, height *uint64) Execut
 
 	result := results[0]
 	return ExecutionInfo{
-		BlockHash:   result.BlockHash,
-		BlockHeight: blockHeight,
-		ExecutionResult: ExecutionResult{
-			ExecutionResultV2:       NewExecutionResultV2FromV1(result.Result),
-			OriginExecutionResultV1: &result.Result,
-		},
+		BlockHash:       result.BlockHash,
+		BlockHeight:     blockHeight,
+		ExecutionResult: NewExecutionResultFromV1(result.Result),
 	}
 }
 
 type ExecutionResult struct {
-	ExecutionResultV2
-	OriginExecutionResultV1 *ExecutionResultV1
+	Initiator    InitiatorAddr   `json:"initiator"`
+	ErrorMessage *string         `json:"error_message"`
+	Limit        uint64          `json:"limit,string"`
+	Consumed     uint64          `json:"consumed,string"`
+	Cost         uint64          `json:"cost,string"`
+	Payment      json.RawMessage `json:"payment"`
+	Transfers    []Transfer      `json:"transfers"`
+	SizeEstimate uint64          `json:"size_estimate"`
+	Effects      []TransformV2   `json:"effects"`
+
+	originExecutionResultV1 *ExecutionResultV1
+	originExecutionResultV2 *ExecutionResultV2
+}
+
+func (v *ExecutionResult) GetExecutionResultV1() *ExecutionResultV1 {
+	return v.originExecutionResultV1
+}
+
+func (v *ExecutionResult) GetExecutionResultV2() *ExecutionResultV2 {
+	return v.originExecutionResultV2
 }
 
 func (v *ExecutionResult) UnmarshalJSON(data []byte) error {
@@ -51,23 +65,29 @@ func (v *ExecutionResult) UnmarshalJSON(data []byte) error {
 
 	if versioned.ExecutionResultV2 != nil {
 		*v = ExecutionResult{
-			ExecutionResultV2: *versioned.ExecutionResultV2,
+			Initiator:               versioned.ExecutionResultV2.Initiator,
+			ErrorMessage:            versioned.ExecutionResultV2.ErrorMessage,
+			Limit:                   versioned.ExecutionResultV2.Limit,
+			Consumed:                versioned.ExecutionResultV2.Consumed,
+			Cost:                    versioned.ExecutionResultV2.Cost,
+			Payment:                 versioned.ExecutionResultV2.Payment,
+			Transfers:               versioned.ExecutionResultV2.Transfers,
+			SizeEstimate:            versioned.ExecutionResultV2.SizeEstimate,
+			Effects:                 versioned.ExecutionResultV2.Effects,
+			originExecutionResultV2: versioned.ExecutionResultV2,
 		}
 		return nil
 	}
 
 	if versioned.ExecutionResultV1 != nil {
-		*v = ExecutionResult{
-			ExecutionResultV2:       NewExecutionResultV2FromV1(*versioned.ExecutionResultV1),
-			OriginExecutionResultV1: versioned.ExecutionResultV1,
-		}
+		*v = NewExecutionResultFromV1(*versioned.ExecutionResultV1)
 		return nil
 	}
 
 	return errors.New("incorrect RPC response structure")
 }
 
-func NewExecutionResultV2FromV1(v1 ExecutionResultV1) ExecutionResultV2 {
+func NewExecutionResultFromV1(v1 ExecutionResultV1) ExecutionResult {
 	transforms := make([]TransformV2, 0)
 	if v1.Success != nil {
 		for _, transform := range v1.Success.Effect.Transforms {
@@ -96,28 +116,29 @@ func NewExecutionResultV2FromV1(v1 ExecutionResultV1) ExecutionResultV2 {
 			}
 
 			transfers = append(transfers, Transfer{
-				TransferV2: TransferV2{
-					Amount: writeTransfer.Amount,
-					TransactionHash: TransactionHash{
-						TransactionV1Hash: transform.Key.Hash,
-					},
-					From: InitiatorAddr{
-						AccountHash: &writeTransfer.From,
-					},
-					Gas:    writeTransfer.Gas,
-					ID:     id,
-					Source: writeTransfer.Source,
-					Target: writeTransfer.Target,
-					To:     toHash,
+				Amount: writeTransfer.Amount,
+				TransactionHash: TransactionHash{
+					Transaction: transform.Key.Hash,
 				},
+				From: InitiatorAddr{
+					AccountHash: &writeTransfer.From,
+				},
+				Gas:    writeTransfer.Gas,
+				ID:     id,
+				Source: writeTransfer.Source,
+				Target: writeTransfer.Target,
+				To:     toHash,
 			})
 		}
-		return ExecutionResultV2{
-			Limit:     0, // limit is unknown field for V1 Deploy
-			Consumed:  v1.Success.Cost,
-			Cost:      0, // cost is unknown field for V1 Deploy
-			Transfers: transfers,
-			Effects:   transforms,
+		return ExecutionResult{
+			Initiator:               InitiatorAddr{},
+			Limit:                   0, // limit is unknown field for V1 Deploy
+			Consumed:                v1.Success.Cost,
+			Cost:                    0, // cost is unknown field for V1 Deploy
+			Payment:                 nil,
+			Transfers:               transfers,
+			Effects:                 transforms,
+			originExecutionResultV1: &v1,
 		}
 	}
 
@@ -131,10 +152,11 @@ func NewExecutionResultV2FromV1(v1 ExecutionResultV1) ExecutionResultV2 {
 		}
 	}
 
-	return ExecutionResultV2{
-		ErrorMessage: &v1.Failure.ErrorMessage,
-		Consumed:     v1.Failure.Cost,
-		Effects:      transforms,
+	return ExecutionResult{
+		ErrorMessage:            &v1.Failure.ErrorMessage,
+		Consumed:                v1.Failure.Cost,
+		Effects:                 transforms,
+		originExecutionResultV1: &v1,
 	}
 }
 

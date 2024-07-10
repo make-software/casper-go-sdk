@@ -8,9 +8,25 @@ import (
 )
 
 type Transaction struct {
-	TransactionV1
+	// Hex-encoded TransactionV1 hash
+	TransactionV1Hash *key.Hash `json:"hash"`
+	// The header portion of a TransactionV1
+	TransactionV1Header TransactionV1Header `json:"header"`
+	// Body of a `TransactionV1`
+	TransactionV1Body TransactionV1Body `json:"body"`
+	// List of signers and signatures for this `deploy`
+	Approvals []Approval `json:"approvals"`
 	// source BlockV1, nil if constructed from BlockV2
-	OriginDeployV1 *Deploy
+	originDeployV1      *Deploy
+	originTransactionV1 *TransactionV1
+}
+
+func (t *Transaction) GetDeploy() *Deploy {
+	return t.originDeployV1
+}
+
+func (t *Transaction) GetTransactionV1() *TransactionV1 {
+	return t.originTransactionV1
 }
 
 func NewTransactionFromDeploy(deploy Deploy) Transaction {
@@ -44,35 +60,33 @@ func NewTransactionFromDeploy(deploy Deploy) Transaction {
 	// Use StandardPayment as true only for payments without explicit `payment amount`
 	var standardPayment = paymentAmount == 0
 	return Transaction{
-		TransactionV1: TransactionV1{
-			TransactionV1Hash: &deploy.Hash,
-			TransactionV1Header: TransactionV1Header{
-				BodyHash:  deploy.Header.BodyHash,
-				ChainName: deploy.Header.ChainName,
-				Timestamp: deploy.Header.Timestamp,
-				TTL:       deploy.Header.TTL,
-				InitiatorAddr: InitiatorAddr{
-					PublicKey: &deploy.Header.Account,
-				},
-				PricingMode: PricingMode{
-					Classic: &ClassicMode{
-						GasPriceTolerance: 1,
-						PaymentAmount:     paymentAmount,
-						StandardPayment:   standardPayment,
-					},
+		TransactionV1Hash: &deploy.Hash,
+		TransactionV1Header: TransactionV1Header{
+			BodyHash:  deploy.Header.BodyHash,
+			ChainName: deploy.Header.ChainName,
+			Timestamp: deploy.Header.Timestamp,
+			TTL:       deploy.Header.TTL,
+			InitiatorAddr: InitiatorAddr{
+				PublicKey: &deploy.Header.Account,
+			},
+			PricingMode: PricingMode{
+				Classic: &ClassicMode{
+					GasPriceTolerance: 1,
+					PaymentAmount:     paymentAmount,
+					StandardPayment:   standardPayment,
 				},
 			},
-			TransactionV1Body: TransactionV1Body{
-				Args:                  deploy.Session.Args(),
-				Target:                NewTransactionTargetFromSession(deploy.Session),
-				TransactionEntryPoint: transactionEntryPoint,
-				TransactionScheduling: TransactionScheduling{
-					Standard: &struct{}{},
-				},
-			},
-			Approvals: deploy.Approvals,
 		},
-		OriginDeployV1: &deploy,
+		TransactionV1Body: TransactionV1Body{
+			Args:                  deploy.Session.Args(),
+			Target:                NewTransactionTargetFromSession(deploy.Session),
+			TransactionEntryPoint: transactionEntryPoint,
+			TransactionScheduling: TransactionScheduling{
+				Standard: &struct{}{},
+			},
+		},
+		Approvals:      deploy.Approvals,
+		originDeployV1: &deploy,
 	}
 }
 

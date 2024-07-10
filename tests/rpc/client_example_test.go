@@ -20,60 +20,6 @@ import (
 	"github.com/make-software/casper-go-sdk/types"
 )
 
-func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
-	tests := []struct {
-		filePath      string
-		isDeploy      bool
-		withTransfers bool
-	}{
-		{
-			filePath: "../data/deploy/get_raw_rpc_deploy.json",
-			isDeploy: true,
-		},
-		{
-			filePath:      "../data/deploy/get_raw_rpc_deploy_with_transfer.json",
-			isDeploy:      true,
-			withTransfers: true,
-		},
-		{
-			filePath: "../data/rpc_response/get_transaction.json",
-		},
-		{
-			filePath: "../data/rpc_response/get_transaction_install.json",
-		},
-	}
-	for _, tt := range tests {
-		t.Run("GetTransaction", func(t *testing.T) {
-			server := SetupServer(t, tt.filePath)
-			defer server.Close()
-			client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-			result, err := client.GetTransaction(context.Background(), "0009ea4441f4700325d9c38b0b6df415537596e1204abe4f6a94b6996aebf2f1")
-			require.NoError(t, err)
-			assert.NotEmpty(t, result.APIVersion)
-			assert.NotEmpty(t, result.Transaction.TransactionV1Hash)
-			assert.NotEmpty(t, result.Transaction.TransactionV1Header)
-			assert.NotEmpty(t, result.Transaction.TransactionV1Header.TTL)
-			assert.NotEmpty(t, result.Transaction.TransactionV1Header.ChainName)
-			assert.NotEmpty(t, result.Transaction.TransactionV1Header.PricingMode)
-			assert.NotEmpty(t, result.Transaction.TransactionV1Header.InitiatorAddr)
-			assert.NotEmpty(t, result.Transaction.TransactionV1Body.Target)
-			assert.NotEmpty(t, result.Transaction.TransactionV1Body.TransactionScheduling)
-			assert.NotEmpty(t, result.ExecutionResult.Initiator)
-			assert.NotEmpty(t, result.ExecutionResult.Effects)
-			assert.NotEmpty(t, result.Transaction.Approvals)
-
-			if tt.isDeploy {
-				assert.NotEmpty(t, result.Transaction.OriginDeployV1)
-				assert.NotEmpty(t, result.ExecutionResult.OriginExecutionResultV1)
-			}
-
-			if tt.withTransfers {
-				assert.NotEmpty(t, result.ExecutionResult.ExecutionResultV2.Transfers)
-			}
-		})
-	}
-}
-
 func Test_ConfigurableClient_GetDeploy(t *testing.T) {
 	deployHash := "0009ea4441f4700325d9c38b0b6df415537596e1204abe4f6a94b6996aebf2f1"
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
@@ -83,8 +29,7 @@ func Test_ConfigurableClient_GetDeploy(t *testing.T) {
 	}))
 	defer server.Close()
 
-	httpClient := &http.Client{Transport: &helper.LogTestTransport{}}
-	handler := rpc.NewHttpHandler(server.URL, httpClient)
+	handler := rpc.NewHttpHandler(server.URL, http.DefaultClient)
 	loggerDecorator := helper.NewTestLoggerDecorator(handler)
 	client := rpc.NewClient(loggerDecorator)
 	ctx := context.Background()
@@ -120,7 +65,7 @@ func Test_SpeculativeExec(t *testing.T) {
 	client := rpc.NewSpeculativeClient(casper.NewRPCHandler("http://127.0.0.1:25102/rpc", http.DefaultClient))
 	result, err := client.SpeculativeExec(context.Background(), deployFixture, nil)
 	require.NoError(t, err)
-	assert.Equal(t, uint64(100000000), result.ExecutionResult.Success.Cost)
+	assert.Equal(t, uint64(100000000), result.ExecutionResult.Cost)
 }
 
 func Test_Client_RPCGetStatus_WithAuthorizationHeader(t *testing.T) {

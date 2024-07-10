@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/make-software/casper-go-sdk/types"
 	"github.com/make-software/casper-go-sdk/types/key"
@@ -23,7 +24,7 @@ func GetReqIdCtx(ctx context.Context) string {
 	if value == nil {
 		return "0"
 	}
-	return value.(string)
+	return strconv.Itoa(value.(int))
 }
 
 // Method is represented a name of the RPC endpoint

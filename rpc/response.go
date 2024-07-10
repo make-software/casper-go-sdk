@@ -175,7 +175,10 @@ func newInfoGetTransactionResultFromV1Compatible(result infoGetTransactionResult
 			return InfoGetTransactionResult{
 				APIVersion: result.APIVersion,
 				Transaction: types.Transaction{
-					TransactionV1: *result.Transaction.TransactionV1,
+					TransactionV1Hash:   result.Transaction.TransactionV1.TransactionV1Hash,
+					TransactionV1Header: result.Transaction.TransactionV1.TransactionV1Header,
+					TransactionV1Body:   result.Transaction.TransactionV1.TransactionV1Body,
+					Approvals:           result.Transaction.TransactionV1.Approvals,
 				},
 				ExecutionResult: result.ExecutionInfo,
 				BlockHash:       result.BlockHash,
@@ -195,7 +198,7 @@ func newInfoGetTransactionResultFromV1Compatible(result infoGetTransactionResult
 				executionInfo := types.ExecutionInfoFromV1(result.ExecutionResults, result.BlockHeight)
 				info.ExecutionResult = &executionInfo.ExecutionResult
 
-				info.ExecutionResult.ExecutionResultV2.Initiator = types.InitiatorAddr{
+				info.ExecutionResult.Initiator = types.InitiatorAddr{
 					PublicKey: &result.Deploy.Header.Account,
 				}
 			}
@@ -217,7 +220,7 @@ func newInfoGetTransactionResultFromV1Compatible(result infoGetTransactionResult
 			info.ExecutionResult = &executionInfo.ExecutionResult
 
 			// Specify the data explicitly that cant be extracts from execution result
-			info.ExecutionResult.ExecutionResultV2.Initiator = types.InitiatorAddr{
+			info.ExecutionResult.Initiator = types.InitiatorAddr{
 				PublicKey: &result.Deploy.Header.Account,
 			}
 		}
@@ -416,9 +419,9 @@ func (b InfoGetStatusResult) GetRawJSON() json.RawMessage {
 }
 
 type SpeculativeExecResult struct {
-	ApiVersion      string                      `json:"api_version"`
-	BlockHash       key.Hash                    `json:"block_hash"`
-	ExecutionResult types.ExecutionResultStatus `json:"execution_result"`
+	ApiVersion      string                `json:"api_version"`
+	BlockHash       key.Hash              `json:"block_hash"`
+	ExecutionResult types.ExecutionResult `json:"execution_result"`
 
 	rawJSON json.RawMessage
 }

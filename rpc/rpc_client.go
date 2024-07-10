@@ -64,7 +64,7 @@ func (c *client) GetTransaction(ctx context.Context, transactionHash string) (In
 	var result infoGetTransactionResultV1Compatible
 	c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
 		TransactionHash: types.TransactionHash{
-			TransactionV1Hash: &hash,
+			Transaction: &hash,
 		},
 	}, &result)
 	if err != nil {
@@ -83,7 +83,7 @@ func (c *client) GetTransactionFinalizedApproval(ctx context.Context, transactio
 	var result infoGetTransactionResultV1Compatible
 	c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
 		TransactionHash: types.TransactionHash{
-			TransactionV1Hash: &hash,
+			Transaction: &hash,
 		},
 		FinalizedApprovals: &[]bool{true}[0],
 	}, &result)
