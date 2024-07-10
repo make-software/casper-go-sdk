@@ -247,9 +247,40 @@ type TransactionTarget struct {
 	// The execution target is a native operation (e.g. a transfer).
 	Native *struct{}
 	// The execution target is a stored entity or package.
-	Stored *StoredTarget
+	Stored *StoredTarget `json:"Stored"`
 	// The execution target is the included module bytes, i.e. compiled Wasm.
-	Session *SessionTarget
+	Session *SessionTarget `json:"Session"`
+}
+
+func (t *TransactionTarget) UnmarshalJSON(data []byte) error {
+	var target struct {
+		Stored  *StoredTarget  `json:"Stored"`
+		Session *SessionTarget `json:"Session"`
+	}
+	if err := json.Unmarshal(data, &target); err == nil {
+		if target.Session != nil {
+			*t = TransactionTarget{
+				Session: target.Session,
+			}
+		}
+
+		if target.Stored != nil {
+			*t = TransactionTarget{
+				Stored: target.Stored,
+			}
+		}
+		return nil
+	}
+
+	var key string
+	if err := json.Unmarshal(data, &key); err == nil && key == "Native" {
+		*t = TransactionTarget{
+			Native: &struct{}{},
+		}
+		return nil
+	}
+
+	return nil
 }
 
 // NewTransactionTargetFromSession create new TransactionTarget from ExecutableDeployItem

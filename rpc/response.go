@@ -152,24 +152,30 @@ func (b InfoGetDeployResult) GetRawJSON() json.RawMessage {
 }
 
 type InfoGetTransactionResult struct {
-	APIVersion      string                 `json:"api_version"`
-	Transaction     types.Transaction      `json:"transaction"`
-	ExecutionResult *types.ExecutionResult `json:"execution_result"`
-	BlockHash       *key.Hash              `json:"block_hash,omitempty"`
-	BlockHeight     *uint64                `json:"block_height,omitempty"`
+	APIVersion    string               `json:"api_version"`
+	Transaction   types.Transaction    `json:"transaction"`
+	ExecutionInfo *types.ExecutionInfo `json:"execution_info"`
+
+	rawJSON json.RawMessage
+}
+
+func (b InfoGetTransactionResult) GetRawJSON() json.RawMessage {
+	return b.rawJSON
 }
 
 type infoGetTransactionResultV1Compatible struct {
 	APIVersion       string                        `json:"api_version"`
 	Transaction      *types.TransactionWrapper     `json:"transaction"`
 	Deploy           *types.Deploy                 `json:"deploy"`
-	ExecutionInfo    *types.ExecutionResult        `json:"execution_result"`
+	ExecutionInfo    *types.ExecutionInfo          `json:"execution_info"`
 	ExecutionResults []types.DeployExecutionResult `json:"execution_results"`
 	BlockHash        *key.Hash                     `json:"block_hash,omitempty"`
 	BlockHeight      *uint64                       `json:"block_height,omitempty"`
+
+	rawJSON json.RawMessage
 }
 
-func newInfoGetTransactionResultFromV1Compatible(result infoGetTransactionResultV1Compatible) (InfoGetTransactionResult, error) {
+func newInfoGetTransactionResultFromV1Compatible(result infoGetTransactionResultV1Compatible, rawJSON json.RawMessage) (InfoGetTransactionResult, error) {
 	if result.Transaction != nil {
 		if result.Transaction.TransactionV1 != nil {
 			return InfoGetTransactionResult{
@@ -180,25 +186,24 @@ func newInfoGetTransactionResultFromV1Compatible(result infoGetTransactionResult
 					TransactionV1Body:   result.Transaction.TransactionV1.TransactionV1Body,
 					Approvals:           result.Transaction.TransactionV1.Approvals,
 				},
-				ExecutionResult: result.ExecutionInfo,
-				BlockHash:       result.BlockHash,
-				BlockHeight:     result.BlockHeight,
+				ExecutionInfo: result.ExecutionInfo,
+				rawJSON:       rawJSON,
 			}, nil
 		}
 
 		if result.Transaction.Deploy != nil {
 			info := InfoGetTransactionResult{
-				APIVersion:  result.APIVersion,
-				Transaction: types.NewTransactionFromDeploy(*result.Deploy),
-				BlockHash:   result.BlockHash,
-				BlockHeight: result.BlockHeight,
+				APIVersion:    result.APIVersion,
+				Transaction:   types.NewTransactionFromDeploy(*result.Transaction.Deploy),
+				ExecutionInfo: result.ExecutionInfo,
+				rawJSON:       rawJSON,
 			}
 
 			if len(result.ExecutionResults) > 0 {
 				executionInfo := types.ExecutionInfoFromV1(result.ExecutionResults, result.BlockHeight)
-				info.ExecutionResult = &executionInfo.ExecutionResult
+				info.ExecutionInfo = &executionInfo
 
-				info.ExecutionResult.Initiator = types.InitiatorAddr{
+				info.ExecutionInfo.ExecutionResult.Initiator = types.InitiatorAddr{
 					PublicKey: &result.Deploy.Header.Account,
 				}
 			}
@@ -209,18 +214,18 @@ func newInfoGetTransactionResultFromV1Compatible(result infoGetTransactionResult
 
 	if result.Deploy != nil {
 		info := InfoGetTransactionResult{
-			APIVersion:  result.APIVersion,
-			Transaction: types.NewTransactionFromDeploy(*result.Deploy),
-			BlockHash:   result.BlockHash,
-			BlockHeight: result.BlockHeight,
+			APIVersion:    result.APIVersion,
+			Transaction:   types.NewTransactionFromDeploy(*result.Deploy),
+			ExecutionInfo: result.ExecutionInfo,
+			rawJSON:       rawJSON,
 		}
 
 		if len(result.ExecutionResults) > 0 {
 			executionInfo := types.ExecutionInfoFromV1(result.ExecutionResults, result.BlockHeight)
-			info.ExecutionResult = &executionInfo.ExecutionResult
+			info.ExecutionInfo = &executionInfo
 
 			// Specify the data explicitly that cant be extracts from execution result
-			info.ExecutionResult.Initiator = types.InitiatorAddr{
+			info.ExecutionInfo.ExecutionResult.Initiator = types.InitiatorAddr{
 				PublicKey: &result.Deploy.Header.Account,
 			}
 		}

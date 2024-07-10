@@ -62,7 +62,7 @@ func (c *client) GetTransaction(ctx context.Context, transactionHash string) (In
 	}
 
 	var result infoGetTransactionResultV1Compatible
-	c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
+	resp, err := c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
 		TransactionHash: types.TransactionHash{
 			Transaction: &hash,
 		},
@@ -71,7 +71,7 @@ func (c *client) GetTransaction(ctx context.Context, transactionHash string) (In
 		return InfoGetTransactionResult{}, err
 	}
 
-	return newInfoGetTransactionResultFromV1Compatible(result)
+	return newInfoGetTransactionResultFromV1Compatible(result, resp.Result)
 }
 
 func (c *client) GetTransactionFinalizedApproval(ctx context.Context, transactionHash string) (InfoGetTransactionResult, error) {
@@ -81,7 +81,7 @@ func (c *client) GetTransactionFinalizedApproval(ctx context.Context, transactio
 	}
 
 	var result infoGetTransactionResultV1Compatible
-	c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
+	resp, err := c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
 		TransactionHash: types.TransactionHash{
 			Transaction: &hash,
 		},
@@ -91,7 +91,7 @@ func (c *client) GetTransactionFinalizedApproval(ctx context.Context, transactio
 		return InfoGetTransactionResult{}, err
 	}
 
-	return newInfoGetTransactionResultFromV1Compatible(result)
+	return newInfoGetTransactionResultFromV1Compatible(result, resp.Result)
 }
 
 func (c *client) GetStateItem(ctx context.Context, stateRootHash *string, key string, path []string) (StateGetItemResult, error) {

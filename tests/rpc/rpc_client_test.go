@@ -39,24 +39,31 @@ func SetupServer(t *testing.T, filePath string) *httptest.Server {
 
 func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 	tests := []struct {
-		filePath      string
-		isDeploy      bool
-		withTransfers bool
+		filePath          string
+		isDeploy          bool
+		withTransfers     bool
+		executionResultV1 bool
 	}{
 		{
-			filePath: "../data/deploy/get_raw_rpc_deploy.json",
+			filePath:          "../data/deploy/get_raw_rpc_deploy.json",
+			isDeploy:          true,
+			executionResultV1: true,
+		},
+		{
+			filePath: "../data/deploy/get_raw_rpc_deploy_v2.json",
 			isDeploy: true,
 		},
 		{
-			filePath:      "../data/deploy/get_raw_rpc_deploy_with_transfer.json",
-			isDeploy:      true,
-			withTransfers: true,
+			filePath:          "../data/deploy/get_raw_rpc_deploy_with_transfer.json",
+			isDeploy:          true,
+			withTransfers:     true,
+			executionResultV1: true,
 		},
 		{
-			filePath: "../data/rpc_response/get_transaction.json",
+			filePath: "../data/transaction/get_transaction.json",
 		},
 		{
-			filePath: "../data/rpc_response/get_transaction_install.json",
+			filePath: "../data/transaction/get_transaction_native_target.json",
 		},
 	}
 	for _, tt := range tests {
@@ -75,17 +82,22 @@ func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 			assert.NotEmpty(t, result.Transaction.TransactionV1Header.InitiatorAddr)
 			assert.NotEmpty(t, result.Transaction.TransactionV1Body.Target)
 			assert.NotEmpty(t, result.Transaction.TransactionV1Body.TransactionScheduling)
-			assert.NotEmpty(t, result.ExecutionResult.Initiator)
-			assert.NotEmpty(t, result.ExecutionResult.Effects)
+			assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.Initiator)
+			assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.Effects)
 			assert.NotEmpty(t, result.Transaction.Approvals)
 
 			if tt.isDeploy {
 				assert.NotEmpty(t, result.Transaction.GetDeploy())
-				assert.NotEmpty(t, result.ExecutionResult.GetExecutionResultV1())
+			}
+
+			if tt.executionResultV1 {
+				assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.GetExecutionResultV1())
+			} else {
+				assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.GetExecutionResultV2())
 			}
 
 			if tt.withTransfers {
-				assert.NotEmpty(t, result.ExecutionResult.Transfers)
+				assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.Transfers)
 			}
 		})
 	}
