@@ -141,6 +141,8 @@ type InfoGetDeployResult struct {
 	ApiVersion       string                    `json:"api_version"`
 	Deploy           types.Deploy              `json:"deploy"`
 	ExecutionResults types.DeployExecutionInfo `json:"execution_info"`
+
+	rawJSON json.RawMessage
 }
 
 type infoGetDeployResultV1Compatible struct {
@@ -153,8 +155,8 @@ type infoGetDeployResultV1Compatible struct {
 	rawJSON json.RawMessage
 }
 
-func (b InfoGetDeployResult) GetRawJSON() json.RawMessage {
-	return b.rawJSON
+func (v InfoGetDeployResult) GetRawJSON() json.RawMessage {
+	return v.rawJSON
 }
 
 func (v *InfoGetDeployResult) UnmarshalJSON(data []byte) error {
@@ -182,10 +184,13 @@ func (v *InfoGetDeployResult) UnmarshalJSON(data []byte) error {
 		ApiVersion       string                    `json:"api_version"`
 		Deploy           types.Deploy              `json:"deploy"`
 		ExecutionResults types.DeployExecutionInfo `json:"execution_info"`
+		rawJSON          json.RawMessage
 	}
 	if err := json.Unmarshal(data, &resp); err != nil {
 		return err
 	}
+
+	resp.rawJSON = data
 	*v = resp
 	return nil
 }
@@ -380,9 +385,9 @@ func (b InfoGetStatusResult) GetRawJSON() json.RawMessage {
 }
 
 type SpeculativeExecResult struct {
-	ApiVersion      string                      `json:"api_version"`
-	BlockHash       key.Hash                    `json:"block_hash"`
-	ExecutionResult types.ExecutionResultStatus `json:"execution_result"`
+	ApiVersion      string                `json:"api_version"`
+	BlockHash       key.Hash              `json:"block_hash"`
+	ExecutionResult types.ExecutionResult `json:"execution_result"`
 
 	rawJSON json.RawMessage
 }
