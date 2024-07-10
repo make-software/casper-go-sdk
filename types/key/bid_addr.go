@@ -199,6 +199,15 @@ func (h BidAddr) Bytes() []byte {
 		res = append(res, byte(Delegator))
 		res = append(res, h.Delegator.Validator.Bytes()...)
 		return append(res, h.Delegator.Delegator.Bytes()...)
+	case h.Credit != nil:
+		res := make([]byte, 0, CreditAddrLen)
+		res = append(res, byte(Credit))
+		res = append(res, h.Credit.Validator.Bytes()...)
+
+		buf := new(bytes.Buffer)
+		binary.Write(buf, binary.LittleEndian, h.Credit.EraId)
+
+		return append(res, buf.Bytes()...)
 	default:
 		panic("Unexpected BidAddr type")
 	}
