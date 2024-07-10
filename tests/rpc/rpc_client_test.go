@@ -565,6 +565,38 @@ func Test_DefaultClient_GetEntity_SmartContractKind(t *testing.T) {
 	assert.NotEmpty(t, result.Entity.AddressableEntity.NamedKeys)
 }
 
+func Test_DefaultClient_GetBlockTransfersLatest_V2(t *testing.T) {
+	tests := []struct {
+		filePath string
+	}{
+		{
+			filePath: "../data/rpc_response/get_block_transfers_v2.json",
+		},
+		{
+			filePath: "../data/rpc_response/get_block_transfers_v2_old.json",
+		},
+		{
+			filePath: "../data/rpc_response/get_block_transfers_v1.json",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run("GetBlockLatest", func(t *testing.T) {
+			server := SetupServer(t, tt.filePath)
+			defer server.Close()
+			client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+			result, err := client.GetBlockTransfersByHeight(context.Background(), 3144186)
+			require.NoError(t, err)
+			assert.NotEmpty(t, result.BlockHash)
+			assert.NotEmpty(t, result.Transfers[0])
+			assert.NotEmpty(t, result.Transfers[0].TransactionHash)
+			assert.NotEmpty(t, result.Transfers[0].From.AccountHash)
+			assert.NotEmpty(t, result.Transfers[0].Source)
+			assert.NotEmpty(t, result.Transfers[0].Amount)
+		})
+	}
+}
+
 func Test_DefaultClient_GetEraSummaryLatest(t *testing.T) {
 	server := SetupServer(t, "../data/rpc_response/get_era_info_summary.json")
 	defer server.Close()

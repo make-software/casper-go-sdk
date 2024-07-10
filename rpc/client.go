@@ -106,8 +106,8 @@ type ClientInformational interface {
 	// GetBlockByHeight returns the types.Block from the network the requested block height.
 	GetBlockByHeight(ctx context.Context, height uint64) (ChainGetBlockResult, error)
 
-	// GetBlockTransfersLatest returns all native transfers within a lasted Block from a network.
-	GetBlockTransfersLatest(ctx context.Context) (ChainGetBlockTransfersResult, error)
+	// GetLatestBlockTransfers returns all native transfers within a lasted Block from a network.
+	GetLatestBlockTransfers(ctx context.Context) (ChainGetBlockTransfersResult, error)
 	// GetBlockTransfersByHash returns all native transfers within a given Block from a network the requested block hash.
 	GetBlockTransfersByHash(ctx context.Context, blockHash string) (ChainGetBlockTransfersResult, error)
 	// GetBlockTransfersByHeight returns all native transfers within a given Block from a network the requested block height.
