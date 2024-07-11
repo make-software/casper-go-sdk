@@ -179,13 +179,8 @@ func newInfoGetTransactionResultFromV1Compatible(result infoGetTransactionResult
 	if result.Transaction != nil {
 		if result.Transaction.TransactionV1 != nil {
 			return InfoGetTransactionResult{
-				APIVersion: result.APIVersion,
-				Transaction: types.Transaction{
-					TransactionV1Hash:   result.Transaction.TransactionV1.TransactionV1Hash,
-					TransactionV1Header: result.Transaction.TransactionV1.TransactionV1Header,
-					TransactionV1Body:   result.Transaction.TransactionV1.TransactionV1Body,
-					Approvals:           result.Transaction.TransactionV1.Approvals,
-				},
+				APIVersion:    result.APIVersion,
+				Transaction:   types.NewTransactionFromTransactionV1(*result.Transaction.TransactionV1),
 				ExecutionInfo: result.ExecutionInfo,
 				rawJSON:       rawJSON,
 			}, nil

@@ -55,7 +55,7 @@ func (c *client) GetDeployFinalizedApproval(ctx context.Context, hash string) (I
 	return result, nil
 }
 
-func (c *client) GetTransaction(ctx context.Context, transactionHash string) (InfoGetTransactionResult, error) {
+func (c *client) GetTransactionByTransactionHash(ctx context.Context, transactionHash string) (InfoGetTransactionResult, error) {
 	hash, err := key.NewHash(transactionHash)
 	if err != nil {
 		return InfoGetTransactionResult{}, err
@@ -74,7 +74,26 @@ func (c *client) GetTransaction(ctx context.Context, transactionHash string) (In
 	return newInfoGetTransactionResultFromV1Compatible(result, resp.Result)
 }
 
-func (c *client) GetTransactionFinalizedApproval(ctx context.Context, transactionHash string) (InfoGetTransactionResult, error) {
+func (c *client) GetTransactionByDeployHash(ctx context.Context, deployHash string) (InfoGetTransactionResult, error) {
+	hash, err := key.NewHash(deployHash)
+	if err != nil {
+		return InfoGetTransactionResult{}, err
+	}
+
+	var result infoGetTransactionResultV1Compatible
+	resp, err := c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
+		TransactionHash: types.TransactionHash{
+			Deploy: &hash,
+		},
+	}, &result)
+	if err != nil {
+		return InfoGetTransactionResult{}, err
+	}
+
+	return newInfoGetTransactionResultFromV1Compatible(result, resp.Result)
+}
+
+func (c *client) GetTransactionFinalizedApprovalByTransactionHash(ctx context.Context, transactionHash string) (InfoGetTransactionResult, error) {
 	hash, err := key.NewHash(transactionHash)
 	if err != nil {
 		return InfoGetTransactionResult{}, err
@@ -84,6 +103,26 @@ func (c *client) GetTransactionFinalizedApproval(ctx context.Context, transactio
 	resp, err := c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
 		TransactionHash: types.TransactionHash{
 			Transaction: &hash,
+		},
+		FinalizedApprovals: &[]bool{true}[0],
+	}, &result)
+	if err != nil {
+		return InfoGetTransactionResult{}, err
+	}
+
+	return newInfoGetTransactionResultFromV1Compatible(result, resp.Result)
+}
+
+func (c *client) GetTransactionFinalizedApprovalByDeployHash(ctx context.Context, deployHash string) (InfoGetTransactionResult, error) {
+	hash, err := key.NewHash(deployHash)
+	if err != nil {
+		return InfoGetTransactionResult{}, err
+	}
+
+	var result infoGetTransactionResultV1Compatible
+	resp, err := c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
+		TransactionHash: types.TransactionHash{
+			Deploy: &hash,
 		},
 		FinalizedApprovals: &[]bool{true}[0],
 	}, &result)
