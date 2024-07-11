@@ -25,7 +25,7 @@ type (
 	DeployApproval  = types.Approval
 	EntryPointV1    = types.EntryPointV1
 	EntryPointV2    = types.EntryPointV2
-	ExecutionResult = types.ExecutionResultStatus
+	ExecutionResult = types.ExecutionResult
 	NamedKeys       = types.NamedKeys
 	NamedKey        = types.NamedKey
 	TransformKey    = types.TransformKey

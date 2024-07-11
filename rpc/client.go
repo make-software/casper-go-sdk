@@ -55,6 +55,11 @@ type ClientInformational interface {
 	GetDeploy(ctx context.Context, hash string) (InfoGetDeployResult, error)
 	// GetDeployFinalizedApproval returns Deploy with the finalized approvals substituted.
 	GetDeployFinalizedApproval(ctx context.Context, hash string) (InfoGetDeployResult, error)
+	// GetTransaction returns a Transaction from the network
+	// TODO: added fallback to Deploy if no transaction found
+	GetTransaction(ctx context.Context, hash string) (InfoGetTransactionResult, error)
+	// GetTransactionFinalizedApproval return the Transaction with the finalized approvals substituted.
+	GetTransactionFinalizedApproval(ctx context.Context, hash string) (InfoGetTransactionResult, error)
 	// GetDictionaryItem returns an item from a Dictionary.
 	// The address of a stored value is the blake2b hash of the seed URef and the byte representation of the dictionary key.
 	// If the param stateRootHash is nil, the client will make an additional RPC call to retrieve the latest stateRootHash.

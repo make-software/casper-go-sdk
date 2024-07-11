@@ -2,6 +2,7 @@ package key
 
 import (
 	"bytes"
+	"encoding/binary"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
@@ -22,11 +23,13 @@ const (
 	Validator
 	// Delegator BidAddr for delegator bid.
 	Delegator
+	// Credit BidAddr for auction credit.
+	Credit = 4
 )
 
 func NewBidAddrTagFromByte(tag uint8) (BidAddrTag, error) {
 	addrTag := BidAddrTag(tag)
-	if addrTag != Unified && addrTag != Validator && addrTag != Delegator {
+	if addrTag != Unified && addrTag != Validator && addrTag != Delegator && addrTag != Credit {
 		return 0, ErrInvalidBidAddrTag
 	}
 
@@ -36,6 +39,8 @@ func NewBidAddrTagFromByte(tag uint8) (BidAddrTag, error) {
 const (
 	// UnifiedOrValidatorAddrLen BidAddrTag(1) + Hash(32)
 	UnifiedOrValidatorAddrLen = 33
+	// CreditAddrLen BidAddrTag(1) + Hash(32) + EraId(8)
+	CreditAddrLen = 41
 	// DelegatorAddrLen BidAddrTag(1) + Hash(32) + Hash(32)
 	DelegatorAddrLen = 65
 )
@@ -47,6 +52,11 @@ type BidAddr struct {
 	Delegator *struct {
 		Validator Hash
 		Delegator Hash
+	}
+
+	Credit *struct {
+		Validator Hash
+		EraId     uint64
 	}
 }
 
@@ -83,6 +93,18 @@ func NewBidAddr(source string) (BidAddr, error) {
 	validatorHash, err := NewHashFromBytes(hexBytes[1:34])
 	if err != nil {
 		return BidAddr{}, err
+	}
+
+	if len(hexBytes) == CreditAddrLen {
+		var eraID uint64
+		if err := binary.Read(bytes.NewReader(hexBytes[33:]), binary.LittleEndian, &eraID); err != nil {
+			return BidAddr{}, err
+		}
+
+		return BidAddr{Credit: &struct {
+			Validator Hash
+			EraId     uint64
+		}{Validator: validatorHash, EraId: eraID}}, nil
 	}
 
 	delegatorHash, err := NewHashFromBytes(hexBytes[33:])
@@ -177,6 +199,15 @@ func (h BidAddr) Bytes() []byte {
 		res = append(res, byte(Delegator))
 		res = append(res, h.Delegator.Validator.Bytes()...)
 		return append(res, h.Delegator.Delegator.Bytes()...)
+	case h.Credit != nil:
+		res := make([]byte, 0, CreditAddrLen)
+		res = append(res, byte(Credit))
+		res = append(res, h.Credit.Validator.Bytes()...)
+
+		buf := new(bytes.Buffer)
+		binary.Write(buf, binary.LittleEndian, h.Credit.EraId)
+
+		return append(res, buf.Bytes()...)
 	default:
 		panic("Unexpected BidAddr type")
 	}

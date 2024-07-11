@@ -116,12 +116,12 @@ func (t *BlockAddedEvent) UnmarshalJSON(data []byte) error {
 
 type (
 	DeployProcessedPayload struct {
-		DeployHash      key.Hash                    `json:"deploy_hash"`
-		Account         string                      `json:"account"`
-		Timestamp       time.Time                   `json:"timestamp"`
-		TTL             string                      `json:"ttl"`
-		BlockHash       key.Hash                    `json:"block_hash"`
-		ExecutionResult types.ExecutionResultStatus `json:"execution_result"`
+		DeployHash      key.Hash                `json:"deploy_hash"`
+		Account         string                  `json:"account"`
+		Timestamp       time.Time               `json:"timestamp"`
+		TTL             string                  `json:"ttl"`
+		BlockHash       key.Hash                `json:"block_hash"`
+		ExecutionResult types.ExecutionResultV1 `json:"execution_result"`
 	}
 	DeployProcessedEvent struct {
 		DeployProcessed DeployProcessedPayload `json:"DeployProcessed"`
