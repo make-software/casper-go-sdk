@@ -76,8 +76,7 @@ func Test_ConfigurableClient_GetDeploy(t *testing.T) {
 	}))
 	defer server.Close()
 
-	httpClient := &http.Client{Transport: &helper.LogTestTransport{}}
-	handler := rpc.NewHttpHandler(server.URL, httpClient)
+	handler := rpc.NewHttpHandler(server.URL, http.DefaultClient)
 	loggerDecorator := helper.NewTestLoggerDecorator(handler)
 	client := rpc.NewClient(loggerDecorator)
 	ctx := context.Background()
@@ -113,7 +112,7 @@ func Test_SpeculativeExec(t *testing.T) {
 	client := rpc.NewSpeculativeClient(casper.NewRPCHandler("http://127.0.0.1:25102/rpc", http.DefaultClient))
 	result, err := client.SpeculativeExec(context.Background(), deployFixture, nil)
 	require.NoError(t, err)
-	assert.Equal(t, uint64(100000000), result.ExecutionResult.Success.Cost)
+	assert.Equal(t, uint64(100000000), result.ExecutionResult.Cost)
 }
 
 func Test_Client_RPCGetStatus_WithAuthorizationHeader(t *testing.T) {

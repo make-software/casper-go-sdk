@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/make-software/casper-go-sdk/types"
+	"github.com/make-software/casper-go-sdk/types/key"
 	"github.com/make-software/casper-go-sdk/types/keypair"
 )
 
@@ -52,6 +53,84 @@ func (c *client) GetDeployFinalizedApproval(ctx context.Context, hash string) (I
 
 	result.rawJSON = resp.Result
 	return result, nil
+}
+
+func (c *client) GetTransactionByTransactionHash(ctx context.Context, transactionHash string) (InfoGetTransactionResult, error) {
+	hash, err := key.NewHash(transactionHash)
+	if err != nil {
+		return InfoGetTransactionResult{}, err
+	}
+
+	var result infoGetTransactionResultV1Compatible
+	resp, err := c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
+		TransactionHash: types.TransactionHash{
+			Transaction: &hash,
+		},
+	}, &result)
+	if err != nil {
+		return InfoGetTransactionResult{}, err
+	}
+
+	return newInfoGetTransactionResultFromV1Compatible(result, resp.Result)
+}
+
+func (c *client) GetTransactionByDeployHash(ctx context.Context, deployHash string) (InfoGetTransactionResult, error) {
+	hash, err := key.NewHash(deployHash)
+	if err != nil {
+		return InfoGetTransactionResult{}, err
+	}
+
+	var result infoGetTransactionResultV1Compatible
+	resp, err := c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
+		TransactionHash: types.TransactionHash{
+			Deploy: &hash,
+		},
+	}, &result)
+	if err != nil {
+		return InfoGetTransactionResult{}, err
+	}
+
+	return newInfoGetTransactionResultFromV1Compatible(result, resp.Result)
+}
+
+func (c *client) GetTransactionFinalizedApprovalByTransactionHash(ctx context.Context, transactionHash string) (InfoGetTransactionResult, error) {
+	hash, err := key.NewHash(transactionHash)
+	if err != nil {
+		return InfoGetTransactionResult{}, err
+	}
+
+	var result infoGetTransactionResultV1Compatible
+	resp, err := c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
+		TransactionHash: types.TransactionHash{
+			Transaction: &hash,
+		},
+		FinalizedApprovals: &[]bool{true}[0],
+	}, &result)
+	if err != nil {
+		return InfoGetTransactionResult{}, err
+	}
+
+	return newInfoGetTransactionResultFromV1Compatible(result, resp.Result)
+}
+
+func (c *client) GetTransactionFinalizedApprovalByDeployHash(ctx context.Context, deployHash string) (InfoGetTransactionResult, error) {
+	hash, err := key.NewHash(deployHash)
+	if err != nil {
+		return InfoGetTransactionResult{}, err
+	}
+
+	var result infoGetTransactionResultV1Compatible
+	resp, err := c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
+		TransactionHash: types.TransactionHash{
+			Deploy: &hash,
+		},
+		FinalizedApprovals: &[]bool{true}[0],
+	}, &result)
+	if err != nil {
+		return InfoGetTransactionResult{}, err
+	}
+
+	return newInfoGetTransactionResultFromV1Compatible(result, resp.Result)
 }
 
 func (c *client) GetStateItem(ctx context.Context, stateRootHash *string, key string, path []string) (StateGetItemResult, error) {

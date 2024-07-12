@@ -195,6 +195,84 @@ func (v *InfoGetDeployResult) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+type InfoGetTransactionResult struct {
+	APIVersion    string               `json:"api_version"`
+	Transaction   types.Transaction    `json:"transaction"`
+	ExecutionInfo *types.ExecutionInfo `json:"execution_info"`
+
+	rawJSON json.RawMessage
+}
+
+func (b InfoGetTransactionResult) GetRawJSON() json.RawMessage {
+	return b.rawJSON
+}
+
+type infoGetTransactionResultV1Compatible struct {
+	APIVersion       string                        `json:"api_version"`
+	Transaction      *types.TransactionWrapper     `json:"transaction"`
+	Deploy           *types.Deploy                 `json:"deploy"`
+	ExecutionInfo    *types.ExecutionInfo          `json:"execution_info"`
+	ExecutionResults []types.DeployExecutionResult `json:"execution_results"`
+	BlockHash        *key.Hash                     `json:"block_hash,omitempty"`
+	BlockHeight      *uint64                       `json:"block_height,omitempty"`
+
+	rawJSON json.RawMessage
+}
+
+func newInfoGetTransactionResultFromV1Compatible(result infoGetTransactionResultV1Compatible, rawJSON json.RawMessage) (InfoGetTransactionResult, error) {
+	if result.Transaction != nil {
+		if result.Transaction.TransactionV1 != nil {
+			return InfoGetTransactionResult{
+				APIVersion:    result.APIVersion,
+				Transaction:   types.NewTransactionFromTransactionV1(*result.Transaction.TransactionV1),
+				ExecutionInfo: result.ExecutionInfo,
+				rawJSON:       rawJSON,
+			}, nil
+		}
+
+		if result.Transaction.Deploy != nil {
+			info := InfoGetTransactionResult{
+				APIVersion:    result.APIVersion,
+				Transaction:   types.NewTransactionFromDeploy(*result.Transaction.Deploy),
+				ExecutionInfo: result.ExecutionInfo,
+				rawJSON:       rawJSON,
+			}
+
+			if len(result.ExecutionResults) > 0 {
+				executionInfo := types.ExecutionInfoFromV1(result.ExecutionResults, result.BlockHeight)
+				info.ExecutionInfo = &executionInfo
+
+				info.ExecutionInfo.ExecutionResult.Initiator = types.InitiatorAddr{
+					PublicKey: &result.Deploy.Header.Account,
+				}
+			}
+
+			return info, nil
+		}
+	}
+
+	if result.Deploy != nil {
+		info := InfoGetTransactionResult{
+			APIVersion:    result.APIVersion,
+			Transaction:   types.NewTransactionFromDeploy(*result.Deploy),
+			ExecutionInfo: result.ExecutionInfo,
+			rawJSON:       rawJSON,
+		}
+
+		if len(result.ExecutionResults) > 0 {
+			executionInfo := types.ExecutionInfoFromV1(result.ExecutionResults, result.BlockHeight)
+			info.ExecutionInfo = &executionInfo
+
+			// Specify the data explicitly that cant be extracts from execution result
+			info.ExecutionInfo.ExecutionResult.Initiator = types.InitiatorAddr{
+				PublicKey: &result.Deploy.Header.Account,
+			}
+		}
+		return info, nil
+	}
+	return InfoGetTransactionResult{}, errors.New("incorrect RPC response structure")
+}
+
 type ChainGetEraInfoResult struct {
 	Version    string           `json:"api_version"`
 	EraSummary types.EraSummary `json:"era_summary"`

@@ -32,6 +32,24 @@ type ExecutableDeployItem struct {
 	Transfer                      *TransferDeployItem            `json:"Transfer,omitempty"`
 }
 
+func (e ExecutableDeployItem) Args() *Args {
+	switch {
+	case e.ModuleBytes != nil:
+		return e.ModuleBytes.Args
+	case e.StoredContractByHash != nil:
+		return e.StoredContractByHash.Args
+	case e.StoredContractByName != nil:
+		return e.StoredContractByName.Args
+	case e.StoredVersionedContractByHash != nil:
+		return e.StoredVersionedContractByHash.Args
+	case e.StoredVersionedContractByName != nil:
+		return e.StoredVersionedContractByName.Args
+	case e.Transfer != nil:
+		return &e.Transfer.Args
+	}
+	return nil
+}
+
 func (e ExecutableDeployItem) Bytes() ([]byte, error) {
 	if e.ModuleBytes != nil {
 		bytes, err := e.ModuleBytes.Bytes()

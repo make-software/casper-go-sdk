@@ -37,6 +37,72 @@ func SetupServer(t *testing.T, filePath string) *httptest.Server {
 	return server
 }
 
+func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
+	tests := []struct {
+		filePath          string
+		isDeploy          bool
+		withTransfers     bool
+		executionResultV1 bool
+	}{
+		{
+			filePath:          "../data/deploy/get_raw_rpc_deploy.json",
+			isDeploy:          true,
+			executionResultV1: true,
+		},
+		{
+			filePath: "../data/deploy/get_raw_rpc_deploy_v2.json",
+			isDeploy: true,
+		},
+		{
+			filePath:          "../data/deploy/get_raw_rpc_deploy_with_transfer.json",
+			isDeploy:          true,
+			withTransfers:     true,
+			executionResultV1: true,
+		},
+		{
+			filePath: "../data/transaction/get_transaction.json",
+		},
+		{
+			filePath: "../data/transaction/get_transaction_native_target.json",
+		},
+	}
+	for _, tt := range tests {
+		t.Run("GetTransaction", func(t *testing.T) {
+			server := SetupServer(t, tt.filePath)
+			defer server.Close()
+			client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+			result, err := client.GetTransactionByTransactionHash(context.Background(), "0009ea4441f4700325d9c38b0b6df415537596e1204abe4f6a94b6996aebf2f1")
+			require.NoError(t, err)
+			assert.NotEmpty(t, result.APIVersion)
+			assert.NotEmpty(t, result.Transaction.TransactionHash)
+			assert.NotEmpty(t, result.Transaction.TransactionHeader)
+			assert.NotEmpty(t, result.Transaction.TransactionHeader.TTL)
+			assert.NotEmpty(t, result.Transaction.TransactionHeader.ChainName)
+			assert.NotEmpty(t, result.Transaction.TransactionHeader.PricingMode)
+			assert.NotEmpty(t, result.Transaction.TransactionHeader.InitiatorAddr)
+			assert.NotEmpty(t, result.Transaction.TransactionBody.Target)
+			assert.NotEmpty(t, result.Transaction.TransactionBody.TransactionScheduling)
+			assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.Initiator)
+			assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.Effects)
+			assert.NotEmpty(t, result.Transaction.Approvals)
+
+			if tt.isDeploy {
+				assert.NotEmpty(t, result.Transaction.GetDeploy())
+			}
+
+			if tt.executionResultV1 {
+				assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.GetExecutionResultV1())
+			} else {
+				assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.GetExecutionResultV2())
+			}
+
+			if tt.withTransfers {
+				assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.Transfers)
+			}
+		})
+	}
+}
+
 func Test_DefaultClient_GetDeploy(t *testing.T) {
 	server := SetupServer(t, "../data/deploy/get_raw_rpc_deploy.json")
 	defer server.Close()
