@@ -9,16 +9,42 @@ import (
 
 type Transaction struct {
 	// Hex-encoded TransactionV1 hash
-	TransactionV1Hash *key.Hash `json:"hash"`
+	TransactionHash *key.Hash `json:"hash"`
 	// The header portion of a TransactionV1
-	TransactionV1Header TransactionV1Header `json:"header"`
+	TransactionHeader TransactionHeader `json:"header"`
 	// Body of a `TransactionV1`
-	TransactionV1Body TransactionV1Body `json:"body"`
+	TransactionBody TransactionBody `json:"body"`
 	// List of signers and signatures for this `deploy`
 	Approvals []Approval `json:"approvals"`
+
 	// source BlockV1, nil if constructed from BlockV2
 	originDeployV1      *Deploy
 	originTransactionV1 *TransactionV1
+}
+
+type TransactionBody struct {
+	Args *Args `json:"args,omitempty"`
+	// Execution target of a Transaction.
+	Target TransactionTarget `json:"target"`
+	// Entry point of a Transaction.
+	TransactionEntryPoint TransactionEntryPoint `json:"entry_point"`
+	// Scheduling mode of a Transaction.
+	TransactionScheduling TransactionScheduling `json:"scheduling"`
+}
+
+type TransactionHeader struct {
+	// `Hash` of the body part of this `Deploy`.
+	BodyHash key.Hash `json:"body_hash"`
+
+	ChainName string `json:"chain_name"`
+	// `Timestamp` formatted as per RFC 3339
+	Timestamp Timestamp `json:"timestamp"`
+	// Duration of the `Deploy` in milliseconds (from timestamp).
+	TTL Duration `json:"ttl"`
+	// The address of the initiator of a TransactionV1.
+	InitiatorAddr InitiatorAddr `json:"initiator_addr"`
+	// Pricing mode of a Transaction.
+	PricingMode PricingMode `json:"pricing_mode"`
 }
 
 func (t *Transaction) GetDeploy() *Deploy {
@@ -27,6 +53,27 @@ func (t *Transaction) GetDeploy() *Deploy {
 
 func (t *Transaction) GetTransactionV1() *TransactionV1 {
 	return t.originTransactionV1
+}
+
+func NewTransactionFromTransactionV1(v1 TransactionV1) Transaction {
+	return Transaction{
+		TransactionHash: v1.TransactionV1Hash,
+		TransactionHeader: TransactionHeader{
+			BodyHash:      v1.TransactionV1Header.BodyHash,
+			ChainName:     v1.TransactionV1Header.ChainName,
+			Timestamp:     v1.TransactionV1Header.Timestamp,
+			TTL:           v1.TransactionV1Header.TTL,
+			InitiatorAddr: v1.TransactionV1Header.InitiatorAddr,
+			PricingMode:   v1.TransactionV1Header.PricingMode,
+		},
+		TransactionBody: TransactionBody{
+			Args:                  v1.TransactionV1Body.Args,
+			Target:                v1.TransactionV1Body.Target,
+			TransactionEntryPoint: v1.TransactionV1Body.TransactionEntryPoint,
+			TransactionScheduling: v1.TransactionV1Body.TransactionScheduling,
+		},
+		Approvals: v1.Approvals,
+	}
 }
 
 func NewTransactionFromDeploy(deploy Deploy) Transaction {
@@ -60,8 +107,8 @@ func NewTransactionFromDeploy(deploy Deploy) Transaction {
 	// Use StandardPayment as true only for payments without explicit `payment amount`
 	var standardPayment = paymentAmount == 0
 	return Transaction{
-		TransactionV1Hash: &deploy.Hash,
-		TransactionV1Header: TransactionV1Header{
+		TransactionHash: &deploy.Hash,
+		TransactionHeader: TransactionHeader{
 			BodyHash:  deploy.Header.BodyHash,
 			ChainName: deploy.Header.ChainName,
 			Timestamp: deploy.Header.Timestamp,
@@ -77,7 +124,7 @@ func NewTransactionFromDeploy(deploy Deploy) Transaction {
 				},
 			},
 		},
-		TransactionV1Body: TransactionV1Body{
+		TransactionBody: TransactionBody{
 			Args:                  deploy.Session.Args(),
 			Target:                NewTransactionTargetFromSession(deploy.Session),
 			TransactionEntryPoint: transactionEntryPoint,
@@ -356,9 +403,13 @@ func NewTransactionTargetFromSession(session ExecutableDeployItem) TransactionTa
 			}
 		}
 		byNameTarget := ByPackageNameInvocationTarget{
-			Name:    session.StoredContractByName.Name,
 			Version: version,
 		}
+
+		if session.StoredContractByName != nil {
+			byNameTarget.Name = session.StoredContractByName.Name
+		}
+
 		return TransactionTarget{
 			Stored: &StoredTarget{
 				ID: TransactionInvocationTarget{
