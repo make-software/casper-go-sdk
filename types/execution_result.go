@@ -93,8 +93,7 @@ func NewExecutionResultFromV1(v1 ExecutionResultV1) ExecutionResult {
 	if v1.Success != nil {
 		for _, transform := range v1.Success.Effect.Transforms {
 			transforms = append(transforms, TransformV2{
-				Key: transform.Key,
-				// TODO: we should convert old Transform to new format
+				Key:  transform.Key,
 				Kind: TransformKind(transform.Transform),
 			})
 		}
@@ -132,7 +131,6 @@ func NewExecutionResultFromV1(v1 ExecutionResultV1) ExecutionResult {
 			})
 		}
 		return ExecutionResult{
-			Initiator:               InitiatorAddr{},
 			Limit:                   0, // limit is unknown field for V1 Deploy
 			Consumed:                v1.Success.Cost,
 			Cost:                    0, // cost is unknown field for V1 Deploy
@@ -183,6 +181,31 @@ type ExecutionResultV1 struct {
 type DeployExecutionResult struct {
 	BlockHash key.Hash          `json:"block_hash"`
 	Result    ExecutionResultV1 `json:"result"`
+}
+
+// DeployExecutionInfo represents the result of executing a single deploy V2
+type DeployExecutionInfo struct {
+	BlockHash       key.Hash        `json:"block_hash"`
+	BlockHeight     uint64          `json:"block_height"`
+	ExecutionResult ExecutionResult `json:"execution_result"`
+}
+
+func DeployExecutionInfoFromV1(results []DeployExecutionResult, height *uint64) DeployExecutionInfo {
+	if len(results) == 0 {
+		return DeployExecutionInfo{}
+	}
+
+	var blockHeight uint64
+	if height != nil {
+		blockHeight = *height
+	}
+
+	result := results[0]
+	return DeployExecutionInfo{
+		BlockHash:       result.BlockHash,
+		BlockHeight:     blockHeight,
+		ExecutionResult: NewExecutionResultFromV1(result.Result),
+	}
 }
 
 type ExecutionResultStatusData struct {

@@ -37,6 +37,57 @@ func SetupServer(t *testing.T, filePath string) *httptest.Server {
 	return server
 }
 
+func Test_DefaultClient_GetDeploy_Example(t *testing.T) {
+	tests := []struct {
+		filePath      string
+		failed        bool
+		withTransfers bool
+	}{
+		{
+			filePath:      "../data/deploy/get_raw_rpc_deploy.json",
+			withTransfers: true,
+		},
+		{
+			failed:   true,
+			filePath: "../data/deploy/get_raw_rpc_deploy_v1_failed.json",
+		},
+		{
+			filePath: "../data/deploy/get_raw_rpc_deploy_v2.json",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run("GetDeploy", func(t *testing.T) {
+			deployHash := "0009ea4441f4700325d9c38b0b6df415537596e1204abe4f6a94b6996aebf2f1"
+			server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+				fixture, err := os.ReadFile(tt.filePath)
+				require.NoError(t, err)
+				rw.Write(fixture)
+			}))
+			defer server.Close()
+
+			client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+			deployResult, err := client.GetDeploy(context.Background(), deployHash)
+			require.NoError(t, err)
+
+			assert.NotEmpty(t, deployResult.ApiVersion)
+			assert.NotEmpty(t, deployResult.Deploy)
+			assert.NotEmpty(t, deployResult.Deploy.Session)
+			assert.NotEmpty(t, deployResult.Deploy.Approvals)
+			assert.NotEmpty(t, deployResult.Deploy.Hash)
+			assert.NotEmpty(t, deployResult.Deploy.Payment)
+			assert.NotEmpty(t, deployResult.ExecutionResults.ExecutionResult)
+			if tt.failed {
+				assert.NotEmpty(t, deployResult.ExecutionResults.ExecutionResult.ErrorMessage)
+			}
+
+			if tt.withTransfers {
+				assert.NotEmpty(t, deployResult.ExecutionResults.ExecutionResult.Transfers)
+			}
+		})
+	}
+}
+
 func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 	tests := []struct {
 		filePath          string
@@ -107,7 +158,7 @@ func Test_DefaultClient_GetDeploy(t *testing.T) {
 	server := SetupServer(t, "../data/deploy/get_raw_rpc_deploy.json")
 	defer server.Close()
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	deployHash := "0009ea4441f4700325d9c38b0b6df415537596e1204abe4f6a94b6996aebf2f1"
+	deployHash := "a2c450eb80c408105dcf5a6808786a2681d4b7ef8bffd6bb59ccbbee98b908fb"
 	result, err := client.GetDeploy(context.Background(), deployHash)
 	require.NoError(t, err)
 	assert.Equal(t, deployHash, result.Deploy.Hash.ToHex())
@@ -117,7 +168,7 @@ func Test_DefaultClient_GetDeployFinalizedApproval(t *testing.T) {
 	server := SetupServer(t, "../data/deploy/get_raw_rpc_deploy.json")
 	defer server.Close()
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	deployHash := "0009ea4441f4700325d9c38b0b6df415537596e1204abe4f6a94b6996aebf2f1"
+	deployHash := "a2c450eb80c408105dcf5a6808786a2681d4b7ef8bffd6bb59ccbbee98b908fb"
 	result, err := client.GetDeployFinalizedApproval(context.Background(), deployHash)
 	require.NoError(t, err)
 	assert.Equal(t, deployHash, result.Deploy.Hash.ToHex())

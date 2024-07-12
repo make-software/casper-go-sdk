@@ -16,7 +16,7 @@ type CtxRequestID string
 const RequestIDKey CtxRequestID = "RequestID"
 
 func WithRequestId(ctx context.Context, requestID int) context.Context {
-	return context.WithValue(ctx, RequestIDKey, requestID)
+	return context.WithValue(ctx, RequestIDKey, strconv.Itoa(requestID))
 }
 
 func GetReqIdCtx(ctx context.Context) string {
