@@ -72,7 +72,8 @@ func NewTransactionFromTransactionV1(v1 TransactionV1) Transaction {
 			TransactionEntryPoint: v1.TransactionV1Body.TransactionEntryPoint,
 			TransactionScheduling: v1.TransactionV1Body.TransactionScheduling,
 		},
-		Approvals: v1.Approvals,
+		Approvals:           v1.Approvals,
+		originTransactionV1: &v1,
 	}
 }
 

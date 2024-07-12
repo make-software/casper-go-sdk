@@ -1,0 +1,59 @@
+{
+  "TransactionAccepted": {
+    "Version1": {
+      "hash": "35ae20f399194f469d74acebe7fae333b59a8b63868f24648e7ce62d3e6ea930",
+      "header": {
+        "chain_name": "dev-net",
+        "timestamp": "2024-07-12T10:08:27.782Z",
+        "ttl": "30m",
+        "body_hash": "08f9a371124b26f8038fba6b6bc72851139d861fcb77e1823fd71e8ae438c5e3",
+        "pricing_mode": {
+          "Fixed": {
+            "gas_price_tolerance": 3
+          }
+        },
+        "initiator_addr": {
+          "PublicKey": "0202c57b8226aadc7bd004860b9d34b0c7bb9652698c508d1c01368cbb5f198d5d32"
+        }
+      },
+      "body": {
+        "args": [
+          [
+            "validator",
+            {
+              "cl_type": "PublicKey",
+              "bytes": "017536433a73f7562526f3e9fcb8d720428ae2d28788a9909f3c6f637a9d848a4b",
+              "parsed": "017536433a73f7562526f3e9fcb8d720428ae2d28788a9909f3c6f637a9d848a4b"
+            }
+          ],
+          [
+            "amount",
+            {
+              "cl_type": "U512",
+              "bytes": "050052eda574",
+              "parsed": "501000000000"
+            }
+          ],
+          [
+            "delegator",
+            {
+              "cl_type": "PublicKey",
+              "bytes": "0202c57b8226aadc7bd004860b9d34b0c7bb9652698c508d1c01368cbb5f198d5d32",
+              "parsed": "0202c57b8226aadc7bd004860b9d34b0c7bb9652698c508d1c01368cbb5f198d5d32"
+            }
+          ]
+        ],
+        "target": "Native",
+        "entry_point": "Delegate",
+        "transaction_category": 1,
+        "scheduling": "Standard"
+      },
+      "approvals": [
+        {
+          "signer": "0202c57b8226aadc7bd004860b9d34b0c7bb9652698c508d1c01368cbb5f198d5d32",
+          "signature": "02bae820a71f24b503921a7d2fac93cf454ffd39cee932f70cc82686c57793f8a3222b599243fa9db275a97e299033a7836f7b5dc33534147989887b2fb506b644"
+        }
+      ]
+    }
+  }
+}

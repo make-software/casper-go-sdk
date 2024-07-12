@@ -74,6 +74,10 @@ func (h EntityAddr) ToPrefixedString() string {
 }
 
 func NewEntityAddr(source string) (EntityAddr, error) {
+	if strings.HasPrefix(source, PrefixNameAddressableEntity) {
+		source = strings.TrimPrefix(source, PrefixNameAddressableEntity)
+	}
+
 	if strings.HasPrefix(source, SystemKindPrefix) {
 		hash, err := NewHash(strings.TrimPrefix(source, SystemKindPrefix))
 		return EntityAddr{System: &hash}, err
