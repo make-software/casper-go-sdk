@@ -21,11 +21,6 @@ type AddressableEntity struct {
 	MessageTopics []MessageTopic `json:"message_topics"`
 }
 
-type MessageTopic struct {
-	TopicName     string   `json:"topic_name"`
-	TopicNameHash key.Hash `json:"topic_name_hash"`
-}
-
 type NamedEntryPoint struct {
 	EntryPoint EntryPointV1 `json:"entry_point"`
 	Name       string       `json:"name"`

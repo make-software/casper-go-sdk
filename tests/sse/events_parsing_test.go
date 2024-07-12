@@ -171,6 +171,87 @@ func Test_RawEvent_ParseAsTransactionExpiredEvent(t *testing.T) {
 	}
 }
 
+func Test_RawEvent_ParseAsTransactionAcceptedEvent(t *testing.T) {
+	tests := []struct {
+		filePath      string
+		isTransaction bool
+	}{
+		{
+			filePath: "../data/sse/deploy_accepted_event.json",
+		},
+		{
+			filePath:      "../data/sse/transaction_accepted_event.json",
+			isTransaction: true,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.filePath, func(t *testing.T) {
+			data, err := os.ReadFile(tc.filePath)
+			require.NoError(t, err)
+
+			rawEvent := sse.RawEvent{
+				Data: data,
+			}
+
+			res, err := rawEvent.ParseAsTransactionAcceptedEvent()
+			require.NoError(t, err)
+
+			if tc.isTransaction {
+				require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.GetTransactionV1())
+			} else {
+				require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.GetDeploy())
+			}
+
+			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction)
+			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.TransactionHeader)
+			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.TransactionBody)
+		})
+	}
+}
+
+func Test_RawEvent_ParseAsTransactionProcessedEvent(t *testing.T) {
+	tests := []struct {
+		filePath      string
+		isTransaction bool
+	}{
+		{
+			filePath: "../data/sse/deploy_processed_event.json",
+		},
+		{
+			filePath:      "../data/sse/transaction_processed_event.json",
+			isTransaction: true,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.filePath, func(t *testing.T) {
+			data, err := os.ReadFile(tc.filePath)
+			require.NoError(t, err)
+
+			rawEvent := sse.RawEvent{
+				Data: data,
+			}
+
+			res, err := rawEvent.ParseAsTransactionProcessedEvent()
+			require.NoError(t, err)
+			require.NotEmpty(t, res.TransactionProcessedPayload.TransactionHash)
+
+			if tc.isTransaction {
+				require.NotEmpty(t, res.TransactionProcessedPayload.TransactionHash.Transaction)
+				require.NotEmpty(t, res.TransactionProcessedPayload.Messages)
+			} else {
+				require.NotEmpty(t, res.TransactionProcessedPayload.TransactionHash.Deploy)
+			}
+
+			require.NotEmpty(t, res.TransactionProcessedPayload.ExecutionResult)
+			require.NotEmpty(t, res.TransactionProcessedPayload.TTL)
+			require.NotEmpty(t, res.TransactionProcessedPayload.Timestamp)
+			require.NotEmpty(t, res.TransactionProcessedPayload.BlockHash)
+		})
+	}
+}
+
 func Test_RawEvent_ParseAsFaultEvent(t *testing.T) {
 	data, err := os.ReadFile("../data/sse/fault_event.json")
 	require.NoError(t, err)

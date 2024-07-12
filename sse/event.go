@@ -117,7 +117,7 @@ func (t *BlockAddedEvent) UnmarshalJSON(data []byte) error {
 type (
 	DeployProcessedPayload struct {
 		DeployHash      key.Hash                `json:"deploy_hash"`
-		Account         string                  `json:"account"`
+		Account         keypair.PublicKey       `json:"account"`
 		Timestamp       time.Time               `json:"timestamp"`
 		TTL             string                  `json:"ttl"`
 		BlockHash       key.Hash                `json:"block_hash"`
@@ -138,6 +138,14 @@ type (
 		DeployExpired deployExpiredPayload `json:"DeployExpired"`
 	}
 
+	TransactionAcceptedPayload struct {
+		Transaction types.Transaction `json:"transaction"`
+	}
+
+	TransactionAcceptedEvent struct {
+		TransactionAcceptedPayload TransactionAcceptedPayload `json:"TransactionAccepted"`
+	}
+
 	TransactionExpiredPayload struct {
 		TransactionHash types.TransactionHash `json:"transaction_hash"`
 	}
@@ -145,7 +153,104 @@ type (
 	TransactionExpiredEvent struct {
 		TransactionExpiredPayload TransactionExpiredPayload `json:"TransactionExpired"`
 	}
+
+	TransactionProcessedPayload struct {
+		BlockHash       key.Hash              `json:"block_hash"`
+		TransactionHash types.TransactionHash `json:"transaction_hash"`
+		InitiatorAddr   types.InitiatorAddr   `json:"initiator_addr"`
+		Timestamp       time.Time             `json:"timestamp"`
+		TTL             string                `json:"ttl"`
+		ExecutionResult types.ExecutionResult `json:"execution_result"`
+		Messages        []types.Message       `json:"messages"`
+	}
+
+	TransactionProcessedEvent struct {
+		TransactionProcessedPayload TransactionProcessedPayload `json:"TransactionProcessed"`
+	}
 )
+
+func (t *TransactionAcceptedEvent) UnmarshalJSON(data []byte) error {
+	if t == nil {
+		return errors.New("json.RawMessage: UnmarshalJSON on nil pointer")
+	}
+
+	transactionEvent := struct {
+		TransactionAcceptedPayload types.TransactionWrapper `json:"TransactionAccepted"`
+	}{}
+	if err := json.Unmarshal(data, &transactionEvent); err != nil {
+		return err
+	}
+
+	if deploy := transactionEvent.TransactionAcceptedPayload.Deploy; deploy != nil {
+		*t = TransactionAcceptedEvent{
+			TransactionAcceptedPayload: TransactionAcceptedPayload{
+				Transaction: types.NewTransactionFromDeploy(*deploy),
+			},
+		}
+		return nil
+	}
+
+	if v1 := transactionEvent.TransactionAcceptedPayload.TransactionV1; v1 != nil {
+		*t = TransactionAcceptedEvent{
+			TransactionAcceptedPayload: TransactionAcceptedPayload{
+				Transaction: types.NewTransactionFromTransactionV1(*v1),
+			},
+		}
+		return nil
+	}
+
+	deployEvent := DeployAcceptedEvent{}
+	if err := json.Unmarshal(data, &deployEvent); err != nil {
+		return err
+	}
+
+	*t = TransactionAcceptedEvent{
+		TransactionAcceptedPayload: TransactionAcceptedPayload{
+			Transaction: types.NewTransactionFromDeploy(deployEvent.DeployAccepted),
+		},
+	}
+	return nil
+}
+
+func (t *TransactionProcessedEvent) UnmarshalJSON(data []byte) error {
+	if t == nil {
+		return errors.New("json.RawMessage: UnmarshalJSON on nil pointer")
+	}
+
+	transactionEvent := struct {
+		TransactionProcessedPayload TransactionProcessedPayload `json:"TransactionProcessed"`
+	}{}
+	if err := json.Unmarshal(data, &transactionEvent); err != nil {
+		return err
+	}
+
+	if transactionEvent.TransactionProcessedPayload.TransactionHash.Transaction != nil ||
+		transactionEvent.TransactionProcessedPayload.TransactionHash.Deploy != nil {
+		*t = transactionEvent
+		return nil
+	}
+
+	deployEvent := DeployProcessedEvent{}
+	if err := json.Unmarshal(data, &deployEvent); err != nil {
+		return err
+	}
+
+	*t = TransactionProcessedEvent{
+		TransactionProcessedPayload: TransactionProcessedPayload{
+			BlockHash: deployEvent.DeployProcessed.BlockHash,
+			TransactionHash: types.TransactionHash{
+				Deploy: &deployEvent.DeployProcessed.DeployHash,
+			},
+			InitiatorAddr: types.InitiatorAddr{
+				PublicKey: &deployEvent.DeployProcessed.Account,
+			},
+			Timestamp:       deployEvent.DeployProcessed.Timestamp,
+			TTL:             deployEvent.DeployProcessed.TTL,
+			ExecutionResult: types.NewExecutionResultFromV1(deployEvent.DeployProcessed.ExecutionResult),
+		},
+	}
+	return nil
+}
 
 func (t *TransactionExpiredEvent) UnmarshalJSON(data []byte) error {
 	if t == nil {
@@ -323,6 +428,14 @@ func (d *RawEvent) ParseAsFinalitySignatureEvent() (FinalitySignatureEvent, erro
 
 func (d *RawEvent) ParseAsTransactionExpiredEvent() (TransactionExpiredEvent, error) {
 	return ParseEvent[TransactionExpiredEvent](d.Data)
+}
+
+func (d *RawEvent) ParseAsTransactionProcessedEvent() (TransactionProcessedEvent, error) {
+	return ParseEvent[TransactionProcessedEvent](d.Data)
+}
+
+func (d *RawEvent) ParseAsTransactionAcceptedEvent() (TransactionAcceptedEvent, error) {
+	return ParseEvent[TransactionAcceptedEvent](d.Data)
 }
 
 func (d *RawEvent) ParseAsFaultEvent() (FaultEvent, error) {
