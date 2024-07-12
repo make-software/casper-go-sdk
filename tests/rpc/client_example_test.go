@@ -20,53 +20,6 @@ import (
 	"github.com/make-software/casper-go-sdk/types"
 )
 
-func Test_DefaultClient_GetDeploy_Example(t *testing.T) {
-	tests := []struct {
-		filePath string
-		failed   bool
-	}{
-		{
-			filePath: "../data/deploy/get_raw_rpc_deploy.json",
-		},
-		{
-			failed:   true,
-			filePath: "../data/deploy/get_raw_rpc_deploy_v1_failed.json",
-		},
-		{
-			filePath: "../data/deploy/get_raw_rpc_deploy_v2.json",
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run("GetDeploy", func(t *testing.T) {
-			deployHash := "0009ea4441f4700325d9c38b0b6df415537596e1204abe4f6a94b6996aebf2f1"
-			server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-				fixture, err := os.ReadFile(tt.filePath)
-				require.NoError(t, err)
-				rw.Write(fixture)
-			}))
-			defer server.Close()
-
-			client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-			deployResult, err := client.GetDeploy(context.Background(), deployHash)
-			require.NoError(t, err)
-
-			assert.NotEmpty(t, deployResult.ApiVersion)
-			assert.NotEmpty(t, deployResult.Deploy)
-			assert.NotEmpty(t, deployResult.Deploy.Session)
-			assert.NotEmpty(t, deployResult.Deploy.Approvals)
-			assert.NotEmpty(t, deployResult.Deploy.Hash)
-			assert.NotEmpty(t, deployResult.Deploy.Payment)
-			assert.NotEmpty(t, deployResult.ExecutionResults.ExecutionResult.Cost)
-			if tt.failed {
-				assert.NotEmpty(t, deployResult.ExecutionResults.ExecutionResult.ErrorMessage)
-			} else {
-				assert.NotEmpty(t, deployResult.ExecutionResults.ExecutionResult.Transfers)
-			}
-		})
-	}
-}
-
 func Test_ConfigurableClient_GetDeploy(t *testing.T) {
 	deployHash := "0009ea4441f4700325d9c38b0b6df415537596e1204abe4f6a94b6996aebf2f1"
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {

@@ -155,7 +155,7 @@ type infoGetDeployResultV1Compatible struct {
 	rawJSON json.RawMessage
 }
 
-func (v InfoGetDeployResult) GetRawJSON() json.RawMessage {
+func (v *InfoGetDeployResult) GetRawJSON() json.RawMessage {
 	return v.rawJSON
 }
 
