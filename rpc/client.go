@@ -163,6 +163,7 @@ type ClientInformational interface {
 // the only means by which users can send their compiled Wasm (as part of a Deploy) to a node on a Casper network.
 type ClientTransactional interface {
 	PutDeploy(ctx context.Context, deploy types.Deploy) (PutDeployResult, error)
+	PutTransaction(ctx context.Context, transaction types.TransactionV1) (PutTransactionResult, error)
 }
 
 // Client interface represent full RPC client that includes all possible queries.

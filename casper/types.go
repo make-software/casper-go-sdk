@@ -43,7 +43,7 @@ type (
 )
 
 var (
-	DefaultHeader   = types.DefaultHeader
+	DefaultHeader   = types.DefaultDeployHeader
 	MakeDeploy      = types.MakeDeploy
 	StandardPayment = types.StandardPayment
 )

@@ -13,19 +13,19 @@ var ErrArgumentNotFound = errors.New("argument is not found")
 
 type Args []PairArgument
 
-func (a Args) Bytes() ([]byte, error) {
+func (args Args) Bytes() ([]byte, error) {
 	var result []byte
-	result = append(result, clvalue.SizeToBytes(len(a))...)
-	for _, one := range a {
-		val, err := one.Value()
+	result = append(result, clvalue.SizeToBytes(len(args))...)
+	for _, arg := range args {
+		val, err := arg.Value()
 		if err != nil {
 			return nil, err
 		}
-		name, err := one.Name()
+		argName, err := arg.Name()
 		if err != nil {
 			return nil, err
 		}
-		result = append(result, clvalue.NewCLString(name).Bytes()...)
+		result = append(result, clvalue.NewCLString(argName).Bytes()...)
 		valueBytes, err := clvalue.ToBytesWithType(val)
 		if err != nil {
 			return nil, err
@@ -36,8 +36,8 @@ func (a Args) Bytes() ([]byte, error) {
 	return result, nil
 }
 
-func (a Args) Find(name string) (*Argument, error) {
-	for _, one := range a {
+func (args Args) Find(name string) (*Argument, error) {
+	for _, one := range args {
 		getName, err := one.Name()
 		if err != nil {
 			return nil, err
@@ -49,12 +49,12 @@ func (a Args) Find(name string) (*Argument, error) {
 	return nil, fmt.Errorf("%w, target: %s", ErrArgumentNotFound, name)
 }
 
-func (a *Args) AddArgument(name string, value clvalue.CLValue) *Args {
+func (args *Args) AddArgument(name string, value clvalue.CLValue) *Args {
 	pair := PairArgument{}
 	pair[0] = &Argument{name: &name}
 	pair[1] = &Argument{value: &value}
-	*a = append(*a, pair)
-	return a
+	*args = append(*args, pair)
+	return args
 }
 
 type PairArgument [2]*Argument

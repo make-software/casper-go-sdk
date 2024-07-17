@@ -49,6 +49,7 @@ const (
 	MethodGetStatus           Method = "info_get_status"
 	MethodGetPeers            Method = "info_get_peers"
 	MethodPutDeploy           Method = "account_put_deploy"
+	MethodPutTransaction      Method = "account_put_transaction"
 	MethodSpeculativeExec     Method = "speculative_exec"
 	MethodQueryBalance        Method = "query_balance"
 	MethodQueryBalanceDetails Method = "query_balance_details"
@@ -146,6 +147,10 @@ func NewEntityIdentifierFromEntityAddr(entityAddr key.EntityAddr) EntityIdentifi
 
 type PutDeployRequest struct {
 	Deploy types.Deploy `json:"deploy"`
+}
+
+type PutTransactionRequest struct {
+	Transaction types.TransactionWrapper `json:"transaction"`
 }
 
 type BlockIdentifier struct {

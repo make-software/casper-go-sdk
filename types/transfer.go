@@ -137,3 +137,17 @@ type InitiatorAddr struct {
 	// The account hash derived from the public key of the initiator
 	AccountHash *key.AccountHash `json:"AccountHash,omitempty"`
 }
+
+func (d InitiatorAddr) Bytes() []byte {
+	var result []byte
+
+	if d.AccountHash != nil {
+		result = append(result, 1)
+		result = append(result, d.AccountHash.Bytes()...)
+	} else if d.PublicKey != nil {
+		result = append(result, 0)
+		result = append(result, d.PublicKey.Bytes()...)
+	}
+
+	return result
+}
