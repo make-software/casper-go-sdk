@@ -38,13 +38,13 @@ const (
 )
 
 type Transaction struct {
-	// Hex-encoded TransactionV1 hash
-	TransactionHash key.Hash `json:"hash"`
-	// The header portion of a TransactionV1
-	TransactionHeader TransactionHeader `json:"header"`
-	// Body of a `TransactionV1`
-	TransactionBody TransactionBody `json:"body"`
-	// List of signers and signatures for this `deploy`
+	// Hex-encoded Transaction hash
+	Hash key.Hash `json:"hash"`
+	// The header portion of a Transaction
+	Header TransactionHeader `json:"header"`
+	// Body of a `Transaction`
+	Body TransactionBody `json:"body"`
+	// List of signers and signatures for this Transaction
 	Approvals []Approval `json:"approvals"`
 
 	// source DeployV1, nil if constructed from TransactionV1
@@ -87,15 +87,15 @@ func (t *Transaction) GetTransactionV1() *TransactionV1 {
 
 func NewTransactionFromTransactionV1(v1 TransactionV1) Transaction {
 	return Transaction{
-		TransactionHash: v1.Hash,
-		TransactionHeader: TransactionHeader{
+		Hash: v1.Hash,
+		Header: TransactionHeader{
 			ChainName:     v1.Header.ChainName,
 			Timestamp:     v1.Header.Timestamp,
 			TTL:           v1.Header.TTL,
 			InitiatorAddr: v1.Header.InitiatorAddr,
 			PricingMode:   v1.Header.PricingMode,
 		},
-		TransactionBody: TransactionBody{
+		Body: TransactionBody{
 			Args:       v1.Body.Args,
 			Target:     v1.Body.Target,
 			EntryPoint: v1.Body.TransactionEntryPoint,
@@ -148,8 +148,8 @@ func NewTransactionFromDeploy(deploy Deploy) Transaction {
 	// Use StandardPayment as true only for payments without explicit `payment amount`
 	var standardPayment = paymentAmount == 0 && deploy.Payment.ModuleBytes == nil
 	return Transaction{
-		TransactionHash: deploy.Hash,
-		TransactionHeader: TransactionHeader{
+		Hash: deploy.Hash,
+		Header: TransactionHeader{
 			ChainName: deploy.Header.ChainName,
 			Timestamp: deploy.Header.Timestamp,
 			TTL:       deploy.Header.TTL,
@@ -164,7 +164,7 @@ func NewTransactionFromDeploy(deploy Deploy) Transaction {
 				},
 			},
 		},
-		TransactionBody: TransactionBody{
+		Body: TransactionBody{
 			Args:       deploy.Session.Args(),
 			Target:     NewTransactionTargetFromSession(deploy.Session),
 			EntryPoint: transactionEntryPoint,

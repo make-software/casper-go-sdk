@@ -204,8 +204,8 @@ func Test_RawEvent_ParseAsTransactionAcceptedEvent(t *testing.T) {
 			}
 
 			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction)
-			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.TransactionHeader)
-			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.TransactionBody)
+			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.Header)
+			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.Body)
 		})
 	}
 }
