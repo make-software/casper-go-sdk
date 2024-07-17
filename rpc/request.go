@@ -47,6 +47,7 @@ const (
 	MethodGetValidatorChanges Method = "info_get_validator_changes"
 	MethodGetStateRootHash    Method = "chain_get_state_root_hash"
 	MethodGetStatus           Method = "info_get_status"
+	MethodGetReward           Method = "info_get_reward"
 	MethodGetPeers            Method = "info_get_peers"
 	MethodPutDeploy           Method = "account_put_deploy"
 	MethodSpeculativeExec     Method = "speculative_exec"
@@ -159,6 +160,11 @@ type GlobalStateIdentifier struct {
 	StateRoot   *string `json:"StateRootHash,omitempty"`
 }
 
+type EraIdentifier struct {
+	Block *BlockIdentifier `json:"Block,omitempty"`
+	Era   *uint32          `json:"Era,omitempty"`
+}
+
 type ParamBlockIdentifier struct {
 	BlockIdentifier *BlockIdentifier `json:"block_identifier"`
 }
@@ -239,4 +245,10 @@ type QueryBalanceRequest struct {
 type QueryBalanceDetailsRequest struct {
 	PurseIdentifier PurseIdentifier        `json:"purse_identifier"`
 	StateIdentifier *GlobalStateIdentifier `json:"state_identifier,omitempty"`
+}
+
+type InfoGetRewardRequest struct {
+	Validator     keypair.PublicKey  `json:"validator"`
+	Delegator     *keypair.PublicKey `json:"delegator,omitempty"`
+	EraIdentifier *EraIdentifier     `json:"era_identifier,omitempty"`
 }

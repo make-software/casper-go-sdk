@@ -152,7 +152,7 @@ type infoGetDeployResultV1Compatible struct {
 	BlockHash        *key.Hash                     `json:"block_hash,omitempty"`
 	BlockHeight      *uint64                       `json:"block_height,omitempty"`
 
-	rawJSON json.RawMessage
+	_rawJSON json.RawMessage
 }
 
 func (v *InfoGetDeployResult) GetRawJSON() json.RawMessage {
@@ -216,7 +216,7 @@ type infoGetTransactionResultV1Compatible struct {
 	BlockHash        *key.Hash                     `json:"block_hash,omitempty"`
 	BlockHeight      *uint64                       `json:"block_height,omitempty"`
 
-	rawJSON json.RawMessage
+	_rawJSON json.RawMessage
 }
 
 func newInfoGetTransactionResultFromV1Compatible(result infoGetTransactionResultV1Compatible, rawJSON json.RawMessage) (InfoGetTransactionResult, error) {
@@ -495,6 +495,19 @@ type QueryBalanceDetailsResult struct {
 }
 
 func (b QueryBalanceDetailsResult) GetRawJSON() json.RawMessage {
+	return b.rawJSON
+}
+
+type InfoGetRewardResponse struct {
+	APIVersion     string          `json:"api_version"`
+	DelegationRate float32         `json:"delegation_rate"`
+	EraID          uint32          `json:"era_id"`
+	RewardAmount   clvalue.UInt512 `json:"reward_amount"`
+
+	rawJSON json.RawMessage
+}
+
+func (b InfoGetRewardResponse) GetRawJSON() json.RawMessage {
 	return b.rawJSON
 }
 

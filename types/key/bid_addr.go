@@ -206,7 +206,6 @@ func (h BidAddr) Bytes() []byte {
 
 		buf := new(bytes.Buffer)
 		binary.Write(buf, binary.LittleEndian, h.Credit.EraId)
-
 		return append(res, buf.Bytes()...)
 	default:
 		panic("Unexpected BidAddr type")

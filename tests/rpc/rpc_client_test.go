@@ -583,6 +583,34 @@ func Test_DefaultClient_GetBlockLatest(t *testing.T) {
 	}
 }
 
+func Test_DefaultClient_GetReward(t *testing.T) {
+	tests := []struct {
+		filePath string
+	}{
+		{
+			filePath: "../data/rpc_response/info_get_reward.json",
+		},
+	}
+
+	pubKey, err := casper.NewPublicKey("0115394d1f395a87dfed4ab62bbfbc91b573bbb2bffb2c8ebb9c240c51d95bcc4d")
+	require.NoError(t, err)
+
+	for _, tt := range tests {
+		t.Run("GetValidatorRewardByEraID", func(t *testing.T) {
+			server := SetupServer(t, tt.filePath)
+			defer server.Close()
+			client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+			result, err := client.GetValidatorRewardByEraID(context.Background(), pubKey, 100)
+			require.NoError(t, err)
+			assert.NotEmpty(t, result.APIVersion)
+			assert.NotEmpty(t, result.EraID)
+			assert.NotEmpty(t, result.RewardAmount)
+			assert.Equal(t, result.RewardAmount.Value().Int64(), int64(62559062048560))
+			assert.NotEmpty(t, result.GetRawJSON())
+		})
+	}
+}
+
 func Test_DefaultClient_GetEntity(t *testing.T) {
 	server := SetupServer(t, "../data/rpc_response/state_get_entity_account_example.json")
 	defer server.Close()

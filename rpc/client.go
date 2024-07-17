@@ -157,6 +157,19 @@ type ClientInformational interface {
 
 	// GetChainspec returns the raw bytes of the chainspec.toml, accounts.toml and global_state.toml files as read at node startup.
 	GetChainspec(ctx context.Context) (InfoGetChainspecResult, error)
+
+	// GetValidatorRewardByEraID returns the reward for a given era and a validator
+	GetValidatorRewardByEraID(ctx context.Context, validator keypair.PublicKey, eraID uint32) (InfoGetRewardResponse, error)
+	// GetValidatorRewardByBlockHash returns the reward for a given block hash and a validator
+	GetValidatorRewardByBlockHash(ctx context.Context, validator keypair.PublicKey, blockHash string) (InfoGetRewardResponse, error)
+	// GetValidatorRewardByBlockHeight returns the reward for a given block height and a validator
+	GetValidatorRewardByBlockHeight(ctx context.Context, validator keypair.PublicKey, height uint64) (InfoGetRewardResponse, error)
+	// GetDelegatorRewardRewardByEraID returns the delegator reward for a given era and a validator
+	GetDelegatorRewardRewardByEraID(ctx context.Context, validator, delegator keypair.PublicKey, eraID uint32) (InfoGetRewardResponse, error)
+	// GetDelegatorRewardByBlockHash returns the delegator reward for a given block hash and a validator
+	GetDelegatorRewardByBlockHash(ctx context.Context, validator, delegator keypair.PublicKey, blockHash string) (InfoGetRewardResponse, error)
+	// GetDelegatorRewardByBlockHeight returns the delegator reward for a given block height and a validator
+	GetDelegatorRewardByBlockHeight(ctx context.Context, validator, delegator keypair.PublicKey, height uint64) (InfoGetRewardResponse, error)
 }
 
 // ClientTransactional contains the description of account_put_deploy,
