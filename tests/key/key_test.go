@@ -44,7 +44,7 @@ func Test_Key_Constructor_fromString(t *testing.T) {
 		{"deploy-info", "deploy-ee83ab5d92e183e2e92c1290a5979e2b7f7fac146c215de8042e2945bbad9760", "deploy-ee83ab5d92e183e2e92c1290a5979e2b7f7fac146c215de8042e2945bbad9760"},
 		{"deploy-info key", "Key::Deploy(ee83ab5d92e183e2e92c1290a5979e2b7f7fac146c215de8042e2945bbad9760)", "deploy-ee83ab5d92e183e2e92c1290a5979e2b7f7fac146c215de8042e2945bbad9760"},
 		{"era-id", "era-123", "era-123"},
-		{"era-id key", "Key::EraID(123)", "era-123"},
+		{"era-id key", "Key::Era(123)", "era-123"},
 		{"balance", "balance-ee83ab5d92e183e2e92c1290a5979e2b7f7fac146c215de8042e2945bbad9760", "balance-ee83ab5d92e183e2e92c1290a5979e2b7f7fac146c215de8042e2945bbad9760"},
 		{"balance key", "Key::Balance(ee83ab5d92e183e2e92c1290a5979e2b7f7fac146c215de8042e2945bbad9760)", "balance-ee83ab5d92e183e2e92c1290a5979e2b7f7fac146c215de8042e2945bbad9760"},
 		{"bid", "bid-ee83ab5d92e183e2e92c1290a5979e2b7f7fac146c215de8042e2945bbad9760", "bid-ee83ab5d92e183e2e92c1290a5979e2b7f7fac146c215de8042e2945bbad9760"},

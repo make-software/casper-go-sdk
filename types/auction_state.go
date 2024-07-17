@@ -20,9 +20,9 @@ type PublicKeyAndBid struct {
 	Bid       Bid               `json:"bid"`
 }
 
-// EraValidators contains validators and weights for an EraID.
+// EraValidators contains validators and weights for an Era.
 type EraValidators struct {
 	EraID uint64 `json:"era_id"`
-	// List of the validator's weight in the EraID
+	// List of the validator's weight in the Era
 	ValidatorWeights []ValidatorWeightAuction `json:"validator_weights"`
 }
