@@ -26,7 +26,7 @@ func Test_PutDeploy(t *testing.T) {
 	facetKeys, err := casper.NewED25519PrivateKeyFromPEMFile("../../data/keys/docker-nctl-secret.pem")
 	require.NoError(t, err)
 	require.NoError(t, err)
-	header := types.DefaultHeader()
+	header := types.DefaultDeployHeader()
 	header.ChainName = "casper-net-1"
 	header.Account = facetKeys.PublicKey()
 	require.NoError(t, err)
@@ -46,7 +46,7 @@ func Test_PutDeploy(t *testing.T) {
 	}
 
 	deploy, err := types.MakeDeploy(header, payment, session)
-	err = deploy.SignDeploy(facetKeys)
+	err = deploy.Sign(facetKeys)
 	require.NoError(t, err)
 
 	rpcClient := rpc.NewClient(rpc.NewHttpHandler("http://127.0.0.1:11101/rpc", http.DefaultClient))

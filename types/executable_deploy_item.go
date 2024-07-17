@@ -99,7 +99,10 @@ type ModuleBytes struct {
 }
 
 func (m ModuleBytes) Bytes() ([]byte, error) {
-	bytes, _ := hex.DecodeString(m.ModuleBytes)
+	bytes, err := hex.DecodeString(m.ModuleBytes)
+	if err != nil {
+		return nil, err
+	}
 	res := clvalue.NewCLUInt32(uint32(len(bytes))).Bytes()
 	res = append(res, clvalue.NewCLByteArray(bytes).Bytes()...)
 	argBytes, err := m.Args.Bytes()

@@ -76,16 +76,16 @@ func NewBlockFromBlockV1(blockV1 BlockV1) Block {
 	blockTransactions := make(BlockTransactions, 0)
 	for i := range blockV1.Body.TransferHashes {
 		blockTransactions = append(blockTransactions, BlockTransaction{
-			Category: BlockTransactionCategoryMint,
-			Version:  BlockTransactionDeploy,
+			Category: TransactionCategoryMint,
+			Version:  TransactionDeploy,
 			Hash:     blockV1.Body.TransferHashes[i],
 		})
 	}
 
 	for i := range blockV1.Body.DeployHashes {
 		blockTransactions = append(blockTransactions, BlockTransaction{
-			Category: BlockTransactionCategoryLarge,
-			Version:  BlockTransactionDeploy,
+			Category: TransactionCategoryLarge,
+			Version:  TransactionDeploy,
 			Hash:     blockV1.Body.DeployHashes[i],
 		})
 	}
@@ -228,24 +228,6 @@ type BlockV2 struct {
 // We need to wait for a few blocks to pass (`signature_rewards_max_delay`) to store the finality signers because we need a bit of time to get the block finality.
 type SingleBlockRewardedSignatures []uint8
 
-type BlockTransactionCategory uint
-
-const (
-	BlockTransactionCategoryMint BlockTransactionCategory = iota
-	BlockTransactionCategoryAuction
-	BlockTransactionCategoryInstallUpgrade
-	BlockTransactionCategoryLarge
-	BlockTransactionCategoryMedium
-	BlockTransactionCategorySmall
-)
-
-type BlockTransactionVersion uint
-
-const (
-	BlockTransactionVersionV1 BlockTransactionVersion = iota
-	BlockTransactionDeploy
-)
-
 type BlockTransactions []BlockTransaction
 
 func (t *BlockTransactions) UnmarshalJSON(data []byte) error {
@@ -267,19 +249,19 @@ func (t *BlockTransactions) UnmarshalJSON(data []byte) error {
 	}
 
 	res := make(BlockTransactions, 0)
-	res = append(res, getBlockTransactionsFromTransactionHashes(source.Mint, BlockTransactionCategoryMint)...)
-	res = append(res, getBlockTransactionsFromTransactionHashes(source.Auction, BlockTransactionCategoryAuction)...)
-	res = append(res, getBlockTransactionsFromTransactionHashes(source.InstallUpgrade, BlockTransactionCategoryInstallUpgrade)...)
-	res = append(res, getBlockTransactionsFromTransactionHashes(source.Large, BlockTransactionCategoryLarge)...)
-	res = append(res, getBlockTransactionsFromTransactionHashes(source.Medium, BlockTransactionCategoryMedium)...)
-	res = append(res, getBlockTransactionsFromTransactionHashes(source.Small, BlockTransactionCategorySmall)...)
+	res = append(res, getBlockTransactionsFromTransactionHashes(source.Mint, TransactionCategoryMint)...)
+	res = append(res, getBlockTransactionsFromTransactionHashes(source.Auction, TransactionCategoryAuction)...)
+	res = append(res, getBlockTransactionsFromTransactionHashes(source.InstallUpgrade, TransactionCategoryInstallUpgrade)...)
+	res = append(res, getBlockTransactionsFromTransactionHashes(source.Large, TransactionCategoryLarge)...)
+	res = append(res, getBlockTransactionsFromTransactionHashes(source.Medium, TransactionCategoryMedium)...)
+	res = append(res, getBlockTransactionsFromTransactionHashes(source.Small, TransactionCategorySmall)...)
 	*t = res
 	return nil
 }
 
 type BlockTransaction struct {
-	Category BlockTransactionCategory
-	Version  BlockTransactionVersion
+	Category TransactionCategory
+	Version  TransactionVersion
 	Hash     key.Hash
 }
 
@@ -314,7 +296,7 @@ type Proof struct {
 	Signature HexBytes `json:"signature"`
 }
 
-func getBlockTransactionsFromTransactionHashes(hashes []TransactionHash, category BlockTransactionCategory) BlockTransactions {
+func getBlockTransactionsFromTransactionHashes(hashes []TransactionHash, category TransactionCategory) BlockTransactions {
 	if len(hashes) == 0 {
 		return nil
 	}
@@ -324,12 +306,12 @@ func getBlockTransactionsFromTransactionHashes(hashes []TransactionHash, categor
 		blockTransaction := BlockTransaction{
 			Category: category,
 		}
-		if hashes[i].Transaction != nil {
-			blockTransaction.Hash = *hashes[i].Transaction
-			blockTransaction.Version = BlockTransactionVersionV1
+		if hashes[i].TransactionV1 != nil {
+			blockTransaction.Hash = *hashes[i].TransactionV1
+			blockTransaction.Version = TransactionVersionV1
 		} else {
 			blockTransaction.Hash = *hashes[i].Deploy
-			blockTransaction.Version = BlockTransactionDeploy
+			blockTransaction.Version = TransactionDeploy
 		}
 
 		res = append(res, blockTransaction)

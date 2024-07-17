@@ -176,10 +176,11 @@ type ClientInformational interface {
 	GetDelegatorRewardByBlockHeight(ctx context.Context, validator, delegator keypair.PublicKey, height uint64) (InfoGetRewardResult, error)
 }
 
-// ClientTransactional contains the description of account_put_deploy,
-// the only means by which users can send their compiled Wasm (as part of a Deploy) to a node on a Casper network.
+// ClientTransactional contains the description of account_put_deploy, account_put_transaction
+// the only means by which users can send their compiled Wasm (as part of a Deploy or TransactionV1) to a node on a Casper network.
 type ClientTransactional interface {
 	PutDeploy(ctx context.Context, deploy types.Deploy) (PutDeployResult, error)
+	PutTransactionV1(ctx context.Context, transaction types.TransactionV1) (PutTransactionResult, error)
 }
 
 // Client interface represent full RPC client that includes all possible queries.

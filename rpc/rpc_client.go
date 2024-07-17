@@ -64,7 +64,7 @@ func (c *client) GetTransactionByTransactionHash(ctx context.Context, transactio
 	var result infoGetTransactionResultV1Compatible
 	resp, err := c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
 		TransactionHash: types.TransactionHash{
-			Transaction: &hash,
+			TransactionV1: &hash,
 		},
 	}, &result)
 	if err != nil {
@@ -102,7 +102,7 @@ func (c *client) GetTransactionFinalizedApprovalByTransactionHash(ctx context.Co
 	var result infoGetTransactionResultV1Compatible
 	resp, err := c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
 		TransactionHash: types.TransactionHash{
-			Transaction: &hash,
+			TransactionV1: &hash,
 		},
 		FinalizedApprovals: &[]bool{true}[0],
 	}, &result)
@@ -633,6 +633,22 @@ func (c *client) PutDeploy(ctx context.Context, deploy types.Deploy) (PutDeployR
 	resp, err := c.processRequest(ctx, MethodPutDeploy, PutDeployRequest{Deploy: deploy}, &result)
 	if err != nil {
 		return PutDeployResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) PutTransactionV1(ctx context.Context, transaction types.TransactionV1) (PutTransactionResult, error) {
+	var result PutTransactionResult
+
+	resp, err := c.processRequest(ctx, MethodPutTransaction, PutTransactionRequest{
+		Transaction: types.TransactionWrapper{
+			TransactionV1: &transaction,
+		},
+	}, &result)
+	if err != nil {
+		return PutTransactionResult{}, err
 	}
 
 	result.rawJSON = resp.Result

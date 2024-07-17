@@ -439,10 +439,6 @@ type InfoGetStatusResult struct {
 	rawJSON json.RawMessage
 }
 
-func (b PutDeployResult) GetRawJSON() json.RawMessage {
-	return b.rawJSON
-}
-
 // NodeNextUpgrade contains the information about the next protocol upgrade.
 type NodeNextUpgrade struct {
 	//The first era to which the associated protocol version applies.
@@ -456,6 +452,21 @@ type PutDeployResult struct {
 	DeployHash key.Hash `json:"deploy_hash"`
 
 	rawJSON json.RawMessage
+}
+
+func (p PutDeployResult) GetRawJSON() json.RawMessage {
+	return p.rawJSON
+}
+
+type PutTransactionResult struct {
+	ApiVersion      string                `json:"api_version"`
+	TransactionHash types.TransactionHash `json:"transaction_hash"`
+
+	rawJSON json.RawMessage
+}
+
+func (p PutTransactionResult) GetRawJSON() json.RawMessage {
+	return p.rawJSON
 }
 
 func (b InfoGetStatusResult) GetRawJSON() json.RawMessage {
