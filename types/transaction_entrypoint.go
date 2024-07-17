@@ -34,9 +34,7 @@ const (
 )
 
 type TransactionEntryPoint struct {
-	Custom *struct {
-		Type string
-	}
+	Custom *string
 	// The `transfer` native entry point, used to transfer `Motes` from a source purse to a target purse.
 	Transfer *struct{}
 	// The `add_bid` native entry point, used to create or top off a bid purse.
@@ -63,7 +61,7 @@ func (t *TransactionEntryPoint) Bytes() []byte {
 	result = append(result, t.Tag())
 
 	if t.Custom != nil {
-		result = append(result, clvalue.NewCLString(t.Custom.Type).Bytes()...)
+		result = append(result, clvalue.NewCLString(*t.Custom).Bytes()...)
 	}
 	return result
 }
@@ -101,7 +99,7 @@ func (t *TransactionEntryPoint) UnmarshalJSON(data []byte) error {
 	}
 	if err := json.Unmarshal(data, &custom); err == nil {
 		*t = TransactionEntryPoint{
-			Custom: &struct{ Type string }{Type: custom.Custom},
+			Custom: &custom.Custom,
 		}
 		return nil
 	}
@@ -142,7 +140,7 @@ func (t TransactionEntryPoint) MarshalJSON() ([]byte, error) {
 		return json.Marshal(struct {
 			Custom string `json:"Custom"`
 		}{
-			Custom: t.Custom.Type,
+			Custom: *t.Custom,
 		})
 	}
 

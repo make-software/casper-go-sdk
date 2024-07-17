@@ -60,12 +60,16 @@ func (t *TransactionTarget) Bytes() ([]byte, error) {
 		result = append(result, t.Stored.Runtime.RuntimeTag())
 	} else if t.Session != nil {
 		result = append(result, TransactionTargetTypeSession)
-		bytes, err := hex.DecodeString(t.Session.ModuleBytes)
-		if err != nil {
-			return nil, err
+		if len(t.Session.ModuleBytes) == 0 {
+			result = append(result, clvalue.NewCLInt32(0).Bytes()...)
+		} else {
+			bytes, err := hex.DecodeString(t.Session.ModuleBytes)
+			if err != nil {
+				return nil, err
+			}
+			result = append(result, clvalue.NewCLUInt32(uint32(len(bytes))).Bytes()...)
+			result = append(result, clvalue.NewCLByteArray(bytes).Bytes()...)
 		}
-		result = append(result, clvalue.NewCLUInt32(uint32(len(bytes))).Bytes()...)
-		result = append(result, clvalue.NewCLByteArray(bytes).Bytes()...)
 
 		result = append(result, t.Session.Runtime.RuntimeTag())
 	}

@@ -97,12 +97,21 @@ func NewTransactionFromDeploy(deploy Deploy) Transaction {
 
 	if deploy.Session.Transfer != nil {
 		transactionEntryPoint.Transfer = &struct{}{}
+	} else if deploy.Session.ModuleBytes != nil {
+		transactionEntryPoint.Call = &struct{}{}
 	} else {
-		transactionEntryPoint.Custom = &struct {
-			Type string
-		}{
-			Type: "Call",
+		var entrypoint string
+		switch {
+		case deploy.Session.StoredContractByHash != nil:
+			entrypoint = deploy.Session.StoredContractByHash.EntryPoint
+		case deploy.Session.StoredContractByName != nil:
+			entrypoint = deploy.Session.StoredContractByName.EntryPoint
+		case deploy.Session.StoredVersionedContractByHash != nil:
+			entrypoint = deploy.Session.StoredVersionedContractByHash.EntryPoint
+		case deploy.Session.StoredVersionedContractByName != nil:
+			entrypoint = deploy.Session.StoredVersionedContractByName.EntryPoint
 		}
+		transactionEntryPoint.Custom = &entrypoint
 	}
 
 	if args := deploy.Payment.Args(); args != nil {
