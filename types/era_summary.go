@@ -6,7 +6,7 @@ import "github.com/make-software/casper-go-sdk/types/key"
 type EraSummary struct {
 	// The block hash
 	BlockHash key.Hash `json:"block_hash"`
-	// The EraID Id
+	// The Era Id
 	EraID uint64 `json:"era_id"`
 	// The StoredValue containing era information.
 	StoredValue StoredValue `json:"stored_value"`
