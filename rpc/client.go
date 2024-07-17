@@ -159,8 +159,8 @@ type ClientInformational interface {
 	GetChainspec(ctx context.Context) (InfoGetChainspecResult, error)
 }
 
-// ClientTransactional contains the description of account_put_deploy,
-// the only means by which users can send their compiled Wasm (as part of a Deploy) to a node on a Casper network.
+// ClientTransactional contains the description of account_put_deploy, account_put_transaction
+// the only means by which users can send their compiled Wasm (as part of a Deploy or Transaction) to a node on a Casper network.
 type ClientTransactional interface {
 	PutDeploy(ctx context.Context, deploy types.Deploy) (PutDeployResult, error)
 	PutTransaction(ctx context.Context, transaction types.TransactionV1) (PutTransactionResult, error)

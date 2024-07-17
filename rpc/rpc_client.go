@@ -642,9 +642,9 @@ func (c *client) PutDeploy(ctx context.Context, deploy types.Deploy) (PutDeployR
 func (c *client) PutTransaction(ctx context.Context, transaction types.TransactionV1) (PutTransactionResult, error) {
 	var result PutTransactionResult
 
-	resp, err := c.processRequest(ctx, MethodPutTransaction, map[string]interface{}{
-		"transaction": map[string]interface{}{
-			"Version1": transaction,
+	resp, err := c.processRequest(ctx, MethodPutTransaction, PutTransactionRequest{
+		Transaction: types.TransactionWrapper{
+			TransactionV1: &transaction,
 		},
 	}, &result)
 	if err != nil {
