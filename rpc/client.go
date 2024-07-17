@@ -158,18 +158,22 @@ type ClientInformational interface {
 	// GetChainspec returns the raw bytes of the chainspec.toml, accounts.toml and global_state.toml files as read at node startup.
 	GetChainspec(ctx context.Context) (InfoGetChainspecResult, error)
 
+	// GetLatestValidatorReward returns the latest reward for a given validator
+	GetLatestValidatorReward(ctx context.Context, validator keypair.PublicKey) (InfoGetRewardResult, error)
 	// GetValidatorRewardByEraID returns the reward for a given era and a validator
-	GetValidatorRewardByEraID(ctx context.Context, validator keypair.PublicKey, eraID uint32) (InfoGetRewardResponse, error)
+	GetValidatorRewardByEraID(ctx context.Context, validator keypair.PublicKey, eraID uint64) (InfoGetRewardResult, error)
 	// GetValidatorRewardByBlockHash returns the reward for a given block hash and a validator
-	GetValidatorRewardByBlockHash(ctx context.Context, validator keypair.PublicKey, blockHash string) (InfoGetRewardResponse, error)
+	GetValidatorRewardByBlockHash(ctx context.Context, validator keypair.PublicKey, blockHash string) (InfoGetRewardResult, error)
 	// GetValidatorRewardByBlockHeight returns the reward for a given block height and a validator
-	GetValidatorRewardByBlockHeight(ctx context.Context, validator keypair.PublicKey, height uint64) (InfoGetRewardResponse, error)
-	// GetDelegatorRewardRewardByEraID returns the delegator reward for a given era and a validator
-	GetDelegatorRewardRewardByEraID(ctx context.Context, validator, delegator keypair.PublicKey, eraID uint32) (InfoGetRewardResponse, error)
+	GetValidatorRewardByBlockHeight(ctx context.Context, validator keypair.PublicKey, height uint64) (InfoGetRewardResult, error)
+	// GetLatestDelegatorReward returns the latest delegator reward for a given validator
+	GetLatestDelegatorReward(ctx context.Context, validator, delegator keypair.PublicKey) (InfoGetRewardResult, error)
+	// GetDelegatorRewardByEraID returns the delegator reward for a given era and a validator
+	GetDelegatorRewardByEraID(ctx context.Context, validator, delegator keypair.PublicKey, eraID uint64) (InfoGetRewardResult, error)
 	// GetDelegatorRewardByBlockHash returns the delegator reward for a given block hash and a validator
-	GetDelegatorRewardByBlockHash(ctx context.Context, validator, delegator keypair.PublicKey, blockHash string) (InfoGetRewardResponse, error)
+	GetDelegatorRewardByBlockHash(ctx context.Context, validator, delegator keypair.PublicKey, blockHash string) (InfoGetRewardResult, error)
 	// GetDelegatorRewardByBlockHeight returns the delegator reward for a given block height and a validator
-	GetDelegatorRewardByBlockHeight(ctx context.Context, validator, delegator keypair.PublicKey, height uint64) (InfoGetRewardResponse, error)
+	GetDelegatorRewardByBlockHeight(ctx context.Context, validator, delegator keypair.PublicKey, height uint64) (InfoGetRewardResult, error)
 }
 
 // ClientTransactional contains the description of account_put_deploy,

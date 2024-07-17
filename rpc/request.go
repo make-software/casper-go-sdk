@@ -162,7 +162,7 @@ type GlobalStateIdentifier struct {
 
 type EraIdentifier struct {
 	Block *BlockIdentifier `json:"Block,omitempty"`
-	Era   *uint32          `json:"Era,omitempty"`
+	Era   *uint64          `json:"Era,omitempty"`
 }
 
 type ParamBlockIdentifier struct {

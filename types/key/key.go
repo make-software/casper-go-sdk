@@ -83,7 +83,7 @@ const (
 	TypeNameURef                   TypeName = "URef"
 	TypeNameTransfer               TypeName = "Transfer"
 	TypeNameDeployInfo             TypeName = "Deploy"
-	TypeNameEraId                  TypeName = "Era"
+	TypeNameEraId                  TypeName = "EraID"
 	TypeNameBid                    TypeName = "Bid"
 	TypeNameBalance                TypeName = "Balance"
 	TypeNameWithdraw               TypeName = "Withdraw"

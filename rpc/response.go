@@ -498,7 +498,7 @@ func (b QueryBalanceDetailsResult) GetRawJSON() json.RawMessage {
 	return b.rawJSON
 }
 
-type InfoGetRewardResponse struct {
+type InfoGetRewardResult struct {
 	APIVersion     string          `json:"api_version"`
 	DelegationRate float32         `json:"delegation_rate"`
 	EraID          uint32          `json:"era_id"`
@@ -507,7 +507,7 @@ type InfoGetRewardResponse struct {
 	rawJSON json.RawMessage
 }
 
-func (b InfoGetRewardResponse) GetRawJSON() json.RawMessage {
+func (b InfoGetRewardResult) GetRawJSON() json.RawMessage {
 	return b.rawJSON
 }
 

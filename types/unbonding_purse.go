@@ -12,7 +12,7 @@ type UnbondingPurse struct {
 	Amount clvalue.UInt512 `json:"amount"`
 	// Bonding purse
 	BondingPurse key.URef `json:"bonding_purse"`
-	// Era ID in which this unbonding request was created.
+	// EraID ID in which this unbonding request was created.
 	EraOfCreation uint32 `json:"era_of_creation"`
 	// Unbonder public key.
 	UnbonderPublicKey keypair.PublicKey `json:"unbonder_public_key"`
