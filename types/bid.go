@@ -94,7 +94,7 @@ type Delegator struct {
 // Credit is a bridge record pointing to a new `ValidatorBid` after the public key was changed.
 type Credit struct {
 	// The era id the credit was created.
-	EraID uint32 `json:"era_id"`
+	EraID uint64 `json:"era_id"`
 	// Validator's public key.
 	ValidatorPublicKey keypair.PublicKey `json:"validator_public_key"`
 	// The credit amount.
@@ -103,7 +103,7 @@ type Credit struct {
 
 // Bridge is a bridge record pointing to a new `ValidatorBid` after the public key was changed.
 type Bridge struct {
-	EraID uint32 `json:"era_id"`
+	EraID uint64 `json:"era_id"`
 	// Previous validator public key associated with the bid."
 	OldValidatorPublicKey keypair.PublicKey `json:"old_validator_public_key"`
 	// New validator public key associated with the bid.

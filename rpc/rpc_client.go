@@ -759,6 +759,148 @@ func (c *client) GetChainspec(ctx context.Context) (InfoGetChainspecResult, erro
 	return result, nil
 }
 
+func (c *client) GetValidatorRewardByEraID(ctx context.Context, validator keypair.PublicKey, eraID uint64) (InfoGetRewardResult, error) {
+	var result InfoGetRewardResult
+
+	resp, err := c.processRequest(ctx, MethodGetReward, InfoGetRewardRequest{
+		Validator: validator,
+		EraIdentifier: &EraIdentifier{
+			Era: &eraID,
+		},
+	}, &result)
+	if err != nil {
+		return InfoGetRewardResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetValidatorRewardByBlockHash(ctx context.Context, validator keypair.PublicKey, blockHash string) (InfoGetRewardResult, error) {
+	var result InfoGetRewardResult
+
+	resp, err := c.processRequest(ctx, MethodGetReward, InfoGetRewardRequest{
+		Validator: validator,
+		EraIdentifier: &EraIdentifier{
+			Block: &BlockIdentifier{
+				Hash: &blockHash,
+			},
+		},
+	}, &result)
+	if err != nil {
+		return InfoGetRewardResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetValidatorRewardByBlockHeight(ctx context.Context, validator keypair.PublicKey, height uint64) (InfoGetRewardResult, error) {
+	var result InfoGetRewardResult
+
+	resp, err := c.processRequest(ctx, MethodGetReward, InfoGetRewardRequest{
+		Validator: validator,
+		EraIdentifier: &EraIdentifier{
+			Block: &BlockIdentifier{
+				Height: &height,
+			},
+		},
+	}, &result)
+	if err != nil {
+		return InfoGetRewardResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetDelegatorRewardByEraID(ctx context.Context, validator, delegator keypair.PublicKey, eraID uint64) (InfoGetRewardResult, error) {
+	var result InfoGetRewardResult
+
+	resp, err := c.processRequest(ctx, MethodGetReward, InfoGetRewardRequest{
+		Validator: validator,
+		Delegator: &delegator,
+		EraIdentifier: &EraIdentifier{
+			Era: &eraID,
+		},
+	}, &result)
+	if err != nil {
+		return InfoGetRewardResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetDelegatorRewardByBlockHash(ctx context.Context, validator, delegator keypair.PublicKey, blockHash string) (InfoGetRewardResult, error) {
+	var result InfoGetRewardResult
+
+	resp, err := c.processRequest(ctx, MethodGetReward, InfoGetRewardRequest{
+		Validator: validator,
+		Delegator: &delegator,
+		EraIdentifier: &EraIdentifier{
+			Block: &BlockIdentifier{
+				Hash: &blockHash,
+			},
+		},
+	}, &result)
+	if err != nil {
+		return InfoGetRewardResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetDelegatorRewardByBlockHeight(ctx context.Context, validator, delegator keypair.PublicKey, height uint64) (InfoGetRewardResult, error) {
+	var result InfoGetRewardResult
+
+	resp, err := c.processRequest(ctx, MethodGetReward, InfoGetRewardRequest{
+		Validator: validator,
+		Delegator: &delegator,
+		EraIdentifier: &EraIdentifier{
+			Block: &BlockIdentifier{
+				Height: &height,
+			},
+		},
+	}, &result)
+	if err != nil {
+		return InfoGetRewardResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetLatestValidatorReward(ctx context.Context, validator keypair.PublicKey) (InfoGetRewardResult, error) {
+	var result InfoGetRewardResult
+
+	resp, err := c.processRequest(ctx, MethodGetReward, InfoGetRewardRequest{
+		Validator: validator,
+	}, &result)
+	if err != nil {
+		return InfoGetRewardResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetLatestDelegatorReward(ctx context.Context, validator, delegator keypair.PublicKey) (InfoGetRewardResult, error) {
+	var result InfoGetRewardResult
+
+	resp, err := c.processRequest(ctx, MethodGetReward, InfoGetRewardRequest{
+		Validator: validator,
+		Delegator: &delegator,
+	}, &result)
+	if err != nil {
+		return InfoGetRewardResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
 func (c *client) processRequest(ctx context.Context, method Method, params interface{}, result any) (RpcResponse, error) {
 	request := DefaultRpcRequest(method, params)
 	if reqID := GetReqIdCtx(ctx); reqID != "0" {
