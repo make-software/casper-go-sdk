@@ -48,13 +48,19 @@ func (t *TransactionTarget) Bytes() ([]byte, error) {
 			result = append(result, InvocationTargetTagByPackageHash)
 			result = append(result, byPackageHash.Addr.Bytes()...)
 			if byPackageHash.Version != nil {
+				result = append(result, 1)
 				result = append(result, clvalue.NewCLUInt32(*byPackageHash.Version).Bytes()...)
+			} else {
+				result = append(result, 0)
 			}
 		} else if byPackageName := t.Stored.ID.ByPackageName; byPackageName != nil {
 			result = append(result, InvocationTargetTagByPackageName)
 			result = append(result, clvalue.NewCLString(byPackageName.Name).Bytes()...)
 			if byPackageHash.Version != nil {
+				result = append(result, 1)
 				result = append(result, clvalue.NewCLUInt32(*byPackageName.Version).Bytes()...)
+			} else {
+				result = append(result, 0)
 			}
 		}
 		result = append(result, t.Stored.Runtime.RuntimeTag())
@@ -208,8 +214,8 @@ func NewTransactionTargetFromSession(session ExecutableDeployItem) TransactionTa
 			Version: version,
 		}
 
-		if session.StoredContractByName != nil {
-			byNameTarget.Name = session.StoredContractByName.Name
+		if session.StoredVersionedContractByName != nil {
+			byNameTarget.Name = session.StoredVersionedContractByName.Name
 		}
 
 		return TransactionTarget{

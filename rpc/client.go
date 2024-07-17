@@ -55,13 +55,13 @@ type ClientInformational interface {
 	GetDeploy(ctx context.Context, hash string) (InfoGetDeployResult, error)
 	// GetDeployFinalizedApproval returns Deploy with the finalized approvals substituted.
 	GetDeployFinalizedApproval(ctx context.Context, hash string) (InfoGetDeployResult, error)
-	// GetTransactionByTransactionHash returns a Transaction from the network
+	// GetTransactionByTransactionHash returns a TransactionV1 from the network
 	GetTransactionByTransactionHash(ctx context.Context, transactionHash string) (InfoGetTransactionResult, error)
-	// GetTransactionByDeployHash returns a Deploy as Transaction from the network
+	// GetTransactionByDeployHash returns a Deploy as TransactionV1 from the network
 	GetTransactionByDeployHash(ctx context.Context, deployHash string) (InfoGetTransactionResult, error)
-	// GetTransactionFinalizedApprovalByTransactionHash return the Transaction with the finalized approvals substituted.
+	// GetTransactionFinalizedApprovalByTransactionHash return the TransactionV1 with the finalized approvals substituted.
 	GetTransactionFinalizedApprovalByTransactionHash(ctx context.Context, transactionHash string) (InfoGetTransactionResult, error)
-	// GetTransactionFinalizedApprovalByDeployHash return the Deploy as Transaction with the finalized approvals substituted.
+	// GetTransactionFinalizedApprovalByDeployHash return the Deploy as TransactionV1 with the finalized approvals substituted.
 	GetTransactionFinalizedApprovalByDeployHash(ctx context.Context, deployHash string) (InfoGetTransactionResult, error)
 	// GetDictionaryItem returns an item from a Dictionary.
 	// The address of a stored value is the blake2b hash of the seed URef and the byte representation of the dictionary key.
@@ -160,10 +160,10 @@ type ClientInformational interface {
 }
 
 // ClientTransactional contains the description of account_put_deploy, account_put_transaction
-// the only means by which users can send their compiled Wasm (as part of a Deploy or Transaction) to a node on a Casper network.
+// the only means by which users can send their compiled Wasm (as part of a Deploy or TransactionV1) to a node on a Casper network.
 type ClientTransactional interface {
 	PutDeploy(ctx context.Context, deploy types.Deploy) (PutDeployResult, error)
-	PutTransaction(ctx context.Context, transaction types.TransactionV1) (PutTransactionResult, error)
+	PutTransactionV1(ctx context.Context, transaction types.TransactionV1) (PutTransactionResult, error)
 }
 
 // Client interface represent full RPC client that includes all possible queries.

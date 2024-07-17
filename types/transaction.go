@@ -19,6 +19,24 @@ var (
 	ErrInvalidApprovalSignature = errors.New("invalid approval signature")
 )
 
+type TransactionCategory uint
+
+const (
+	TransactionCategoryMint TransactionCategory = iota
+	TransactionCategoryAuction
+	TransactionCategoryInstallUpgrade
+	TransactionCategoryLarge
+	TransactionCategoryMedium
+	TransactionCategorySmall
+)
+
+type TransactionVersion uint
+
+const (
+	TransactionVersionV1 TransactionVersion = iota
+	TransactionDeploy
+)
+
 type Transaction struct {
 	// Hex-encoded TransactionV1 hash
 	TransactionHash key.Hash `json:"hash"`
@@ -29,7 +47,7 @@ type Transaction struct {
 	// List of signers and signatures for this `deploy`
 	Approvals []Approval `json:"approvals"`
 
-	// source BlockV1, nil if constructed from BlockV2
+	// source DeployV1, nil if constructed from TransactionV1
 	originDeployV1      *Deploy
 	originTransactionV1 *TransactionV1
 }
@@ -39,21 +57,21 @@ type TransactionBody struct {
 	// Execution target of a Transaction.
 	Target TransactionTarget `json:"target"`
 	// Entry point of a Transaction.
-	TransactionEntryPoint TransactionEntryPoint `json:"entry_point"`
+	EntryPoint TransactionEntryPoint `json:"entry_point"`
 	// Scheduling mode of a Transaction.
-	TransactionScheduling TransactionScheduling `json:"scheduling"`
+	Scheduling TransactionScheduling `json:"scheduling"`
+	// Transaction category
+	Category uint8 `json:"transaction_category"`
 }
 
 type TransactionHeader struct {
-	// `Hash` of the body part of this `Deploy`.
-	BodyHash key.Hash `json:"body_hash"`
-
+	// Transaction chain name
 	ChainName string `json:"chain_name"`
 	// `Timestamp` formatted as per RFC 3339
 	Timestamp Timestamp `json:"timestamp"`
-	// Duration of the `Deploy` in milliseconds (from timestamp).
+	// Duration of the `TransactionV1` in milliseconds (from timestamp).
 	TTL Duration `json:"ttl"`
-	// The address of the initiator of a TransactionV1.
+	// The address of the initiator of a Transaction.
 	InitiatorAddr InitiatorAddr `json:"initiator_addr"`
 	// Pricing mode of a Transaction.
 	PricingMode PricingMode `json:"pricing_mode"`
@@ -69,20 +87,19 @@ func (t *Transaction) GetTransactionV1() *TransactionV1 {
 
 func NewTransactionFromTransactionV1(v1 TransactionV1) Transaction {
 	return Transaction{
-		TransactionHash: v1.TransactionV1Hash,
+		TransactionHash: v1.Hash,
 		TransactionHeader: TransactionHeader{
-			BodyHash:      v1.TransactionV1Header.BodyHash,
-			ChainName:     v1.TransactionV1Header.ChainName,
-			Timestamp:     v1.TransactionV1Header.Timestamp,
-			TTL:           v1.TransactionV1Header.TTL,
-			InitiatorAddr: v1.TransactionV1Header.InitiatorAddr,
-			PricingMode:   v1.TransactionV1Header.PricingMode,
+			ChainName:     v1.Header.ChainName,
+			Timestamp:     v1.Header.Timestamp,
+			TTL:           v1.Header.TTL,
+			InitiatorAddr: v1.Header.InitiatorAddr,
+			PricingMode:   v1.Header.PricingMode,
 		},
 		TransactionBody: TransactionBody{
-			Args:                  v1.TransactionV1Body.Args,
-			Target:                v1.TransactionV1Body.Target,
-			TransactionEntryPoint: v1.TransactionV1Body.TransactionEntryPoint,
-			TransactionScheduling: v1.TransactionV1Body.TransactionScheduling,
+			Args:       v1.Body.Args,
+			Target:     v1.Body.Target,
+			EntryPoint: v1.Body.TransactionEntryPoint,
+			Scheduling: v1.Body.TransactionScheduling,
 		},
 		Approvals:           v1.Approvals,
 		originTransactionV1: &v1,
@@ -93,9 +110,11 @@ func NewTransactionFromDeploy(deploy Deploy) Transaction {
 	var (
 		paymentAmount         uint64
 		transactionEntryPoint TransactionEntryPoint
+		transactionCategory   = TransactionCategoryLarge
 	)
 
 	if deploy.Session.Transfer != nil {
+		transactionCategory = TransactionCategoryMint
 		transactionEntryPoint.Transfer = &struct{}{}
 	} else if deploy.Session.ModuleBytes != nil {
 		transactionEntryPoint.Call = &struct{}{}
@@ -127,11 +146,10 @@ func NewTransactionFromDeploy(deploy Deploy) Transaction {
 	}
 
 	// Use StandardPayment as true only for payments without explicit `payment amount`
-	var standardPayment = paymentAmount == 0
+	var standardPayment = paymentAmount == 0 && deploy.Payment.ModuleBytes == nil
 	return Transaction{
 		TransactionHash: deploy.Hash,
 		TransactionHeader: TransactionHeader{
-			BodyHash:  deploy.Header.BodyHash,
 			ChainName: deploy.Header.ChainName,
 			Timestamp: deploy.Header.Timestamp,
 			TTL:       deploy.Header.TTL,
@@ -147,12 +165,13 @@ func NewTransactionFromDeploy(deploy Deploy) Transaction {
 			},
 		},
 		TransactionBody: TransactionBody{
-			Args:                  deploy.Session.Args(),
-			Target:                NewTransactionTargetFromSession(deploy.Session),
-			TransactionEntryPoint: transactionEntryPoint,
-			TransactionScheduling: TransactionScheduling{
+			Args:       deploy.Session.Args(),
+			Target:     NewTransactionTargetFromSession(deploy.Session),
+			EntryPoint: transactionEntryPoint,
+			Scheduling: TransactionScheduling{
 				Standard: &struct{}{},
 			},
+			Category: uint8(transactionCategory),
 		},
 		Approvals:      deploy.Approvals,
 		originDeployV1: &deploy,
@@ -166,11 +185,11 @@ type TransactionWrapper struct {
 
 type TransactionV1 struct {
 	// Hex-encoded TransactionV1 hash
-	TransactionV1Hash key.Hash `json:"hash"`
+	Hash key.Hash `json:"hash"`
 	// The header portion of a TransactionV1
-	TransactionV1Header TransactionV1Header `json:"header"`
+	Header TransactionV1Header `json:"header"`
 	// Body of a `TransactionV1`
-	TransactionV1Body TransactionV1Body `json:"body"`
+	Body TransactionV1Body `json:"body"`
 	// List of signers and signatures for this `deploy`
 	Approvals []Approval `json:"approvals"`
 }
@@ -208,7 +227,7 @@ type TransactionV1Body struct {
 	TransactionEntryPoint TransactionEntryPoint `json:"entry_point"`
 	// Scheduling mode of a Transaction.
 	TransactionScheduling TransactionScheduling `json:"scheduling"`
-	// Scheduling mode of a Transaction.
+	// Transaction category
 	TransactionCategory uint8 `json:"transaction_category"`
 }
 
@@ -234,12 +253,12 @@ func (t *TransactionV1Body) Bytes() ([]byte, error) {
 
 // TransactionHash A versioned wrapper for a transaction hash or deploy hash
 type TransactionHash struct {
-	Deploy      *key.Hash `json:"Deploy,omitempty"`
-	Transaction *key.Hash `json:"Version1,omitempty"`
+	Deploy        *key.Hash `json:"Deploy,omitempty"`
+	TransactionV1 *key.Hash `json:"Version1,omitempty"`
 }
 
 func (t *TransactionV1) Sign(keys keypair.PrivateKey) error {
-	signature, err := keys.Sign(t.TransactionV1Hash.Bytes())
+	signature, err := keys.Sign(t.Hash.Bytes())
 	if err != nil {
 		return err
 	}
@@ -257,21 +276,21 @@ func (t *TransactionV1) Sign(keys keypair.PrivateKey) error {
 }
 
 func (t *TransactionV1) Validate() error {
-	bodyBytes, err := t.TransactionV1Body.Bytes()
+	bodyBytes, err := t.Body.Bytes()
 	if err != nil {
 		return err
 	}
 
-	if t.TransactionV1Header.BodyHash != blake2b.Sum256(bodyBytes) {
+	if t.Header.BodyHash != blake2b.Sum256(bodyBytes) {
 		return ErrInvalidBodyHash
 	}
 
-	if t.TransactionV1Hash != blake2b.Sum256(t.TransactionV1Header.Bytes()) {
+	if t.Hash != blake2b.Sum256(t.Header.Bytes()) {
 		return ErrInvalidTransactionHash
 	}
 
 	for _, one := range t.Approvals {
-		if one.Signer.VerifySignature(t.TransactionV1Hash.Bytes(), one.Signature) != nil {
+		if one.Signer.VerifySignature(t.Hash.Bytes(), one.Signature) != nil {
 			return ErrInvalidApprovalSignature
 		}
 	}
@@ -281,10 +300,10 @@ func (t *TransactionV1) Validate() error {
 
 func NewTransactionV1(hash key.Hash, header TransactionV1Header, body TransactionV1Body, approvals []Approval) *TransactionV1 {
 	return &TransactionV1{
-		TransactionV1Hash:   hash,
-		TransactionV1Header: header,
-		TransactionV1Body:   body,
-		Approvals:           approvals,
+		Hash:      hash,
+		Header:    header,
+		Body:      body,
+		Approvals: approvals,
 	}
 }
 

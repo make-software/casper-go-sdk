@@ -132,7 +132,7 @@ func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 			assert.NotEmpty(t, result.Transaction.TransactionHeader.PricingMode)
 			assert.NotEmpty(t, result.Transaction.TransactionHeader.InitiatorAddr)
 			assert.NotEmpty(t, result.Transaction.TransactionBody.Target)
-			assert.NotEmpty(t, result.Transaction.TransactionBody.TransactionScheduling)
+			assert.NotEmpty(t, result.Transaction.TransactionBody.Scheduling)
 			assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.Initiator)
 			assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.Effects)
 			assert.NotEmpty(t, result.Transaction.Approvals)

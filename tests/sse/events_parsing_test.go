@@ -163,7 +163,7 @@ func Test_RawEvent_ParseAsTransactionExpiredEvent(t *testing.T) {
 			require.NotEmpty(t, res.TransactionExpiredPayload.TransactionHash)
 
 			if tc.isTransaction {
-				require.NotEmpty(t, res.TransactionExpiredPayload.TransactionHash.Transaction)
+				require.NotEmpty(t, res.TransactionExpiredPayload.TransactionHash.TransactionV1)
 			} else {
 				require.NotEmpty(t, res.TransactionExpiredPayload.TransactionHash.Deploy)
 			}
@@ -238,7 +238,7 @@ func Test_RawEvent_ParseAsTransactionProcessedEvent(t *testing.T) {
 			require.NotEmpty(t, res.TransactionProcessedPayload.TransactionHash)
 
 			if tc.isTransaction {
-				require.NotEmpty(t, res.TransactionProcessedPayload.TransactionHash.Transaction)
+				require.NotEmpty(t, res.TransactionProcessedPayload.TransactionHash.TransactionV1)
 				require.NotEmpty(t, res.TransactionProcessedPayload.Messages)
 			} else {
 				require.NotEmpty(t, res.TransactionProcessedPayload.TransactionHash.Deploy)

@@ -75,15 +75,15 @@ func Test_PutTransaction(t *testing.T) {
 	require.NoError(t, err)
 
 	rpcClient := rpc.NewClient(rpc.NewHttpHandler("http://127.0.0.1:11101/rpc", http.DefaultClient))
-	res, err := rpcClient.PutTransaction(context.Background(), *transaction)
+	res, err := rpcClient.PutTransactionV1(context.Background(), *transaction)
 	require.NoError(t, err)
-	assert.NotEmpty(t, res.TransactionHash.Transaction)
+	assert.NotEmpty(t, res.TransactionHash.TransactionV1)
 	assert.NoError(t, transaction.Validate())
 
-	log.Println("Transaction submitted:", res.TransactionHash.Transaction)
+	log.Println("TransactionV1 submitted:", res.TransactionHash.TransactionV1)
 
 	time.Sleep(time.Second * 10)
-	transactionRes, err := rpcClient.GetTransactionByTransactionHash(context.Background(), res.TransactionHash.Transaction.ToHex())
+	transactionRes, err := rpcClient.GetTransactionByTransactionHash(context.Background(), res.TransactionHash.TransactionV1.ToHex())
 	require.NoError(t, err)
 	assert.NotEmpty(t, transactionRes.Transaction)
 	assert.NotEmpty(t, transactionRes.ExecutionInfo)

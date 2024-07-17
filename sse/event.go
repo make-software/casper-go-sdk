@@ -224,7 +224,7 @@ func (t *TransactionProcessedEvent) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	if transactionEvent.TransactionProcessedPayload.TransactionHash.Transaction != nil ||
+	if transactionEvent.TransactionProcessedPayload.TransactionHash.TransactionV1 != nil ||
 		transactionEvent.TransactionProcessedPayload.TransactionHash.Deploy != nil {
 		*t = transactionEvent
 		return nil
@@ -264,7 +264,7 @@ func (t *TransactionExpiredEvent) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	if transactionEvent.TransactionExpiredPayload.TransactionHash.Transaction != nil ||
+	if transactionEvent.TransactionExpiredPayload.TransactionHash.TransactionV1 != nil ||
 		transactionEvent.TransactionExpiredPayload.TransactionHash.Deploy != nil {
 		*t = transactionEvent
 		return nil
