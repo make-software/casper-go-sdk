@@ -398,8 +398,9 @@ type (
 
 type (
 	StepPayload struct {
-		EraID           uint64       `json:"era_id"`
-		ExecutionEffect types.Effect `json:"execution_effect"`
+		EraID            uint64        `json:"era_id"`
+		ExecutionEffect  types.Effect  `json:"execution_effect"`
+		ExecutionEffects types.Effects `json:"execution_effects"`
 	}
 	StepEvent struct {
 		Step StepPayload `json:"step"`

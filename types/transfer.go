@@ -28,10 +28,16 @@ type Transfer struct {
 
 	// source originTransferV1, nil if constructed from TransferV2
 	originTransferV1 *TransferV1
+	// source originTransferV2, nil if constructed from TransferV1
+	originTransferV2 *TransferV2
 }
 
 func (h *Transfer) GetTransferV1() *TransferV1 {
 	return h.originTransferV1
+}
+
+func (h *Transfer) GetTransferV2() *TransferV2 {
+	return h.originTransferV2
 }
 
 func (h *Transfer) UnmarshalJSON(bytes []byte) error {
@@ -46,14 +52,15 @@ func (h *Transfer) UnmarshalJSON(bytes []byte) error {
 
 	if versioned.Version2 != nil {
 		*h = Transfer{
-			Amount:          versioned.Version2.Amount,
-			TransactionHash: versioned.Version2.TransactionHash,
-			From:            versioned.Version2.From,
-			Gas:             versioned.Version2.Gas,
-			ID:              versioned.Version2.ID,
-			Source:          versioned.Version2.Source,
-			Target:          versioned.Version2.Target,
-			To:              versioned.Version2.To,
+			Amount:           versioned.Version2.Amount,
+			TransactionHash:  versioned.Version2.TransactionHash,
+			From:             versioned.Version2.From,
+			Gas:              versioned.Version2.Gas,
+			ID:               versioned.Version2.ID,
+			Source:           versioned.Version2.Source,
+			Target:           versioned.Version2.Target,
+			To:               versioned.Version2.To,
+			originTransferV2: versioned.Version2,
 		}
 		return nil
 	}

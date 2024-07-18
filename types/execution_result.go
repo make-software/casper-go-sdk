@@ -216,6 +216,9 @@ type ExecutionResultStatusData struct {
 	ErrorMessage string             `json:"error_message"`
 }
 
+// Effects A log of all transforms produced during execution, used only in 2.0+ Network
+type Effects []TransformV2
+
 type Effect struct {
 	Operations []Operation    `json:"operations"`
 	Transforms []TransformKey `json:"transforms"`
