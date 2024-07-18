@@ -10,15 +10,18 @@ type EntryPointType string
 const (
 	EntryPointTypeSession  EntryPointType = "Session"
 	EntryPointTypeContract EntryPointType = "Contract"
+	EntryPointTypeCaller   EntryPointType = "Caller"
+	EntryPointTypeCalled   EntryPointType = "Called"
+	EntryPointTypeFactory  EntryPointType = "Factory"
 )
 
 // EntryPointPayment An enum specifying who pays for the invocation and execution of the entrypoint.
 type EntryPointPayment string
 
 const (
-	EntryPointPaymentCaller  EntryPointPayment = "Caller"
-	EntryPointTypeSelfOnly   EntryPointPayment = "SelfOnly"
-	EntryPointTypeSelfOnward EntryPointPayment = "SelfOnward"
+	EntryPointPaymentCaller     EntryPointPayment = "Caller"
+	EntryPointPaymentSelfOnly   EntryPointPayment = "SelfOnly"
+	EntryPointPaymentSelfOnward EntryPointPayment = "SelfOnward"
 )
 
 // EntryPointValue The encapsulated representation of entrypoints.
