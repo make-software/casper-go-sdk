@@ -20,22 +20,6 @@ import (
 	"github.com/make-software/casper-go-sdk/types"
 )
 
-func Test_DefaultClient_GetDeploy_Example(t *testing.T) {
-	deployHash := "0009ea4441f4700325d9c38b0b6df415537596e1204abe4f6a94b6996aebf2f1"
-	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		fixture, err := os.ReadFile("../data/deploy/get_raw_rpc_deploy.json")
-		require.NoError(t, err)
-		rw.Write(fixture)
-	}))
-	defer server.Close()
-
-	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	deployResult, err := client.GetDeploy(context.Background(), deployHash)
-	require.NoError(t, err)
-
-	assert.Equal(t, deployHash, deployResult.Deploy.Hash.ToHex())
-}
-
 func Test_ConfigurableClient_GetDeploy(t *testing.T) {
 	deployHash := "0009ea4441f4700325d9c38b0b6df415537596e1204abe4f6a94b6996aebf2f1"
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
@@ -45,8 +29,7 @@ func Test_ConfigurableClient_GetDeploy(t *testing.T) {
 	}))
 	defer server.Close()
 
-	httpClient := &http.Client{Transport: &helper.LogTestTransport{}}
-	handler := rpc.NewHttpHandler(server.URL, httpClient)
+	handler := rpc.NewHttpHandler(server.URL, http.DefaultClient)
 	loggerDecorator := helper.NewTestLoggerDecorator(handler)
 	client := rpc.NewClient(loggerDecorator)
 	ctx := context.Background()
@@ -82,7 +65,7 @@ func Test_SpeculativeExec(t *testing.T) {
 	client := rpc.NewSpeculativeClient(casper.NewRPCHandler("http://127.0.0.1:25102/rpc", http.DefaultClient))
 	result, err := client.SpeculativeExec(context.Background(), deployFixture, nil)
 	require.NoError(t, err)
-	assert.Equal(t, uint64(100000000), result.ExecutionResult.Success.Cost)
+	assert.Equal(t, uint64(100000000), result.ExecutionResult.Cost)
 }
 
 func Test_Client_RPCGetStatus_WithAuthorizationHeader(t *testing.T) {
@@ -104,5 +87,6 @@ func Test_Client_RPCGetStatus_WithAuthorizationHeader(t *testing.T) {
 
 	status, err := client.GetStatus(context.Background())
 	require.NoError(t, err)
-	assert.Equal(t, "1.0.0", status.APIVersion)
+	assert.Equal(t, "2.0.0", status.APIVersion)
+	assert.NotEmpty(t, status.LatestSwitchBlockHash)
 }

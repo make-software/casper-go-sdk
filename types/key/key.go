@@ -14,6 +14,7 @@ type PrefixName = string
 
 const (
 	PrefixNameAccount                PrefixName = "account-hash-"
+	PrefixAddressableEntity          PrefixName = "addressable-entity-"
 	PrefixNameHash                   PrefixName = "hash-"
 	PrefixNameContractPackageWasm    PrefixName = "contract-package-wasm"
 	PrefixNameContractPackage        PrefixName = "contract-package-"
@@ -32,6 +33,15 @@ const (
 	PrefixNameUnbond                 PrefixName = "unbond-"
 	PrefixNameChainspecRegistry      PrefixName = "chainspec-registry-"
 	PrefixNameChecksumRegistry       PrefixName = "checksum-registry-"
+	PrefixNameBidAddr                PrefixName = "bid-addr-"
+	PrefixNamePackage                PrefixName = "package-"
+	PrefixNameAddressableEntity      PrefixName = "entity-"
+	PrefixNameByteCode               PrefixName = "byte-code-"
+	PrefixNameMessage                PrefixName = "message-"
+	PrefixNameNamedKey               PrefixName = "named-key-"
+	PrefixNameBlockGlobal            PrefixName = "block-"
+	PrefixNameBalanceHold            PrefixName = "balance-hold-"
+	PrefixEntryPoint                 PrefixName = "entry-point-"
 )
 
 var ErrNotFoundPrefix = errors.New("prefix is not found")
@@ -54,6 +64,15 @@ const (
 	TypeIDUnbond
 	TypeIDChainspecRegistry
 	TypeIDChecksumRegistry
+	TypeIDBidAddr
+	TypeIDPackage
+	TypeIDAddressableEntity
+	TypeIDByteCode
+	TypeIDMessage
+	TypeIDNamedKey
+	TypeIDBlockGlobal
+	TypeIDBalanceHold
+	TypeIDEntryPoint
 )
 
 type TypeName = string
@@ -110,6 +129,15 @@ var keyIDbyPrefix = map[PrefixName]TypeID{
 	PrefixNameUnbond:                 TypeIDUnbond,
 	PrefixNameChainspecRegistry:      TypeIDChainspecRegistry,
 	PrefixNameChecksumRegistry:       TypeIDChecksumRegistry,
+	PrefixNameBidAddr:                TypeIDBidAddr,
+	PrefixNamePackage:                TypeIDPackage,
+	PrefixNameAddressableEntity:      TypeIDAddressableEntity,
+	PrefixNameByteCode:               TypeIDByteCode,
+	PrefixNameMessage:                TypeIDMessage,
+	PrefixNameNamedKey:               TypeIDNamedKey,
+	PrefixNameBlockGlobal:            TypeIDBlockGlobal,
+	PrefixNameBalanceHold:            TypeIDBalanceHold,
+	PrefixEntryPoint:                 TypeIDEntryPoint,
 }
 
 type Key struct {
@@ -144,6 +172,24 @@ type Key struct {
 	ChainspecRegistry *Hash
 	// A `Key` variant under which we store a registry of checksums.
 	ChecksumRegistry *Hash
+	// A `Key` variant which represent Bid Address
+	BidAddr *BidAddr
+	// A `Key` variant which represent Package Address
+	Package *Hash
+	// A `Key` variant which represent Package Address
+	AddressableEntity *EntityAddr
+	// A `Key` variant which represent ByteCode
+	ByteCode *ByteCode
+	// A `Key` variant which represent Message
+	Message *MessageAddr
+	// A `Key` variant which represent NamedKey
+	NamedKey *NamedKeyAddr
+	// A `Key` variant under which the total number of emitted messages in the last block is stored.
+	BlockGlobal *BlockGlobalAddr
+	// A `Key` variant under which a hold on a purse balance is stored.
+	BalanceHold *BalanceHoldAddr
+	// A `Key` variant under which a hold on a purse balance is stored.
+	EntryPoint *EntryPointAddr
 }
 
 func (k Key) Bytes() []byte {
@@ -178,7 +224,24 @@ func (k Key) Bytes() []byte {
 		return append([]byte{TypeIDDeployInfo}, k.Deploy.Bytes()...)
 	case TypeIDDictionary:
 		return append([]byte{TypeIDDictionary}, k.Dictionary.Bytes()...)
-
+	case TypeIDBidAddr:
+		return append([]byte{TypeIDBidAddr}, k.BidAddr.Bytes()...)
+	case TypeIDPackage:
+		return append([]byte{TypeIDPackage}, k.Package.Bytes()...)
+	case TypeIDAddressableEntity:
+		return append([]byte{TypeIDAddressableEntity}, k.AddressableEntity.Bytes()...)
+	case TypeIDByteCode:
+		return append([]byte{TypeIDByteCode}, k.ByteCode.Bytes()...)
+	case TypeIDMessage:
+		return append([]byte{TypeIDMessage}, k.Message.Bytes()...)
+	case TypeIDNamedKey:
+		return append([]byte{TypeIDNamedKey}, k.NamedKey.Bytes()...)
+	case TypeIDBlockGlobal:
+		return append([]byte{TypeIDBlockGlobal}, k.BlockGlobal.Bytes()...)
+	case TypeIDBalanceHold:
+		return append([]byte{TypeIDBalanceHold}, k.BalanceHold.Bytes()...)
+	case TypeIDEntryPoint:
+		return append([]byte{TypeIDEntryPoint}, k.EntryPoint.Bytes()...)
 	default:
 		return []byte{}
 	}
@@ -220,6 +283,24 @@ func (k Key) ToPrefixedString() string {
 		return PrefixNameChainspecRegistry + k.ChainspecRegistry.ToHex()
 	case TypeIDChecksumRegistry:
 		return PrefixNameChecksumRegistry + k.ChecksumRegistry.ToHex()
+	case TypeIDBidAddr:
+		return k.BidAddr.ToPrefixedString()
+	case TypeIDPackage:
+		return PrefixNamePackage + k.Package.ToHex()
+	case TypeIDAddressableEntity:
+		return k.AddressableEntity.ToPrefixedString()
+	case TypeIDByteCode:
+		return k.ByteCode.ToPrefixedString()
+	case TypeIDMessage:
+		return k.Message.ToPrefixedString()
+	case TypeIDNamedKey:
+		return k.NamedKey.ToPrefixedString()
+	case TypeIDBlockGlobal:
+		return k.BlockGlobal.ToPrefixedString()
+	case TypeIDBalanceHold:
+		return k.BalanceHold.ToPrefixedString()
+	case TypeIDEntryPoint:
+		return k.EntryPoint.ToPrefixedString()
 	default:
 		return ""
 	}
@@ -268,6 +349,17 @@ func findPrefixByMap(source string, prefixes map[PrefixName]TypeID) PrefixName {
 			if one == PrefixNameEraId && strings.HasPrefix(source, PrefixNameEraSummary) {
 				return PrefixNameEraSummary
 			}
+
+			// handle the special case when prefix bid- is the part of the prefix bid-addr-
+			if one == PrefixNameBid && strings.HasPrefix(source, PrefixNameBidAddr) {
+				return PrefixNameBidAddr
+			}
+
+			// handle the special case when prefix balance- is the part of the prefix bid-hold-
+			if one == PrefixNameBalance && strings.HasPrefix(source, PrefixNameBalanceHold) {
+				return PrefixNameBalanceHold
+			}
+
 			prefix = one
 			break
 		}
@@ -377,6 +469,42 @@ func createByType(source string, typeID TypeID) (result Key, err error) {
 		data, err := NewHash(strings.TrimPrefix(source, PrefixNameChecksumRegistry))
 		result.ChecksumRegistry = &data
 		return result, err
+	case TypeIDBidAddr:
+		data, err := NewBidAddr(strings.TrimPrefix(source, PrefixNameBidAddr))
+		result.BidAddr = &data
+		return result, err
+	case TypeIDPackage:
+		data, err := NewHash(strings.TrimPrefix(source, PrefixNamePackage))
+		result.Package = &data
+		return result, err
+	case TypeIDAddressableEntity:
+		data, err := NewEntityAddr(strings.TrimPrefix(source, PrefixNameAddressableEntity))
+		result.AddressableEntity = &data
+		return result, err
+	case TypeIDByteCode:
+		data, err := NewByteCode(strings.TrimPrefix(source, PrefixNameByteCode))
+		result.ByteCode = &data
+		return result, err
+	case TypeIDMessage:
+		data, err := NewMessageAddr(strings.TrimPrefix(source, PrefixNameMessage))
+		result.Message = &data
+		return result, err
+	case TypeIDNamedKey:
+		data, err := NewNamedKeyAddr(strings.TrimPrefix(source, PrefixNameNamedKey))
+		result.NamedKey = &data
+		return result, err
+	case TypeIDBlockGlobal:
+		data, err := NewBlockGlobalAddr(strings.TrimPrefix(source, PrefixNameBlockGlobal))
+		result.BlockGlobal = &data
+		return result, err
+	case TypeIDBalanceHold:
+		data, err := NewBalanceHoldAddr(strings.TrimPrefix(source, PrefixNameBalanceHold))
+		result.BalanceHold = &data
+		return result, err
+	case TypeIDEntryPoint:
+		data, err := NewEntryPointAddr(strings.TrimPrefix(source, PrefixEntryPoint))
+		result.EntryPoint = &data
+		return result, err
 	default:
 		err = errors.New("type is not found")
 	}
@@ -452,6 +580,42 @@ func NewKeyFromBuffer(buffer *bytes.Buffer) (result Key, err error) {
 	case TypeIDChecksumRegistry:
 		data, err := NewByteHashFromBuffer(buffer)
 		result.ChecksumRegistry = &data
+		return result, err
+	case TypeIDBidAddr:
+		data, err := NewBidAddrFromBuffer(buffer)
+		result.BidAddr = &data
+		return result, err
+	case TypeIDPackage:
+		data, err := NewByteHashFromBuffer(buffer)
+		result.Package = &data
+		return result, err
+	case TypeIDAddressableEntity:
+		data, err := NewEntityAddrFromBuffer(buffer)
+		result.AddressableEntity = &data
+		return result, err
+	case TypeIDByteCode:
+		data, err := NewByteCodeFromBuffer(buffer)
+		result.ByteCode = &data
+		return result, err
+	case TypeIDMessage:
+		data, err := NewMessageAddrFromBuffer(buffer)
+		result.Message = &data
+		return result, err
+	case TypeIDNamedKey:
+		data, err := NewNamedKeyAddrFromBuffer(buffer)
+		result.NamedKey = &data
+		return result, err
+	case TypeIDBlockGlobal:
+		data, err := NewBlockGlobalAddrFrom(buffer)
+		result.BlockGlobal = &data
+		return result, err
+	case TypeIDBalanceHold:
+		data, err := NewBalanceHoldAddrFromBuffer(buffer)
+		result.BalanceHold = &data
+		return result, err
+	case TypeIDEntryPoint:
+		data, err := NewEntryPointAddrFromBuffer(buffer)
+		result.EntryPoint = &data
 		return result, err
 	default:
 		return result, errors.New("type is not found")

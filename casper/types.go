@@ -10,25 +10,29 @@ type (
 	AuctionState    = types.AuctionState
 	Args            = types.Args
 	ValidatorBid    = types.ValidatorBid
-	AuctionBid      = types.AuctionBid
-	Block           = types.Block
-	BlockHeader     = types.BlockHeader
-	BlockBody       = types.BlockBody
+	Bid             = types.Bid
+	BlockV1         = types.BlockV1
+	BlockHeaderV1   = types.BlockHeaderV1
+	BlockBodyV1     = types.BlockBodyV1
+	BlockV2         = types.BlockV2
+	BlockHeaderV2   = types.BlockHeaderV2
+	BlockBodyV2     = types.BlockBodyV2
 	ContractPackage = types.ContractPackage
 	ContractVersion = types.ContractVersion
 	Contract        = types.Contract
 	Deploy          = types.Deploy
 	DeployHeader    = types.DeployHeader
 	DeployApproval  = types.Approval
-	Entrypoint      = types.EntryPoint
-	ExecutionResult = types.ExecutionResultStatus
+	EntryPointV1    = types.EntryPointV1
+	EntryPointV2    = types.EntryPointV2
+	ExecutionResult = types.ExecutionResult
 	NamedKeys       = types.NamedKeys
 	NamedKey        = types.NamedKey
 	TransformKey    = types.TransformKey
 	Transform       = types.Transform
 	Argument        = types.Argument
 	Account         = types.Account
-	Reward          = types.Reward
+	Reward          = types.EraReward
 	WriteTransfer   = types.WriteTransfer
 	UnbondingPurse  = types.UnbondingPurse
 )
@@ -39,7 +43,7 @@ type (
 )
 
 var (
-	DefaultHeader   = types.DefaultHeader
+	DefaultHeader   = types.DefaultDeployHeader
 	MakeDeploy      = types.MakeDeploy
 	StandardPayment = types.StandardPayment
 )

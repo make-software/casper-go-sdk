@@ -1,0 +1,21 @@
+{
+  "protocol_version": "2.0.0",
+  "entity_kind": {
+    "Account": "account-hash-989ca079a5e446071866331468ab949483162588d57ec13ba6bb051f1e15f8b7"
+  },
+  "package_hash": "package-54fe7327b24927d057a16c9f201dd7942800cd2eb2ddcda9f84df763416a8278",
+  "byte_code_hash": "byte-code-0000000000000000000000000000000000000000000000000000000000000000",
+  "main_purse": "uref-5cd5e20eebb6ee35f16c4d0812872a769ae135a4502934abd838086d5b270ec2-007",
+  "associated_keys": [
+    {
+      "account_hash": "account-hash-989ca079a5e446071866331468ab949483162588d57ec13ba6bb051f1e15f8b7",
+      "weight": 1
+    }
+  ],
+  "action_thresholds": {
+    "deployment": 1,
+    "upgrade_management": 1,
+    "key_management": 1
+  },
+  "message_topics": []
+}

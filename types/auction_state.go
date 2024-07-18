@@ -7,22 +7,22 @@ import (
 // AuctionState is a data structure summarizing auction contract data.
 type AuctionState struct {
 	// All bids contained within a vector.
-	Bids          []ValidatorBid  `json:"bids"`
-	BlockHeight   uint64          `json:"block_height"`
-	EraValidators []EraValidators `json:"era_validators"`
-	StateRootHash string          `json:"state_root_hash"`
+	Bids          []PublicKeyAndBid `json:"bids"`
+	BlockHeight   uint64            `json:"block_height"`
+	EraValidators []EraValidators   `json:"era_validators"`
+	StateRootHash string            `json:"state_root_hash"`
 }
 
-// ValidatorBid is an entry in a founding validator map representing a bid.
-type ValidatorBid struct {
+// PublicKeyAndBid is an entry in a founding validator map representing a bid.
+type PublicKeyAndBid struct {
 	// Validator public key
 	PublicKey keypair.PublicKey `json:"public_key"`
-	Bid       AuctionBid        `json:"bid"`
+	Bid       Bid               `json:"bid"`
 }
 
 // EraValidators contains validators and weights for an Era.
 type EraValidators struct {
-	EraID uint32 `json:"era_id"`
+	EraID uint64 `json:"era_id"`
 	// List of the validator's weight in the Era
 	ValidatorWeights []ValidatorWeightAuction `json:"validator_weights"`
 }

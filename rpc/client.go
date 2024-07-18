@@ -16,8 +16,8 @@ import (
 // They return information related to auctions, bids and validators.
 // This information is necessary for users involved with node operations and validation.
 type ClientPOS interface {
-	// GetAuctionInfoLatest returns the types.ValidatorBid and types.EraValidators from the most recent Block.
-	GetAuctionInfoLatest(ctx context.Context) (StateGetAuctionInfoResult, error)
+	// GetLatestAuctionInfo returns the types.ValidatorBid and types.EraValidators from the most recent Block.
+	GetLatestAuctionInfo(ctx context.Context) (StateGetAuctionInfoResult, error)
 	// GetAuctionInfoByHash returns the types.ValidatorBid and types.EraValidators of either a specific Block by hash
 	GetAuctionInfoByHash(ctx context.Context, blockHash string) (StateGetAuctionInfoResult, error)
 	// GetAuctionInfoByHeight returns the types.ValidatorBid and types.EraValidators of either a specific Block by height
@@ -45,14 +45,24 @@ type ClientPOS interface {
 // The response should be identical, regardless of the node queried,
 // as the information in question is objective and common to all nodes within a network.
 type ClientInformational interface {
-	// GetAccountBalance returns a purse's balance from a network.
+	// GetLatestBalance returns a purse's balance from a network.
 	// The request takes in the formatted representation of a purse URef as a parameter.
-	// If the param stateRootHash is nil, the client will make an additional RPC call to retrieve the latest stateRootHash.
-	GetAccountBalance(ctx context.Context, stateRootHash *string, purseURef string) (StateGetBalanceResult, error)
+	// The client will make an additional RPC call to retrieve the latest stateRootHash.
+	GetLatestBalance(ctx context.Context, purseURef string) (StateGetBalanceResult, error)
+	// GetBalanceByStateRootHash returns a purse's balance and state root hash from a network.
+	GetBalanceByStateRootHash(ctx context.Context, purseURef string, stateRootHash string) (StateGetBalanceResult, error)
 	// GetDeploy retrieves a Deploy from a network. It requires a deploy_hash to query the Deploy.
 	GetDeploy(ctx context.Context, hash string) (InfoGetDeployResult, error)
 	// GetDeployFinalizedApproval returns Deploy with the finalized approvals substituted.
 	GetDeployFinalizedApproval(ctx context.Context, hash string) (InfoGetDeployResult, error)
+	// GetTransactionByTransactionHash returns a Transaction from the network
+	GetTransactionByTransactionHash(ctx context.Context, transactionHash string) (InfoGetTransactionResult, error)
+	// GetTransactionByDeployHash returns a Deploy as Transaction from the network
+	GetTransactionByDeployHash(ctx context.Context, deployHash string) (InfoGetTransactionResult, error)
+	// GetTransactionFinalizedApprovalByTransactionHash return the Transaction with the finalized approvals substituted.
+	GetTransactionFinalizedApprovalByTransactionHash(ctx context.Context, transactionHash string) (InfoGetTransactionResult, error)
+	// GetTransactionFinalizedApprovalByDeployHash return the Deploy as Transaction with the finalized approvals substituted.
+	GetTransactionFinalizedApprovalByDeployHash(ctx context.Context, deployHash string) (InfoGetTransactionResult, error)
 	// GetDictionaryItem returns an item from a Dictionary.
 	// The address of a stored value is the blake2b hash of the seed URef and the byte representation of the dictionary key.
 	// If the param stateRootHash is nil, the client will make an additional RPC call to retrieve the latest stateRootHash.
@@ -65,6 +75,8 @@ type ClientInformational interface {
 	// Deprecated: use QueryGlobalStateByStateHash instead
 	GetStateItem(ctx context.Context, stateRootHash *string, key string, path []string) (StateGetItemResult, error)
 
+	// QueryLatestGlobalState allows for you to query for the latest value stored under certain keys in global state.
+	QueryLatestGlobalState(ctx context.Context, key string, path []string) (QueryGlobalStateResult, error)
 	// QueryGlobalStateByBlockHash allows for you to query for a value stored under certain keys in global state.
 	QueryGlobalStateByBlockHash(ctx context.Context, blockHash, key string, path []string) (QueryGlobalStateResult, error)
 	// QueryGlobalStateByBlockHeight allows for you to query for a value stored under certain keys in global state.
@@ -83,15 +95,22 @@ type ClientInformational interface {
 	// This is the most generic interface.
 	GetAccountInfo(ctx context.Context, blockIdentifier *ParamBlockIdentifier, accountIdentifier AccountIdentifier) (StateGetAccountInfo, error)
 
-	// GetBlockLatest returns the latest types.Block from the network.
-	GetBlockLatest(ctx context.Context) (ChainGetBlockResult, error)
+	// GetLatestEntity returns latest AddressableEntity from the network.
+	GetLatestEntity(ctx context.Context, entityIdentifier EntityIdentifier) (StateGetEntity, error)
+	// GetEntityByHash returns an AddressableEntity by block hash from the network.
+	GetEntityByBlockHash(ctx context.Context, entityIdentifier EntityIdentifier, hash string) (StateGetEntity, error)
+	// GetEntityByHeight returns an AddressableEntity by block height from the network.
+	GetEntityByBlockHeight(ctx context.Context, entityIdentifier EntityIdentifier, height uint64) (StateGetEntity, error)
+
+	// GetLatestBlock returns the latest types.Block from the network.
+	GetLatestBlock(ctx context.Context) (ChainGetBlockResult, error)
 	// GetBlockByHash returns the types.Block from the network the requested block hash.
 	GetBlockByHash(ctx context.Context, hash string) (ChainGetBlockResult, error)
 	// GetBlockByHeight returns the types.Block from the network the requested block height.
 	GetBlockByHeight(ctx context.Context, height uint64) (ChainGetBlockResult, error)
 
-	// GetBlockTransfersLatest returns all native transfers within a lasted Block from a network.
-	GetBlockTransfersLatest(ctx context.Context) (ChainGetBlockTransfersResult, error)
+	// GetLatestBlockTransfers returns all native transfers within a lasted Block from a network.
+	GetLatestBlockTransfers(ctx context.Context) (ChainGetBlockTransfersResult, error)
 	// GetBlockTransfersByHash returns all native transfers within a given Block from a network the requested block hash.
 	GetBlockTransfersByHash(ctx context.Context, blockHash string) (ChainGetBlockTransfersResult, error)
 	// GetBlockTransfersByHeight returns all native transfers within a given Block from a network the requested block height.
@@ -117,16 +136,51 @@ type ClientInformational interface {
 	// GetPeers return a list of peers connected to the node on a Casper network.
 	// The responses return information specific to the queried node, and as such, will vary.
 	GetPeers(ctx context.Context) (InfoGetPeerResult, error)
-	// QueryBalance queries for balances under a given PurseIdentifier
-	QueryBalance(ctx context.Context, identifier PurseIdentifier) (QueryBalanceResult, error)
+
+	// QueryLatestBalance queries for balances under a given PurseIdentifier
+	QueryLatestBalance(ctx context.Context, identifier PurseIdentifier) (QueryBalanceResult, error)
+	// QueryBalanceByBlockHeight query for balance information using a purse identifier and block height
+	QueryBalanceByBlockHeight(ctx context.Context, purseIdentifier PurseIdentifier, height uint64) (QueryBalanceResult, error)
+	// QueryBalanceByBlockHash query for balance information using a purse identifier and block hash
+	QueryBalanceByBlockHash(ctx context.Context, purseIdentifier PurseIdentifier, blockHash string) (QueryBalanceResult, error)
+	// QueryBalanceByStateRootHash query for full balance information using a purse identifier and state root hash
+	QueryBalanceByStateRootHash(ctx context.Context, purseIdentifier PurseIdentifier, stateRootHash string) (QueryBalanceResult, error)
+
+	// QueryLatestBalanceDetails query for full balance information using a purse identifier
+	QueryLatestBalanceDetails(ctx context.Context, purseIdentifier PurseIdentifier) (QueryBalanceDetailsResult, error)
+	// QueryBalanceDetailsByBlockHeight query for full balance information using a purse identifier and block height
+	QueryBalanceDetailsByBlockHeight(ctx context.Context, purseIdentifier PurseIdentifier, height uint64) (QueryBalanceDetailsResult, error)
+	// QueryBalanceDetailsByBlockHash query for full balance information using a purse identifier and block hash
+	QueryBalanceDetailsByBlockHash(ctx context.Context, purseIdentifier PurseIdentifier, blockHash string) (QueryBalanceDetailsResult, error)
+	// QueryBalanceDetailsByStateRootHash query for full balance information using a purse identifier and state root hash
+	QueryBalanceDetailsByStateRootHash(ctx context.Context, purseIdentifier PurseIdentifier, stateRootHash string) (QueryBalanceDetailsResult, error)
+
 	// GetChainspec returns the raw bytes of the chainspec.toml, accounts.toml and global_state.toml files as read at node startup.
 	GetChainspec(ctx context.Context) (InfoGetChainspecResult, error)
+
+	// GetLatestValidatorReward returns the latest reward for a given validator
+	GetLatestValidatorReward(ctx context.Context, validator keypair.PublicKey) (InfoGetRewardResult, error)
+	// GetValidatorRewardByEraID returns the reward for a given era and a validator
+	GetValidatorRewardByEraID(ctx context.Context, validator keypair.PublicKey, eraID uint64) (InfoGetRewardResult, error)
+	// GetValidatorRewardByBlockHash returns the reward for a given block hash and a validator
+	GetValidatorRewardByBlockHash(ctx context.Context, validator keypair.PublicKey, blockHash string) (InfoGetRewardResult, error)
+	// GetValidatorRewardByBlockHeight returns the reward for a given block height and a validator
+	GetValidatorRewardByBlockHeight(ctx context.Context, validator keypair.PublicKey, height uint64) (InfoGetRewardResult, error)
+	// GetLatestDelegatorReward returns the latest delegator reward for a given validator
+	GetLatestDelegatorReward(ctx context.Context, validator, delegator keypair.PublicKey) (InfoGetRewardResult, error)
+	// GetDelegatorRewardByEraID returns the delegator reward for a given era and a validator
+	GetDelegatorRewardByEraID(ctx context.Context, validator, delegator keypair.PublicKey, eraID uint64) (InfoGetRewardResult, error)
+	// GetDelegatorRewardByBlockHash returns the delegator reward for a given block hash and a validator
+	GetDelegatorRewardByBlockHash(ctx context.Context, validator, delegator keypair.PublicKey, blockHash string) (InfoGetRewardResult, error)
+	// GetDelegatorRewardByBlockHeight returns the delegator reward for a given block height and a validator
+	GetDelegatorRewardByBlockHeight(ctx context.Context, validator, delegator keypair.PublicKey, height uint64) (InfoGetRewardResult, error)
 }
 
-// ClientTransactional contains the description of account_put_deploy,
-// the only means by which users can send their compiled Wasm (as part of a Deploy) to a node on a Casper network.
+// ClientTransactional contains the description of account_put_deploy, account_put_transaction
+// the only means by which users can send their compiled Wasm (as part of a Deploy or TransactionV1) to a node on a Casper network.
 type ClientTransactional interface {
 	PutDeploy(ctx context.Context, deploy types.Deploy) (PutDeployResult, error)
+	PutTransactionV1(ctx context.Context, transaction types.TransactionV1) (PutTransactionResult, error)
 }
 
 // Client interface represent full RPC client that includes all possible queries.

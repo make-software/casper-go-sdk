@@ -78,7 +78,7 @@ func Test_MakeDeploy(t *testing.T) {
 	require.NoError(t, err)
 	privateKey, err := casper.NewED25519PrivateKeyFromPEMFile("../data/keys/secret_key.pem")
 	require.NoError(t, err)
-	header := types.DefaultHeader()
+	header := types.DefaultDeployHeader()
 	header.ChainName = "casper-net-1"
 	header.Account = privateKey.PublicKey()
 	dateTime, err := time.Parse("2006-01-02T15:04:05.999Z", "2023-05-08T21:33:00.268Z")
@@ -100,7 +100,7 @@ func Test_MakeDeploy(t *testing.T) {
 
 	deploy, err := types.MakeDeploy(header, payment, session)
 	require.NoError(t, err)
-	err = deploy.SignDeploy(privateKey)
+	err = deploy.Sign(privateKey)
 	require.NoError(t, err)
 	actual, err := json.Marshal(deploy)
 	require.NoError(t, err)

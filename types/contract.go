@@ -9,7 +9,7 @@ type Contract struct {
 	// Key to the storage of the ContractWasm object
 	ContractWasmHash key.ContractHash `json:"contract_wasm_hash"`
 	// List of entry points or methods in the contract.
-	EntryPoints []EntryPoint `json:"entry_points"`
+	EntryPoints []EntryPointV1 `json:"entry_points"`
 	// NamedKeys are a collection of String-Key pairs used to easily identify some data on the network.
 	NamedKeys NamedKeys `json:"named_keys"`
 	// The protocol version when the contract was deployed

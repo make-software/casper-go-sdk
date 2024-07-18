@@ -32,6 +32,24 @@ type ExecutableDeployItem struct {
 	Transfer                      *TransferDeployItem            `json:"Transfer,omitempty"`
 }
 
+func (e ExecutableDeployItem) Args() *Args {
+	switch {
+	case e.ModuleBytes != nil:
+		return e.ModuleBytes.Args
+	case e.StoredContractByHash != nil:
+		return e.StoredContractByHash.Args
+	case e.StoredContractByName != nil:
+		return e.StoredContractByName.Args
+	case e.StoredVersionedContractByHash != nil:
+		return e.StoredVersionedContractByHash.Args
+	case e.StoredVersionedContractByName != nil:
+		return e.StoredVersionedContractByName.Args
+	case e.Transfer != nil:
+		return &e.Transfer.Args
+	}
+	return nil
+}
+
 func (e ExecutableDeployItem) Bytes() ([]byte, error) {
 	if e.ModuleBytes != nil {
 		bytes, err := e.ModuleBytes.Bytes()
@@ -81,7 +99,10 @@ type ModuleBytes struct {
 }
 
 func (m ModuleBytes) Bytes() ([]byte, error) {
-	bytes, _ := hex.DecodeString(m.ModuleBytes)
+	bytes, err := hex.DecodeString(m.ModuleBytes)
+	if err != nil {
+		return nil, err
+	}
 	res := clvalue.NewCLUInt32(uint32(len(bytes))).Bytes()
 	res = append(res, clvalue.NewCLByteArray(bytes).Bytes()...)
 	argBytes, err := m.Args.Bytes()

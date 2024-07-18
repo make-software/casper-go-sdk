@@ -53,7 +53,7 @@ func PrivateKeyToPem(priv *secp256k1.PrivateKey) ([]byte, error) {
 		Version:       1,
 		PrivateKey:    key.D.FillBytes(privateKey),
 		NamedCurveOID: oid,
-		PublicKey:     asn1.BitString{Bytes: elliptic.Marshal(key.Curve, key.X, key.Y)},
+		PublicKey:     asn1.BitString{Bytes: elliptic.Marshal(key.Curve, key.X, key.Y)}, //nolint
 	})
 	if err != nil {
 		return nil, fmt.Errorf("marshalling EC private key: %s", err)

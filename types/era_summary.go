@@ -7,7 +7,7 @@ type EraSummary struct {
 	// The block hash
 	BlockHash key.Hash `json:"block_hash"`
 	// The Era Id
-	EraID uint32 `json:"era_id"`
+	EraID uint64 `json:"era_id"`
 	// The StoredValue containing era information.
 	StoredValue StoredValue `json:"stored_value"`
 	// Hex-encoded hash of the state root.

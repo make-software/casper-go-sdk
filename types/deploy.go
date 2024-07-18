@@ -1,6 +1,7 @@
 package types
 
 import (
+	"errors"
 	"time"
 
 	"golang.org/x/crypto/blake2b"
@@ -9,6 +10,10 @@ import (
 	"github.com/make-software/casper-go-sdk/types/clvalue/cltype"
 	"github.com/make-software/casper-go-sdk/types/key"
 	"github.com/make-software/casper-go-sdk/types/keypair"
+)
+
+var (
+	ErrInvalidDeployHash = errors.New("invalid deploy hash")
 )
 
 // Deploy is an item containing a smart contract along with the requester's signature(s).
@@ -45,7 +50,7 @@ type DeployHeader struct {
 	TTL Duration `json:"ttl"`
 }
 
-func DefaultHeader() DeployHeader {
+func DefaultDeployHeader() DeployHeader {
 	return DeployHeader{
 		Dependencies: []key.Hash{},
 		GasPrice:     1,
@@ -71,33 +76,33 @@ func (d DeployHeader) Bytes() []byte {
 	return result
 }
 
-func (d *Deploy) ValidateDeploy() (bool, error) {
+func (d *Deploy) Validate() error {
 	paymentBytes, err := d.Payment.Bytes()
 	if err != nil {
-		return false, err
+		return err
 	}
 	sessionBytes, err := d.Session.Bytes()
 	if err != nil {
-		return false, err
+		return err
 	}
 	if d.Header.BodyHash != blake2b.Sum256(append(paymentBytes, sessionBytes...)) {
-		return false, nil
+		return ErrInvalidBodyHash
 	}
 
 	if d.Hash != blake2b.Sum256(d.Header.Bytes()) {
-		return false, nil
+		return ErrInvalidDeployHash
 	}
 
 	for _, one := range d.Approvals {
 		if one.Signer.VerifySignature(d.Hash.Bytes(), one.Signature) != nil {
-			return false, nil
+			return ErrInvalidApprovalSignature
 		}
 	}
 
-	return true, nil
+	return nil
 }
 
-func (d *Deploy) SignDeploy(keys keypair.PrivateKey) error {
+func (d *Deploy) Sign(keys keypair.PrivateKey) error {
 	signature, err := keys.Sign(d.Hash.Bytes())
 	if err != nil {
 		return err

@@ -1,0 +1,132 @@
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "result": {
+    "api_version": "2.0.0",
+    "block_with_signatures": {
+      "block": {
+        "Version2": {
+          "hash": "57443064e4e46c6afcb7e60c855cc10ad212752b3c9d72ba87bdf34154573767",
+          "header": {
+            "parent_hash": "6872358e1386c84df1c9f581493bfd54e223708226dc8613038f30f92329042b",
+            "state_root_hash": "a71fab87e491ba8164d0a097c9bdf5a20b7469f077cdbff88656fc2e9bf43a87",
+            "body_hash": "98121b93ca97b2f08a63dbb6f06f218ad6d1890b4505d23d7c3ccfb8193b8eed",
+            "random_bit": true,
+            "accumulated_seed": "884d89271e215edcbe55300049e8f55587b4176d991a64a64ddf713ee7e88392",
+            "era_end": {
+              "equivocators": [],
+              "inactive_validators": [],
+              "next_era_validator_weights": [
+                {
+                  "validator": "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c",
+                  "weight": "100000000000000"
+                },
+                {
+                  "validator": "0126d4637eb0c0769274f03a696df1112383fa621c9f73f57af4c5c0fbadafa8cf",
+                  "weight": "100000000000000"
+                },
+                {
+                  "validator": "0140afe8f752e5ff100e0189c080bc207e8805b3e5e82f792ec608de2f11f39f6c",
+                  "weight": "100000000000000"
+                },
+                {
+                  "validator": "017536433a73f7562526f3e9fcb8d720428ae2d28788a9909f3c6f637a9d848a4b",
+                  "weight": "100000000000000"
+                }
+              ],
+              "rewards": {
+                "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c": [
+                  "45900966383797",
+                  "39983420194"
+                ],
+                "0126d4637eb0c0769274f03a696df1112383fa621c9f73f57af4c5c0fbadafa8cf": [
+                  "45421165341458",
+                  "39983420194"
+                ],
+                "0140afe8f752e5ff100e0189c080bc207e8805b3e5e82f792ec608de2f11f39f6c": [
+                  "41542773582548",
+                  "79966840389"
+                ],
+                "017536433a73f7562526f3e9fcb8d720428ae2d28788a9909f3c6f637a9d848a4b": [
+                  "43262060650931",
+                  "39983420194"
+                ]
+              },
+              "next_era_gas_price": 1
+            },
+            "timestamp": "2024-06-03T14:55:10.573Z",
+            "era_id": 1,
+            "height": 441,
+            "protocol_version": "2.0.0",
+            "proposer": "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c",
+            "current_gas_price": 1,
+            "last_switch_block_hash": "f0fcb110952a07d85c4e815774c3a29b41c06907db87e8694f79cc34b2238699"
+          },
+          "body": {
+            "transactions": {
+              "0": [
+                {
+                  "Version1": "1414141414141414141414141414141414141414141414141414141414141414"
+                }
+              ],
+              "1": [
+                {
+                  "Version1": "1515151515151515151515151515151515151515151515151515151515151515"
+                }
+              ],
+              "2": [
+                {
+                  "Version1": "1616161616161616161616161616161616161616161616161616161616161616"
+                }
+              ],
+              "3": [
+                {
+                  "Version1": "1717171717171717171717171717171717171717171717171717171717171717"
+                }
+              ],
+              "4": [
+                {
+                  "Version1": "1717171717171717171717171717171717171717171717171717171717171717"
+                }
+              ],
+              "5": [
+                {
+                  "Version1": "1717171717171717171717171717171717171717171717171717171717171717"
+                }
+              ]
+            },
+            "rewarded_signatures": [
+              [
+                240
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ]
+            ]
+          }
+        }
+      },
+      "proofs": [
+        {
+          "public_key": "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c",
+          "signature": "01b113256c16a31a5fadd9c4314bb626cdd0e7944f100c37fdb012623173e917b97a62a28c0e9c9f4137a4bc5c437b32b3922f3a9db1abd44f7eeb3b36f064e305"
+        },
+        {
+          "public_key": "0126d4637eb0c0769274f03a696df1112383fa621c9f73f57af4c5c0fbadafa8cf",
+          "signature": "01cb6a8d6ea436229e0a379217c34fbc0537327e36f5a3fcc73679950173a08630cd4ee1faafcb8e53f7c38b3bf184eab31ffffac8422b537cfbbe8ad6318daa01"
+        },
+        {
+          "public_key": "0140afe8f752e5ff100e0189c080bc207e8805b3e5e82f792ec608de2f11f39f6c",
+          "signature": "017e9eab36d3ac41c66e6843c1ea3b380f9d6d6b58c2b5b7baa7301c728170dc0a7365de2ca0c3f21111f0d4fb02cab9e7e754af1056d7e8eab0209a3fd9e07407"
+        },
+        {
+          "public_key": "017536433a73f7562526f3e9fcb8d720428ae2d28788a9909f3c6f637a9d848a4b",
+          "signature": "014a68596f906ba6ee9d4dcf684a09db997718d384af923a9607035c6f9f85728651c3283c8e9c01455cdfdb86537a619e5b83c27c340ad5247cd63fce18aa7e03"
+        }
+      ]
+    }
+  }
+}
