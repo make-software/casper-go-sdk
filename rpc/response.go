@@ -151,8 +151,6 @@ type infoGetDeployResultV1Compatible struct {
 	ExecutionResults []types.DeployExecutionResult `json:"execution_results"`
 	BlockHash        *key.Hash                     `json:"block_hash,omitempty"`
 	BlockHeight      *uint64                       `json:"block_height,omitempty"`
-
-	_rawJSON json.RawMessage
 }
 
 func (v *InfoGetDeployResult) GetRawJSON() json.RawMessage {
@@ -175,6 +173,7 @@ func (v *InfoGetDeployResult) UnmarshalJSON(data []byte) error {
 				ApiVersion:       v1Compatible.ApiVersion,
 				Deploy:           v1Compatible.Deploy,
 				ExecutionResults: types.DeployExecutionInfoFromV1(v1Compatible.ExecutionResults, v1Compatible.BlockHeight),
+				rawJSON:          data,
 			}
 			return nil
 		}
@@ -215,8 +214,6 @@ type infoGetTransactionResultV1Compatible struct {
 	ExecutionResults []types.DeployExecutionResult `json:"execution_results"`
 	BlockHash        *key.Hash                     `json:"block_hash,omitempty"`
 	BlockHeight      *uint64                       `json:"block_height,omitempty"`
-
-	_rawJSON json.RawMessage
 }
 
 func newInfoGetTransactionResultFromV1Compatible(result infoGetTransactionResultV1Compatible, rawJSON json.RawMessage) (InfoGetTransactionResult, error) {

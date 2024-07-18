@@ -139,8 +139,9 @@ func NewTransactionFromDeploy(deploy Deploy) Transaction {
 			parsed, err := argument.Parsed()
 			if err == nil {
 				var amount string
-				json.Unmarshal(parsed, &amount)
-				paymentAmount, _ = strconv.ParseUint(amount, 10, 64)
+				if err := json.Unmarshal(parsed, &amount); err == nil {
+					paymentAmount, _ = strconv.ParseUint(amount, 10, 64)
+				}
 			}
 		}
 	}

@@ -48,7 +48,12 @@ func NewMessageAddr(source string) (MessageAddr, error) {
 		return MessageAddr{}, err
 	}
 
-	messageAddr.EntityAddr, err = NewEntityAddr(strings.TrimPrefix(source, PrefixNameAddressableEntity))
+	entityAddr, err := NewEntityAddr(strings.TrimPrefix(source, PrefixNameAddressableEntity))
+	if err != nil {
+		return MessageAddr{}, err
+	}
+
+	messageAddr.EntityAddr = entityAddr
 	return messageAddr, nil
 }
 

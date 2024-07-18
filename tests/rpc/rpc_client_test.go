@@ -62,7 +62,8 @@ func Test_DefaultClient_GetDeploy_Example(t *testing.T) {
 			server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 				fixture, err := os.ReadFile(tt.filePath)
 				require.NoError(t, err)
-				rw.Write(fixture)
+				_, err = rw.Write(fixture)
+				require.NoError(t, err)
 			}))
 			defer server.Close()
 

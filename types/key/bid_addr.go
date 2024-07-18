@@ -6,6 +6,8 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+
+	"github.com/make-software/casper-go-sdk/types/clvalue/cltype"
 )
 
 var (
@@ -203,10 +205,9 @@ func (h BidAddr) Bytes() []byte {
 		res := make([]byte, 0, CreditAddrLen)
 		res = append(res, byte(Credit))
 		res = append(res, h.Credit.Validator.Bytes()...)
-
-		buf := new(bytes.Buffer)
-		binary.Write(buf, binary.LittleEndian, h.Credit.EraId)
-		return append(res, buf.Bytes()...)
+		data := make([]byte, cltype.Int64ByteSize)
+		binary.LittleEndian.PutUint64(data, h.Credit.EraId)
+		return append(res, data...)
 	default:
 		panic("Unexpected BidAddr type")
 	}
