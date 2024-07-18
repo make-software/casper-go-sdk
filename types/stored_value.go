@@ -11,7 +11,7 @@ type StoredValue struct {
 	Contract          *Contract            `json:"Contract,omitempty"`
 	ContractWASM      *json.RawMessage     `json:"ContractWASM,omitempty"`
 	ContractPackage   *ContractPackage     `json:"ContractPackage,omitempty"`
-	Transfer          *TransferV1          `json:"LegacyTransfer,omitempty"`
+	LegacyTransfer    *TransferV1          `json:"LegacyTransfer,omitempty"`
 	DeployInfo        *DeployInfo          `json:"DeployInfo,omitempty"`
 	EraInfo           *EraInfo             `json:"EraInfo,omitempty"`
 	Bid               *Bid                 `json:"Bid,omitempty"`

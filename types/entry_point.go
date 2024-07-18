@@ -12,6 +12,15 @@ const (
 	EntryPointTypeContract EntryPointType = "Contract"
 )
 
+// EntryPointPayment An enum specifying who pays for the invocation and execution of the entrypoint.
+type EntryPointPayment string
+
+const (
+	EntryPointPaymentCaller  EntryPointPayment = "Caller"
+	EntryPointTypeSelfOnly   EntryPointPayment = "SelfOnly"
+	EntryPointTypeSelfOnward EntryPointPayment = "SelfOnward"
+)
+
 // EntryPointValue The encapsulated representation of entrypoints.
 type EntryPointValue struct {
 	V1CasperVm *EntryPointV1 `json:"V1CasperVm"`
@@ -36,6 +45,8 @@ type EntryPointV1 struct {
 	Args []EntryPointArg `json:"args"`
 	// Context of method execution
 	EntryPointType EntryPointType `json:"entry_point_type"`
+	// Context of method execution
+	EntryPointPayment EntryPointPayment `json:"entry_point_payment"`
 	// Name of the entry point
 	Name string `json:"name"`
 	// Returned type
