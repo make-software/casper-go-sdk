@@ -106,7 +106,6 @@ func NewBalanceHoldAddrFromBuffer(buf *bytes.Buffer) (BalanceHoldAddr, error) {
 	default:
 		panic("Unexpected BalanceHoldAddr type")
 	}
-	return BalanceHoldAddr{}, nil
 }
 
 func (h *BalanceHoldAddr) UnmarshalJSON(data []byte) error {
