@@ -4,9 +4,9 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/make-software/casper-go-sdk/types"
-	"github.com/make-software/casper-go-sdk/types/key"
-	"github.com/make-software/casper-go-sdk/types/keypair"
+	"github.com/make-software/casper-go-sdk/v2/types"
+	"github.com/make-software/casper-go-sdk/v2/types/key"
+	"github.com/make-software/casper-go-sdk/v2/types/keypair"
 )
 
 var ApiVersion = "2.0"
@@ -16,7 +16,7 @@ type CtxRequestID string
 const RequestIDKey CtxRequestID = "RequestID"
 
 func WithRequestId(ctx context.Context, requestID int) context.Context {
-	return context.WithValue(ctx, RequestIDKey, strconv.Itoa(requestID))
+	return context.WithValue(ctx, RequestIDKey, requestID)
 }
 
 func GetReqIdCtx(ctx context.Context) string {

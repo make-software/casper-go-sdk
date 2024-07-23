@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/make-software/casper-go-sdk/types/key"
-	"github.com/make-software/casper-go-sdk/types/keypair"
+	"github.com/make-software/casper-go-sdk/v2/types/key"
+	"github.com/make-software/casper-go-sdk/v2/types/keypair"
 )
 
 // Block represents a common object returned as result from RPC response unifying BlockV2 and BlockV1

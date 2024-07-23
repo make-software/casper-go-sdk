@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/make-software/casper-go-sdk/types/clvalue/cltype"
+	"github.com/make-software/casper-go-sdk/v2/types/clvalue/cltype"
 )
 
 type UInt8 uint8

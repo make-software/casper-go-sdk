@@ -6,9 +6,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/make-software/casper-go-sdk/types"
-	"github.com/make-software/casper-go-sdk/types/key"
-	"github.com/make-software/casper-go-sdk/types/keypair"
+	"github.com/make-software/casper-go-sdk/v2/types"
+	"github.com/make-software/casper-go-sdk/v2/types/key"
+	"github.com/make-software/casper-go-sdk/v2/types/keypair"
 )
 
 var ErrResultUnmarshal = errors.New("failed to unmarshal rpc result")

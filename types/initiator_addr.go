@@ -1,8 +1,8 @@
 package types
 
 import (
-	"github.com/make-software/casper-go-sdk/types/key"
-	"github.com/make-software/casper-go-sdk/types/keypair"
+	"github.com/make-software/casper-go-sdk/v2/types/key"
+	"github.com/make-software/casper-go-sdk/v2/types/keypair"
 )
 
 // InitiatorAddr the address of the initiator of a TransactionV1.

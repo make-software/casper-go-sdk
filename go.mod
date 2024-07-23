@@ -1,4 +1,4 @@
-module github.com/make-software/casper-go-sdk
+module github.com/make-software/casper-go-sdk/v2
 
 go 1.21
 

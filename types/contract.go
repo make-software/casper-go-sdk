@@ -1,6 +1,6 @@
 package types
 
-import "github.com/make-software/casper-go-sdk/types/key"
+import "github.com/make-software/casper-go-sdk/v2/types/key"
 
 // Contract contains information, entry points and named keys belonging to a Contract
 type Contract struct {

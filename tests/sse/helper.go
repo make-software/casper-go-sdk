@@ -5,7 +5,7 @@ import (
 	"errors"
 	"log"
 
-	"github.com/make-software/casper-go-sdk/sse"
+	"github.com/make-software/casper-go-sdk/v2/sse"
 )
 
 type TestHandler struct{}

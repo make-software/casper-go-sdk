@@ -1,7 +1,7 @@
 package casper
 
 import (
-	"github.com/make-software/casper-go-sdk/rpc"
+	"github.com/make-software/casper-go-sdk/v2/rpc"
 )
 
 type (

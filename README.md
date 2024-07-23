@@ -26,7 +26,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/make-software/casper-go-sdk/casper"
+	"github.com/make-software/casper-go-sdk/v2/casper"
 )
 
 func main() {
@@ -54,7 +54,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/make-software/casper-go-sdk/sse"
+	"github.com/make-software/casper-go-sdk/v2/sse"
 )
 
 func main() {
@@ -95,8 +95,8 @@ import (
 	"math/big"
 	"net/http"
 
-	"github.com/make-software/casper-go-sdk/casper"
-	"github.com/make-software/casper-go-sdk/types/clvalue"
+	"github.com/make-software/casper-go-sdk/v2/casper"
+	"github.com/make-software/casper-go-sdk/v2/types/clvalue"
 )
 
 func main() {

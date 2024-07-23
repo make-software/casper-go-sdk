@@ -4,8 +4,8 @@ import (
 	"errors"
 	"os"
 
-	"github.com/make-software/casper-go-sdk/types/keypair/ed25519"
-	"github.com/make-software/casper-go-sdk/types/keypair/secp256k1"
+	"github.com/make-software/casper-go-sdk/v2/types/keypair/ed25519"
+	"github.com/make-software/casper-go-sdk/v2/types/keypair/secp256k1"
 )
 
 type PrivateKeyInternal interface {

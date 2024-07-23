@@ -1,6 +1,6 @@
 package types
 
-import "github.com/make-software/casper-go-sdk/types/key"
+import "github.com/make-software/casper-go-sdk/v2/types/key"
 
 // EraSummary is a summary of an era
 type EraSummary struct {

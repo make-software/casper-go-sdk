@@ -8,8 +8,8 @@ package rpc
 import (
 	"context"
 
-	"github.com/make-software/casper-go-sdk/types"
-	"github.com/make-software/casper-go-sdk/types/keypair"
+	"github.com/make-software/casper-go-sdk/v2/types"
+	"github.com/make-software/casper-go-sdk/v2/types/keypair"
 )
 
 // ClientPOS contains methods pertain to the Proof-of-Stake functionality of a Casper network.

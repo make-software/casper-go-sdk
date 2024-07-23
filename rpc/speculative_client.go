@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/make-software/casper-go-sdk/types"
+	"github.com/make-software/casper-go-sdk/v2/types"
 )
 
 type SpeculativeClient struct {
