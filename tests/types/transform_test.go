@@ -26,6 +26,143 @@ func Test_Transform_AddUInt512(t *testing.T) {
 	assert.EqualValues(t, 100000000, val.Value().Int64())
 }
 
+func Test_Transform_CLValue(t *testing.T) {
+	fixture, err := os.ReadFile("../data/transform/cl_value_v1.json")
+	require.NoError(t, err)
+	var transform types.TransformKey
+
+	err = json.Unmarshal(fixture, &transform)
+	require.NoError(t, err)
+
+	val, err := transform.Transform.ParseAsWriteCLValue()
+	require.NoError(t, err)
+	clValue, err := val.Value()
+	require.NoError(t, err)
+
+	assert.True(t, transform.Transform.IsWriteCLValue())
+	assert.EqualValues(t, "9998335129799990000", clValue.UI512.Value().String())
+}
+
+func Test_Transform_CLValue_V2(t *testing.T) {
+	fixture, err := os.ReadFile("../data/transform/cl_value_v2.json")
+	require.NoError(t, err)
+	var transform types.Transform
+
+	err = json.Unmarshal(fixture, &transform)
+	require.NoError(t, err)
+
+	val, err := transform.Kind.ParseAsWriteCLValue()
+	require.NoError(t, err)
+	clValue, err := val.Value()
+	require.NoError(t, err)
+
+	assert.True(t, transform.Kind.IsWriteCLValue())
+	assert.EqualValues(t, "9998335129799990000", clValue.UI512.Value().String())
+}
+
+func Test_Transform_Package(t *testing.T) {
+	fixture, err := os.ReadFile("../data/transform/package.json")
+	require.NoError(t, err)
+	var transform types.Transform
+
+	err = json.Unmarshal(fixture, &transform)
+	require.NoError(t, err)
+
+	packageRes, err := transform.Kind.ParseAsPackage()
+	require.NoError(t, err)
+
+	assert.True(t, transform.Kind.IsWritePackage())
+	assert.NotEmpty(t, packageRes.LockStatus)
+	assert.NotEmpty(t, packageRes.Versions)
+}
+
+func Test_Transform_AddressableEntity(t *testing.T) {
+	fixture, err := os.ReadFile("../data/transform/addressable_entity.json")
+	require.NoError(t, err)
+	var transform types.Transform
+
+	err = json.Unmarshal(fixture, &transform)
+	require.NoError(t, err)
+
+	addressableEntity, err := transform.Kind.ParseAsAddressableEntity()
+	require.NoError(t, err)
+
+	assert.True(t, transform.Kind.IsWriteAddressableEntity())
+	assert.NotEmpty(t, addressableEntity.EntityKind)
+	assert.True(t, addressableEntity.EntityKind.Account != nil)
+	assert.NotEmpty(t, addressableEntity.MainPurse)
+	assert.NotEmpty(t, addressableEntity.AssociatedKeys)
+	assert.NotEmpty(t, addressableEntity.PackageHash)
+}
+
+func Test_Transform_BidKind(t *testing.T) {
+	fixture, err := os.ReadFile("../data/transform/bid_kind.json")
+	require.NoError(t, err)
+	var transform types.Transform
+
+	err = json.Unmarshal(fixture, &transform)
+	require.NoError(t, err)
+
+	bidKind, err := transform.Kind.ParseAsBidKind()
+	require.NoError(t, err)
+
+	assert.True(t, transform.Kind.IsWriteBidKind())
+	assert.True(t, bidKind.Credit != nil)
+	assert.Equal(t, bidKind.Credit.Amount.String(), "100000000")
+}
+
+func Test_Transform_NamedKey(t *testing.T) {
+	fixture, err := os.ReadFile("../data/transform/named_key.json")
+	require.NoError(t, err)
+	var transform types.Transform
+
+	err = json.Unmarshal(fixture, &transform)
+	require.NoError(t, err)
+
+	namedKey, err := transform.Kind.ParseAsNamedKey()
+	require.NoError(t, err)
+
+	nameCLValue, err := namedKey.Name.Value()
+	require.NoError(t, err)
+
+	nameKeyCLValue, err := namedKey.NamedKey.Value()
+	require.NoError(t, err)
+
+	assert.True(t, transform.Kind.IsWriteNamedKey())
+	assert.Equal(t, nameCLValue.StringVal.String(), "my-key-name")
+	assert.True(t, nameKeyCLValue.Key != nil)
+}
+
+func Test_Transform_Message(t *testing.T) {
+	fixture, err := os.ReadFile("../data/transform/message.json")
+	require.NoError(t, err)
+	var transform types.Transform
+
+	err = json.Unmarshal(fixture, &transform)
+	require.NoError(t, err)
+
+	message, err := transform.Kind.ParseAsMessage()
+	require.NoError(t, err)
+
+	assert.True(t, transform.Kind.IsWriteMessage())
+	assert.Equal(t, string(*message), "message-checksum-4fa4135e65967751f007064a7cbf6c17d27f7189cc97b7b0f484445c72ecbd6f")
+}
+
+func Test_Transform_MessageTopic(t *testing.T) {
+	fixture, err := os.ReadFile("../data/transform/message_topic.json")
+	require.NoError(t, err)
+	var transform types.Transform
+
+	err = json.Unmarshal(fixture, &transform)
+	require.NoError(t, err)
+
+	messageTopic, err := transform.Kind.ParseAsMessageTopic()
+	require.NoError(t, err)
+
+	assert.True(t, transform.Kind.IsWriteMessageTopic())
+	assert.Equal(t, messageTopic.MessageCount, uint32(1))
+}
+
 func Test_Transform_WriteDeployInfo(t *testing.T) {
 	fixute, err := os.ReadFile("../data/transform/WriteDeployInfo.json")
 	require.NoError(t, err)

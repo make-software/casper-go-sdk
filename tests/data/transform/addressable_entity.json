@@ -1,0 +1,28 @@
+{
+  "key": "entity-account-a3a8e3087123170fccbaef0cd14dae6127dbb4a959172836ba2d105dcc8179d8",
+  "kind": {
+    "Write": {
+      "AddressableEntity": {
+        "protocol_version": "2.0.1",
+        "entity_kind": {
+          "Account": "account-hash-a3a8e3087123170fccbaef0cd14dae6127dbb4a959172836ba2d105dcc8179d8"
+        },
+        "package_hash": "package-0527a12331d6ad8236946760e9d21081454372e808672068467c74f6afef6d87",
+        "byte_code_hash": "byte-code-0000000000000000000000000000000000000000000000000000000000000000",
+        "main_purse": "uref-9ad469145198891e38290940b28cde71aeefd7bd5a482139bbc6b23316819587-007",
+        "associated_keys": [
+          {
+            "account_hash": "account-hash-a3a8e3087123170fccbaef0cd14dae6127dbb4a959172836ba2d105dcc8179d8",
+            "weight": 1
+          }
+        ],
+        "action_thresholds": {
+          "deployment": 1,
+          "upgrade_management": 1,
+          "key_management": 1
+        },
+        "message_topics": []
+      }
+    }
+  }
+}

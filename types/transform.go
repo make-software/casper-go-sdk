@@ -10,30 +10,22 @@ import (
 	"github.com/make-software/casper-go-sdk/v2/types/key"
 )
 
-type TransformKind json.RawMessage
-
-// UnmarshalJSON sets *m to a copy of data.
-func (t *TransformKind) UnmarshalJSON(data []byte) error {
-	if t == nil {
-		return errors.New("json.RawMessage: UnmarshalJSON on nil pointer")
-	}
-	*t = append((*t)[0:0], data...)
-	return nil
-}
-
-// TransformV2 is an enumeration of transformation types used in the execution of a `deploy` for V2 version.
-type TransformV2 struct {
+// Transform is an enumeration of transformation types used in the execution of a `transaction` for V2 version.
+type Transform struct {
 	Key  key.Key       `json:"key"`
 	Kind TransformKind `json:"kind"`
 }
 
 // TransformKey is an enumeration of transformation types used in the execution of a `deploy`.
 type TransformKey struct {
-	Key       key.Key   `json:"key"`
-	Transform Transform `json:"transform"`
+	Key       key.Key       `json:"key"`
+	Transform TransformKind `json:"transform"`
 }
 
-type Transform json.RawMessage
+type NamedKeyKind struct {
+	NamedKey Argument `json:"named_key"`
+	Name     Argument `json:"name"`
+}
 
 type WriteTransfer struct {
 	ID         *uint64          `json:"id"`
@@ -46,16 +38,10 @@ type WriteTransfer struct {
 	Gas        uint             `json:"gas,string"`
 }
 
-// MarshalJSON returns m as the JSON encoding of m.
-func (t Transform) MarshalJSON() ([]byte, error) {
-	if t == nil {
-		return []byte("null"), nil
-	}
-	return t, nil
-}
+type TransformKind json.RawMessage
 
 // UnmarshalJSON sets *m to a copy of data.
-func (t *Transform) UnmarshalJSON(data []byte) error {
+func (t *TransformKind) UnmarshalJSON(data []byte) error {
 	if t == nil {
 		return errors.New("json.RawMessage: UnmarshalJSON on nil pointer")
 	}
@@ -63,11 +49,19 @@ func (t *Transform) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (t *Transform) IsWriteTransfer() bool {
+// MarshalJSON returns m as the JSON encoding of m.
+func (t TransformKind) MarshalJSON() ([]byte, error) {
+	if t == nil {
+		return []byte("null"), nil
+	}
+	return t, nil
+}
+
+func (t *TransformKind) IsWriteTransfer() bool {
 	return strings.Contains(string(*t), "WriteTransfer")
 }
 
-func (t *Transform) ParseAsWriteTransfer() (*WriteTransfer, error) {
+func (t *TransformKind) ParseAsWriteTransfer() (*WriteTransfer, error) {
 	type RawWriteTransferTransform struct {
 		WriteTransfer `json:"WriteTransfer"`
 	}
@@ -80,11 +74,11 @@ func (t *Transform) ParseAsWriteTransfer() (*WriteTransfer, error) {
 	return &jsonRes.WriteTransfer, nil
 }
 
-func (t *Transform) IsWriteAccount() bool {
+func (t *TransformKind) IsWriteAccount() bool {
 	return strings.Contains(string(*t), "WriteAccount")
 }
 
-func (t *Transform) ParseAsWriteAccount() (key.AccountHash, error) {
+func (t *TransformKind) ParseAsWriteAccount() (key.AccountHash, error) {
 	type RawWriteAccountTransform struct {
 		WriteAccount key.AccountHash `json:"WriteAccount"`
 	}
@@ -97,35 +91,59 @@ func (t *Transform) ParseAsWriteAccount() (key.AccountHash, error) {
 	return jsonRes.WriteAccount, nil
 }
 
-func (t *Transform) IsWriteContract() bool {
+func (t *TransformKind) IsWriteContract() bool {
 	return bytes.Equal(*t, []byte("\"WriteContract\""))
 }
 
-func (t *Transform) IsWriteWithdraw() bool {
+func (t *TransformKind) IsWriteWithdraw() bool {
 	return strings.Contains(string(*t), "WriteWithdraw")
 }
 
-func (t *Transform) IsWriteUnbonding() bool {
+func (t *TransformKind) IsWriteUnbonding() bool {
 	return strings.Contains(string(*t), "WriteUnbonding")
 }
 
-func (t *Transform) IsWriteCLValue() bool {
-	return bytes.Contains(*t, []byte("\"WriteCLValue\""))
+func (t *TransformKind) IsWriteCLValue() bool {
+	return bytes.Contains(*t, []byte("CLValue"))
 }
 
-func (t *Transform) IsWriteBid() bool {
+func (t *TransformKind) IsWritePackage() bool {
+	return bytes.Contains(*t, []byte("\"Package\""))
+}
+
+func (t *TransformKind) IsWriteAddressableEntity() bool {
+	return bytes.Contains(*t, []byte("\"AddressableEntity\""))
+}
+
+func (t *TransformKind) IsWriteBidKind() bool {
+	return bytes.Contains(*t, []byte("\"BidKind\""))
+}
+
+func (t *TransformKind) IsWriteNamedKey() bool {
+	return bytes.Contains(*t, []byte("\"NamedKey\""))
+}
+
+func (t *TransformKind) IsWriteMessage() bool {
+	return bytes.Contains(*t, []byte("\"Message\""))
+}
+
+func (t *TransformKind) IsWriteMessageTopic() bool {
+	return bytes.Contains(*t, []byte("\"MessageTopic\""))
+}
+
+func (t *TransformKind) IsWriteBid() bool {
 	return strings.Contains(string(*t), "WriteBid")
 }
 
-func (t *Transform) IsAddUint512() bool {
+func (t *TransformKind) IsAddUint512() bool {
 	return strings.Contains(string(*t), "AddUInt512")
 }
 
-func (t *Transform) IsWriteDeployInfo() bool {
+func (t *TransformKind) IsWriteDeployInfo() bool {
 	return strings.Contains(string(*t), "WriteDeployInfo")
 }
 
-func (t *Transform) ParseAsWriteWithdraws() ([]UnbondingPurse, error) {
+func (t *TransformKind) ParseAsWriteWithdraws() ([]UnbondingPurse, error) {
 	type RawWriteWithdrawals struct {
 		UnbondingPurses []UnbondingPurse `json:"WriteWithdraw"`
 	}
@@ -138,7 +156,121 @@ func (t *Transform) ParseAsWriteWithdraws() ([]UnbondingPurse, error) {
 	return jsonRes.UnbondingPurses, nil
 }
 
-func (t *Transform) ParseAsWriteUnbondings() ([]UnbondingPurse, error) {
+func (t *TransformKind) ParseAsAddressableEntity() (*AddressableEntity, error) {
+	type rawData struct {
+		Write *struct {
+			AddressableEntity *AddressableEntity `json:"AddressableEntity"`
+		} `json:"Write"`
+	}
+
+	jsonRes := rawData{}
+	if err := json.Unmarshal(*t, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	if jsonRes.Write == nil || jsonRes.Write.AddressableEntity == nil {
+		return nil, errors.New("error: empty response")
+	}
+
+	return jsonRes.Write.AddressableEntity, nil
+}
+
+func (t *TransformKind) ParseAsPackage() (*Package, error) {
+	type rawData struct {
+		Write *struct {
+			Package *Package `json:"Package"`
+		} `json:"Write"`
+	}
+
+	jsonRes := rawData{}
+	if err := json.Unmarshal(*t, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	if jsonRes.Write == nil || jsonRes.Write.Package == nil {
+		return nil, errors.New("error: empty response")
+	}
+
+	return jsonRes.Write.Package, nil
+}
+
+func (t *TransformKind) ParseAsBidKind() (*BidKind, error) {
+	type rawData struct {
+		Write *struct {
+			BidKind *BidKind `json:"BidKind"`
+		} `json:"Write"`
+	}
+
+	jsonRes := rawData{}
+	if err := json.Unmarshal(*t, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	if jsonRes.Write == nil || jsonRes.Write.BidKind == nil {
+		return nil, errors.New("error: empty response")
+	}
+
+	return jsonRes.Write.BidKind, nil
+}
+
+func (t *TransformKind) ParseAsNamedKey() (*NamedKeyKind, error) {
+	type rawData struct {
+		Write *struct {
+			NamedKey *NamedKeyKind `json:"NamedKey"`
+		} `json:"Write"`
+	}
+
+	jsonRes := rawData{}
+	if err := json.Unmarshal(*t, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	if jsonRes.Write == nil || jsonRes.Write.NamedKey == nil {
+		return nil, errors.New("error: empty response")
+	}
+
+	return jsonRes.Write.NamedKey, nil
+}
+
+func (t *TransformKind) ParseAsMessage() (*MessageChecksum, error) {
+	type rawData struct {
+		Write *struct {
+			Message *MessageChecksum `json:"Message"`
+		} `json:"Write"`
+	}
+
+	jsonRes := rawData{}
+	if err := json.Unmarshal(*t, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	if jsonRes.Write == nil || jsonRes.Write.Message == nil {
+		return nil, errors.New("error: empty response")
+	}
+
+	return jsonRes.Write.Message, nil
+}
+
+func (t *TransformKind) ParseAsMessageTopic() (*MessageTopicSummary, error) {
+	type rawData struct {
+		Write *struct {
+			MessageTopic *MessageTopicSummary `json:"MessageTopic"`
+		} `json:"Write"`
+	}
+
+	jsonRes := rawData{}
+	if err := json.Unmarshal(*t, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	if jsonRes.Write == nil || jsonRes.Write.MessageTopic == nil {
+		return nil, errors.New("error: empty response")
+	}
+
+	return jsonRes.Write.MessageTopic, nil
+}
+
+func (t *TransformKind) ParseAsWriteUnbondings() ([]UnbondingPurse, error) {
 	type RawWriteUnbondings struct {
 		UnbondingPurses []UnbondingPurse `json:"WriteUnbonding"`
 	}
@@ -151,20 +283,7 @@ func (t *Transform) ParseAsWriteUnbondings() ([]UnbondingPurse, error) {
 	return jsonRes.UnbondingPurses, nil
 }
 
-func (t *Transform) ParseAsWriteCLValue() (*Argument, error) {
-	type RawWriteCLValue struct {
-		WriteCLValue Argument `json:"WriteCLValue"`
-	}
-
-	jsonRes := RawWriteCLValue{}
-	if err := json.Unmarshal(*t, &jsonRes); err != nil {
-		return nil, err
-	}
-
-	return &jsonRes.WriteCLValue, nil
-}
-
-func (t *Transform) ParseAsUInt512() (*clvalue.UInt512, error) {
+func (t *TransformKind) ParseAsUInt512() (*clvalue.UInt512, error) {
 	type RawUInt512 struct {
 		UInt512 clvalue.UInt512 `json:"AddUInt512"`
 	}
@@ -177,7 +296,7 @@ func (t *Transform) ParseAsUInt512() (*clvalue.UInt512, error) {
 	return &jsonRes.UInt512, nil
 }
 
-func (t *Transform) ParseAsWriteDeployInfo() (*DeployInfo, error) {
+func (t *TransformKind) ParseAsWriteDeployInfo() (*DeployInfo, error) {
 	type RawWriteDeployInfo struct {
 		WriteDeployInfo DeployInfo `json:"WriteDeployInfo"`
 	}
@@ -188,4 +307,30 @@ func (t *Transform) ParseAsWriteDeployInfo() (*DeployInfo, error) {
 	}
 
 	return &jsonRes.WriteDeployInfo, nil
+}
+
+func (t *TransformKind) ParseAsWriteCLValue() (*Argument, error) {
+	type RawWriteCLValue struct {
+		WriteCLValue *Argument `json:"WriteCLValue"`
+	}
+
+	jsonRes := RawWriteCLValue{}
+	err := json.Unmarshal(*t, &jsonRes)
+	if err == nil && jsonRes.WriteCLValue != nil {
+		return jsonRes.WriteCLValue, nil
+	}
+
+	type RawWriteCLValueV2 struct {
+		Write *struct {
+			CLValue *Argument `json:"CLValue"`
+		} `json:"Write"`
+	}
+
+	jsonResV2 := RawWriteCLValueV2{}
+	err = json.Unmarshal(*t, &jsonResV2)
+	if err == nil && jsonResV2.Write != nil {
+		return jsonResV2.Write.CLValue, nil
+	}
+
+	return nil, err
 }
