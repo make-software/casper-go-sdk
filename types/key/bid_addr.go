@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/make-software/casper-go-sdk/types/clvalue/cltype"
+	"github.com/make-software/casper-go-sdk/v2/types/clvalue/cltype"
 )
 
 var (

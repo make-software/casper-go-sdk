@@ -7,9 +7,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/make-software/casper-go-sdk/types/clvalue"
-	"github.com/make-software/casper-go-sdk/types/clvalue/cltype"
-	"github.com/make-software/casper-go-sdk/types/keypair"
+	"github.com/make-software/casper-go-sdk/v2/types/clvalue"
+	"github.com/make-software/casper-go-sdk/v2/types/clvalue/cltype"
+	"github.com/make-software/casper-go-sdk/v2/types/keypair"
 )
 
 func Test_PublicKeyHash_ToString(t *testing.T) {

@@ -1,6 +1,6 @@
 package types
 
-import "github.com/make-software/casper-go-sdk/types/key"
+import "github.com/make-software/casper-go-sdk/v2/types/key"
 
 // ReservationKind Container for bytes recording location, type and data for a gas reservation
 type ReservationKind struct {

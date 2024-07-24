@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/make-software/casper-go-sdk/rpc"
+	"github.com/make-software/casper-go-sdk/v2/rpc"
 )
 
 type clientRetriesDecorator struct {

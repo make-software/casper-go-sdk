@@ -1,7 +1,7 @@
 package types
 
 import (
-	"github.com/make-software/casper-go-sdk/types/key"
+	"github.com/make-software/casper-go-sdk/v2/types/key"
 )
 
 // Account representing a user's account, stored in a global state.

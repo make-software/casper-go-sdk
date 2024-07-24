@@ -1,6 +1,6 @@
 package types
 
-import "github.com/make-software/casper-go-sdk/types/key"
+import "github.com/make-software/casper-go-sdk/v2/types/key"
 
 // MessageTopicSummary Summary of a message topic that will be stored in global state.
 type MessageTopicSummary struct {

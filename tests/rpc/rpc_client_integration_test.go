@@ -11,8 +11,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/make-software/casper-go-sdk/casper"
-	"github.com/make-software/casper-go-sdk/rpc"
+	"github.com/make-software/casper-go-sdk/v2/casper"
+	"github.com/make-software/casper-go-sdk/v2/rpc"
 )
 
 func Test_QueryBalance_byPublicKey(t *testing.T) {

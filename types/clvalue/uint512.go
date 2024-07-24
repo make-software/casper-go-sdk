@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/make-software/casper-go-sdk/types/clvalue/cltype"
+	"github.com/make-software/casper-go-sdk/v2/types/clvalue/cltype"
 )
 
 type UInt512 struct {

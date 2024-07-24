@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/make-software/casper-go-sdk/types/clvalue"
+	"github.com/make-software/casper-go-sdk/v2/types/clvalue"
 )
 
 const (

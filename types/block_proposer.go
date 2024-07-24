@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/make-software/casper-go-sdk/types/keypair"
+	"github.com/make-software/casper-go-sdk/v2/types/keypair"
 )
 
 type Proposer struct {

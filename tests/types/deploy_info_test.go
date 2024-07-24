@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/make-software/casper-go-sdk/types"
+	"github.com/make-software/casper-go-sdk/v2/types"
 )
 
 func Test_DeployInfo_MarshalUnmarshal_ShouldReturnSameResult(t *testing.T) {

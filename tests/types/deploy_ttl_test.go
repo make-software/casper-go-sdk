@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/make-software/casper-go-sdk/types"
+	"github.com/make-software/casper-go-sdk/v2/types"
 )
 
 func Test_DurationUnmarshal_withSpace_shouldBeParsed(t *testing.T) {

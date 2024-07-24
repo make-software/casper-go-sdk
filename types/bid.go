@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/make-software/casper-go-sdk/types/clvalue"
-	"github.com/make-software/casper-go-sdk/types/key"
-	"github.com/make-software/casper-go-sdk/types/keypair"
+	"github.com/make-software/casper-go-sdk/v2/types/clvalue"
+	"github.com/make-software/casper-go-sdk/v2/types/key"
+	"github.com/make-software/casper-go-sdk/v2/types/keypair"
 )
 
 // ValidatorBid is an entry in the validator map.

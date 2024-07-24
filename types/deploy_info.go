@@ -1,6 +1,6 @@
 package types
 
-import "github.com/make-software/casper-go-sdk/types/key"
+import "github.com/make-software/casper-go-sdk/v2/types/key"
 
 // DeployInfo provides information relating to the given Deploy.
 type DeployInfo struct {
