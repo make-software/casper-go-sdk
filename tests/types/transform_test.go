@@ -68,7 +68,7 @@ func Test_Transform_Package(t *testing.T) {
 	err = json.Unmarshal(fixture, &transform)
 	require.NoError(t, err)
 
-	packageRes, err := transform.Kind.ParseAsPackage()
+	packageRes, err := transform.Kind.ParseAsWritePackage()
 	require.NoError(t, err)
 
 	assert.True(t, transform.Kind.IsWritePackage())
@@ -84,7 +84,7 @@ func Test_Transform_AddressableEntity(t *testing.T) {
 	err = json.Unmarshal(fixture, &transform)
 	require.NoError(t, err)
 
-	addressableEntity, err := transform.Kind.ParseAsAddressableEntity()
+	addressableEntity, err := transform.Kind.ParseAsWriteAddressableEntity()
 	require.NoError(t, err)
 
 	assert.True(t, transform.Kind.IsWriteAddressableEntity())
@@ -103,7 +103,7 @@ func Test_Transform_BidKind(t *testing.T) {
 	err = json.Unmarshal(fixture, &transform)
 	require.NoError(t, err)
 
-	bidKind, err := transform.Kind.ParseAsBidKind()
+	bidKind, err := transform.Kind.ParseAsWriteBidKind()
 	require.NoError(t, err)
 
 	assert.True(t, transform.Kind.IsWriteBidKind())
@@ -119,7 +119,7 @@ func Test_Transform_NamedKey(t *testing.T) {
 	err = json.Unmarshal(fixture, &transform)
 	require.NoError(t, err)
 
-	namedKey, err := transform.Kind.ParseAsNamedKey()
+	namedKey, err := transform.Kind.ParseAsWriteNamedKey()
 	require.NoError(t, err)
 
 	nameCLValue, err := namedKey.Name.Value()
@@ -141,7 +141,7 @@ func Test_Transform_Message(t *testing.T) {
 	err = json.Unmarshal(fixture, &transform)
 	require.NoError(t, err)
 
-	message, err := transform.Kind.ParseAsMessage()
+	message, err := transform.Kind.ParseAsWriteMessage()
 	require.NoError(t, err)
 
 	assert.True(t, transform.Kind.IsWriteMessage())
@@ -156,7 +156,7 @@ func Test_Transform_MessageTopic(t *testing.T) {
 	err = json.Unmarshal(fixture, &transform)
 	require.NoError(t, err)
 
-	messageTopic, err := transform.Kind.ParseAsMessageTopic()
+	messageTopic, err := transform.Kind.ParseAsWriteMessageTopic()
 	require.NoError(t, err)
 
 	assert.True(t, transform.Kind.IsWriteMessageTopic())

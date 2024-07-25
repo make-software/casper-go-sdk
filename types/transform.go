@@ -156,7 +156,7 @@ func (t *TransformKind) ParseAsWriteWithdraws() ([]UnbondingPurse, error) {
 	return jsonRes.UnbondingPurses, nil
 }
 
-func (t *TransformKind) ParseAsAddressableEntity() (*AddressableEntity, error) {
+func (t *TransformKind) ParseAsWriteAddressableEntity() (*AddressableEntity, error) {
 	type rawData struct {
 		Write *struct {
 			AddressableEntity *AddressableEntity `json:"AddressableEntity"`
@@ -175,7 +175,7 @@ func (t *TransformKind) ParseAsAddressableEntity() (*AddressableEntity, error) {
 	return jsonRes.Write.AddressableEntity, nil
 }
 
-func (t *TransformKind) ParseAsPackage() (*Package, error) {
+func (t *TransformKind) ParseAsWritePackage() (*Package, error) {
 	type rawData struct {
 		Write *struct {
 			Package *Package `json:"Package"`
@@ -194,7 +194,7 @@ func (t *TransformKind) ParseAsPackage() (*Package, error) {
 	return jsonRes.Write.Package, nil
 }
 
-func (t *TransformKind) ParseAsBidKind() (*BidKind, error) {
+func (t *TransformKind) ParseAsWriteBidKind() (*BidKind, error) {
 	type rawData struct {
 		Write *struct {
 			BidKind *BidKind `json:"BidKind"`
@@ -213,7 +213,7 @@ func (t *TransformKind) ParseAsBidKind() (*BidKind, error) {
 	return jsonRes.Write.BidKind, nil
 }
 
-func (t *TransformKind) ParseAsNamedKey() (*NamedKeyKind, error) {
+func (t *TransformKind) ParseAsWriteNamedKey() (*NamedKeyKind, error) {
 	type rawData struct {
 		Write *struct {
 			NamedKey *NamedKeyKind `json:"NamedKey"`
@@ -232,7 +232,7 @@ func (t *TransformKind) ParseAsNamedKey() (*NamedKeyKind, error) {
 	return jsonRes.Write.NamedKey, nil
 }
 
-func (t *TransformKind) ParseAsMessage() (*MessageChecksum, error) {
+func (t *TransformKind) ParseAsWriteMessage() (*MessageChecksum, error) {
 	type rawData struct {
 		Write *struct {
 			Message *MessageChecksum `json:"Message"`
@@ -251,7 +251,7 @@ func (t *TransformKind) ParseAsMessage() (*MessageChecksum, error) {
 	return jsonRes.Write.Message, nil
 }
 
-func (t *TransformKind) ParseAsMessageTopic() (*MessageTopicSummary, error) {
+func (t *TransformKind) ParseAsWriteMessageTopic() (*MessageTopicSummary, error) {
 	type rawData struct {
 		Write *struct {
 			MessageTopic *MessageTopicSummary `json:"MessageTopic"`
