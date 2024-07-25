@@ -41,7 +41,7 @@ type ExecutionResult struct {
 	Payment      json.RawMessage `json:"payment"`
 	Transfers    []Transfer      `json:"transfers"`
 	SizeEstimate uint64          `json:"size_estimate"`
-	Effects      []TransformV2   `json:"effects"`
+	Effects      []Transform     `json:"effects"`
 
 	originExecutionResultV1 *ExecutionResultV1
 	originExecutionResultV2 *ExecutionResultV2
@@ -89,10 +89,10 @@ func (v *ExecutionResult) UnmarshalJSON(data []byte) error {
 }
 
 func NewExecutionResultFromV1(v1 ExecutionResultV1) ExecutionResult {
-	transforms := make([]TransformV2, 0)
+	transforms := make([]Transform, 0)
 	if v1.Success != nil {
 		for _, transform := range v1.Success.Effect.Transforms {
-			transforms = append(transforms, TransformV2{
+			transforms = append(transforms, Transform{
 				Key:  transform.Key,
 				Kind: TransformKind(transform.Transform),
 			})
@@ -143,7 +143,7 @@ func NewExecutionResultFromV1(v1 ExecutionResultV1) ExecutionResult {
 
 	if v1.Failure != nil {
 		for _, transform := range v1.Failure.Effect.Transforms {
-			transforms = append(transforms, TransformV2{
+			transforms = append(transforms, Transform{
 				Key: transform.Key,
 				// TODO: we should convert old Transform to new format
 				Kind: TransformKind(transform.Transform),
@@ -169,7 +169,7 @@ type ExecutionResultV2 struct {
 	Payment      json.RawMessage `json:"payment"`
 	Transfers    []Transfer      `json:"transfers"`
 	SizeEstimate uint64          `json:"size_estimate"`
-	Effects      []TransformV2   `json:"effects"`
+	Effects      []Transform     `json:"effects"`
 }
 
 type ExecutionResultV1 struct {
@@ -217,7 +217,7 @@ type ExecutionResultStatusData struct {
 }
 
 // Effects A log of all transforms produced during execution, used only in 2.0+ Network
-type Effects []TransformV2
+type Effects []Transform
 
 type Effect struct {
 	Operations []Operation    `json:"operations"`

@@ -37,9 +37,9 @@ type (
 	NamedKey            = types.NamedKey
 	TransformKey        = types.TransformKey
 	Transform           = types.Transform
-	TransformV2         = types.TransformV2
 	Argument            = types.Argument
 	Account             = types.Account
+	PublicKeyAndBid     = types.PublicKeyAndBid
 	Reward              = types.EraReward
 	WriteTransfer       = types.WriteTransfer
 	UnbondingPurse      = types.UnbondingPurse

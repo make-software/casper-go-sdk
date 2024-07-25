@@ -1,0 +1,21 @@
+{
+  "key": "package-0527a12331d6ad8236946760e9d21081454372e808672068467c74f6afef6d87",
+  "kind": {
+    "Write": {
+      "Package": {
+        "versions": [
+          {
+            "entity_version_key": {
+              "protocol_version_major": 2,
+              "entity_version": 1
+            },
+            "addressable_entity_hash": "addressable-entity-a3a8e3087123170fccbaef0cd14dae6127dbb4a959172836ba2d105dcc8179d8"
+          }
+        ],
+        "disabled_versions": [],
+        "groups": [],
+        "lock_status": "Locked"
+      }
+    }
+  }
+}

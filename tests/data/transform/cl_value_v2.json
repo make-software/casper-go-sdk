@@ -1,0 +1,12 @@
+{
+  "key": "balance-86b4925adbefbfa5cbecc2994010e1291ac87a197c98c7b751ffbb860ea2a7ed",
+  "kind": {
+    "Write": {
+      "CLValue": {
+        "cl_type": "U512",
+        "bytes": "08f09a09bdd338c18a",
+        "parsed": "9998335129799990000"
+      }
+    }
+  }
+}

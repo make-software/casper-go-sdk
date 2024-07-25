@@ -1,0 +1,14 @@
+{
+  "key": "bid-addr-04da3cd8cc4c8f34e7731583e67ddc211ff9b5c3f2c52640582415c2cce9315b2aea00000000000000",
+  "kind": {
+    "Write": {
+      "BidKind": {
+        "Credit": {
+          "validator_public_key": "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c",
+          "era_id": 234,
+          "amount": "100000000"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "key": "named-key-entity-account-2eebf033107ad08de5e776ef98a0222452a13bb310c9070bae50c5b05a35c27b-dde6f264c89fe385a5b07c26d77284d6fddabe79653c5ca25cec39a6363e6ec7",
+  "kind": {
+    "Write": {
+      "NamedKey": {
+        "named_key": {
+          "cl_type": "Key",
+          "bytes": "023100736f594c5c112e8e2f15c1f758ac37209864959d68eac14fa67645f0d29a07",
+          "parsed": "uref-3100736f594c5c112e8e2f15c1f758ac37209864959d68eac14fa67645f0d29a-007"
+        },
+        "name": {
+          "cl_type": "String",
+          "bytes": "0b0000006d792d6b65792d6e616d65",
+          "parsed": "my-key-name"
+        }
+      }
+    }
+  }
+}
