@@ -398,6 +398,8 @@ func (b InfoGetValidatorChangesResult) GetRawJSON() json.RawMessage {
 type InfoGetStatusResult struct {
 	// The RPC API version.
 	APIVersion string `json:"api_version"`
+	// The protocol version running in the node
+	ProtocolVersion string `json:"protocol_version"`
 	// The compiled node version.
 	BuildVersion string `json:"build_version"`
 	// The chainspec name, used to identify the currently connected network.

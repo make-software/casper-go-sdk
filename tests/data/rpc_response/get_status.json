@@ -3,6 +3,7 @@
   "id": "1",
   "result": {
     "api_version": "2.0.0",
+    "protocol_version": "5.4.3",
     "peers": [
       {
         "node_id": "tls:4cca..587b",
