@@ -1,0 +1,14 @@
+{
+  "bonding_purse": "uref-b3c03358245a0d9514064b6d0c3dd90023d29a0fe137507d430a26990f5ce8e3-007",
+  "staked_amount": "900000000000",
+  "delegation_rate": 10,
+  "delegators": [
+    {
+      "public_key": "02038f1f65c0297281a9eb5c83a525121715a8c71f1cdddabe70ae795dcd31b1ba92",
+      "staked_amount": "555000000000",
+      "bonding_purse": "uref-41059a3aa5c5759c7f5e3c826cb47e0b21257ac57ee63a4c00dc305133e55d64-007",
+      "delegatee": "01d829cbfb66b2b11ef8d8feb6d3f2155789fc22f407bb57f89b05f6ba4b9ae070"
+    }
+  ],
+  "inactive": false
+}

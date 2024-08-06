@@ -1,0 +1,20 @@
+{
+  "validator_public_key": "01197f6b23e16c8532c6abc838facd5ea789be0c76b2920334039bfa8b3d368d61",
+  "bonding_purse": "uref-fafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafa-007",
+  "staked_amount": "900000000000",
+  "delegation_rate": 0,
+  "vesting_schedule": null,
+  "delegators": [
+    {
+      "delegator_public_key": "014508a07aa941707f3eb2db94c8897a80b2c1197476b6de213ac273df7d86c4ff",
+      "delegator": {
+        "delegator_public_key": "01d829cbfb66b2b11ef8d8feb6d3f2155789fc22f407bb57f89b05f6ba4b9ae070",
+        "staked_amount": "10",
+        "bonding_purse": "uref-fbfbfbfbfbfbfbfbfbfbfbfbfbfbfbfbfbfbfbfbfbfbfbfbfbfbfbfbfbfbfbfb-007",
+        "validator_public_key": "01197f6b23e16c8532c6abc838facd5ea789be0c76b2920334039bfa8b3d368d61",
+        "vesting_schedule": null
+      }
+    }
+  ],
+  "inactive": false
+}

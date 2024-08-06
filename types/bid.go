@@ -54,11 +54,12 @@ func (d *Delegators) UnmarshalJSON(data []byte) error {
 	}
 
 	publicKeyAndDelegators := make([]struct {
-		DelegatorPublicKey keypair.PublicKey `json:"delegator_public_key"`
-		Delegator          Delegator         `json:"delegator"`
+		DelegatorPublicKey *keypair.PublicKey `json:"delegator_public_key"`
+		Delegator          Delegator          `json:"delegator"`
 	}, 0)
 
-	if err := json.Unmarshal(data, &publicKeyAndDelegators); err == nil && len(publicKeyAndDelegators) > 0 {
+	err := json.Unmarshal(data, &publicKeyAndDelegators)
+	if err == nil && len(publicKeyAndDelegators) > 0 && publicKeyAndDelegators[0].DelegatorPublicKey != nil {
 		delegators := make(Delegators, 0, len(publicKeyAndDelegators))
 		for _, item := range publicKeyAndDelegators {
 			delegators = append(delegators, item.Delegator)
@@ -68,9 +69,14 @@ func (d *Delegators) UnmarshalJSON(data []byte) error {
 		return nil
 	}
 
-	delegators := make([]Delegator, 0)
-	if err := json.Unmarshal(data, &publicKeyAndDelegators); err != nil {
+	delegatorsV1 := make([]DelegatorV1, 0)
+	if err := json.Unmarshal(data, &delegatorsV1); err != nil {
 		return err
+	}
+
+	delegators := make(Delegators, 0, len(delegatorsV1))
+	for _, item := range delegatorsV1 {
+		delegators = append(delegators, NewDelegatorFromDelegatorV1(item))
 	}
 
 	*d = delegators
@@ -89,6 +95,30 @@ type Delegator struct {
 	ValidatorPublicKey keypair.PublicKey `json:"validator_public_key"`
 	// Vesting schedule for a genesis validator. `None` if non-genesis validator.
 	VestingSchedule *VestingSchedule `json:"vesting_schedule"`
+}
+
+// DelegatorV1 of version 1 which is associated with the given validator.
+type DelegatorV1 struct {
+	// The purse that was used for delegating.
+	BondingPurse key.URef `json:"bonding_purse"`
+	// Amount of Casper token (in motes) delegated
+	StakedAmount clvalue.UInt512 `json:"staked_amount"`
+	// Public Key of the delegator
+	Delegatee keypair.PublicKey `json:"delegatee"`
+	// Public key of the validator
+	ValidatorPublicKey keypair.PublicKey `json:"validator_public_key"`
+	// Vesting schedule for a genesis validator. `None` if non-genesis validator.
+	VestingSchedule *VestingSchedule `json:"vesting_schedule"`
+}
+
+func NewDelegatorFromDelegatorV1(v1 DelegatorV1) Delegator {
+	return Delegator{
+		BondingPurse:       v1.BondingPurse,
+		StakedAmount:       v1.StakedAmount,
+		DelegatorPublicKey: v1.Delegatee,
+		ValidatorPublicKey: v1.ValidatorPublicKey,
+		VestingSchedule:    v1.VestingSchedule,
+	}
 }
 
 // Credit is a bridge record pointing to a new `ValidatorBid` after the public key was changed.
