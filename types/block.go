@@ -15,7 +15,7 @@ type Block struct {
 	StateRootHash       key.Hash                        `json:"state_root_hash"`
 	LastSwitchBlockHash key.Hash                        `json:"last_switch_block_hash"`
 	ParentHash          key.Hash                        `json:"parent_hash"`
-	EraID               uint32                          `json:"era_id"`
+	EraID               uint64                          `json:"era_id"`
 	Timestamp           Timestamp                       `json:"timestamp"`
 	AccumulatedSeed     *key.Hash                       `json:"accumulated_seed,omitempty"`
 	RandomBit           bool                            `json:"random_bit"`
@@ -143,7 +143,7 @@ type BlockHeaderWrapper struct {
 type BlockHeader struct {
 	AccumulatedSeed *key.Hash `json:"accumulated_seed,omitempty"`
 	BodyHash        key.Hash  `json:"body_hash"`
-	EraID           uint32    `json:"era_id"`
+	EraID           uint64    `json:"era_id"`
 	CurrentGasPrice uint8     `json:"current_gas_price"`
 	Height          uint64    `json:"height"`
 	ParentHash      key.Hash  `json:"parent_hash"`
@@ -206,7 +206,7 @@ func NewBlockHeaderFromV2(header BlockHeaderV2) BlockHeader {
 type BlockHeaderV1 struct {
 	AccumulatedSeed *key.Hash `json:"accumulated_seed,omitempty"`
 	BodyHash        key.Hash  `json:"body_hash"`
-	EraID           uint32    `json:"era_id"`
+	EraID           uint64    `json:"era_id"`
 	Height          uint64    `json:"height"`
 	ParentHash      key.Hash  `json:"parent_hash"`
 	ProtocolVersion string    `json:"protocol_version,omitempty"`
@@ -275,7 +275,7 @@ type BlockBodyV2 struct {
 type BlockHeaderV2 struct {
 	AccumulatedSeed     *key.Hash `json:"accumulated_seed,omitempty"`
 	BodyHash            key.Hash  `json:"body_hash"`
-	EraID               uint32    `json:"era_id"`
+	EraID               uint64    `json:"era_id"`
 	CurrentGasPrice     uint8     `json:"current_gas_price"`
 	Height              uint64    `json:"height"`
 	ParentHash          key.Hash  `json:"parent_hash"`

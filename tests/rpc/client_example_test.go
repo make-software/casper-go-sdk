@@ -88,5 +88,6 @@ func Test_Client_RPCGetStatus_WithAuthorizationHeader(t *testing.T) {
 	status, err := client.GetStatus(context.Background())
 	require.NoError(t, err)
 	assert.Equal(t, "2.0.0", status.APIVersion)
+	assert.Equal(t, "5.4.3", status.ProtocolVersion)
 	assert.NotEmpty(t, status.LatestSwitchBlockHash)
 }
