@@ -94,12 +94,16 @@ func NewExecutionResultFromV1(v1 ExecutionResultV1) ExecutionResult {
 		for _, transform := range v1.Success.Effect.Transforms {
 			transforms = append(transforms, Transform{
 				Key:  transform.Key,
-				Kind: TransformKind(transform.Transform),
+				Kind: transform.Transform,
 			})
 		}
 
 		transfers := make([]Transfer, 0)
 		for _, transform := range v1.Success.Effect.Transforms {
+			if !transform.Transform.IsWriteTransfer() {
+				continue
+			}
+
 			writeTransfer, err := transform.Transform.ParseAsWriteTransfer()
 			if err != nil {
 				continue

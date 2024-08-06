@@ -63,7 +63,7 @@ func (t *TransformKind) IsWriteTransfer() bool {
 
 func (t *TransformKind) ParseAsWriteTransfer() (*WriteTransfer, error) {
 	type RawWriteTransferTransform struct {
-		WriteTransfer `json:"WriteTransfer"`
+		WriteTransfer *WriteTransfer `json:"WriteTransfer"`
 	}
 
 	jsonRes := RawWriteTransferTransform{}
@@ -71,7 +71,11 @@ func (t *TransformKind) ParseAsWriteTransfer() (*WriteTransfer, error) {
 		return nil, err
 	}
 
-	return &jsonRes.WriteTransfer, nil
+	if jsonRes.WriteTransfer == nil {
+		return nil, errors.New("error: empty response")
+	}
+
+	return jsonRes.WriteTransfer, nil
 }
 
 func (t *TransformKind) IsWriteAccount() bool {
@@ -298,7 +302,7 @@ func (t *TransformKind) ParseAsUInt512() (*clvalue.UInt512, error) {
 
 func (t *TransformKind) ParseAsWriteDeployInfo() (*DeployInfo, error) {
 	type RawWriteDeployInfo struct {
-		WriteDeployInfo DeployInfo `json:"WriteDeployInfo"`
+		WriteDeployInfo *DeployInfo `json:"WriteDeployInfo"`
 	}
 
 	jsonRes := RawWriteDeployInfo{}
@@ -306,7 +310,11 @@ func (t *TransformKind) ParseAsWriteDeployInfo() (*DeployInfo, error) {
 		return nil, err
 	}
 
-	return &jsonRes.WriteDeployInfo, nil
+	if jsonRes.WriteDeployInfo == nil {
+		return nil, errors.New("error: empty response")
+	}
+
+	return jsonRes.WriteDeployInfo, nil
 }
 
 func (t *TransformKind) ParseAsWriteCLValue() (*Argument, error) {
