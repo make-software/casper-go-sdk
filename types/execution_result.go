@@ -89,16 +89,10 @@ func (v *ExecutionResult) UnmarshalJSON(data []byte) error {
 }
 
 func NewExecutionResultFromV1(v1 ExecutionResultV1) ExecutionResult {
-	transforms := make([]Transform, 0)
-	if v1.Success != nil {
-		for _, transform := range v1.Success.Effect.Transforms {
-			transforms = append(transforms, Transform{
-				Key:  transform.Key,
-				Kind: transform.Transform,
-			})
-		}
+	transforms := make([]Transform, 0, len(v1.Success.Effect.Transforms))
+	transfers := make([]Transfer, 0)
 
-		transfers := make([]Transfer, 0)
+	if v1.Success != nil {
 		for _, transform := range v1.Success.Effect.Transforms {
 			if !transform.Transform.IsWriteTransfer() {
 				continue
@@ -122,7 +116,7 @@ func NewExecutionResultFromV1(v1 ExecutionResultV1) ExecutionResult {
 			transfers = append(transfers, Transfer{
 				Amount: writeTransfer.Amount,
 				TransactionHash: TransactionHash{
-					TransactionV1: transform.Key.Hash,
+					TransactionV1: &transform.Key.Transfer.Hash,
 				},
 				From: InitiatorAddr{
 					AccountHash: &writeTransfer.From,
@@ -132,6 +126,11 @@ func NewExecutionResultFromV1(v1 ExecutionResultV1) ExecutionResult {
 				Source: writeTransfer.Source,
 				Target: writeTransfer.Target,
 				To:     toHash,
+			})
+
+			transforms = append(transforms, Transform{
+				Key:  transform.Key,
+				Kind: transform.Transform,
 			})
 		}
 		return ExecutionResult{
