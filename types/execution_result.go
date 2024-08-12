@@ -94,6 +94,11 @@ func NewExecutionResultFromV1(v1 ExecutionResultV1) ExecutionResult {
 
 	if v1.Success != nil {
 		for _, transform := range v1.Success.Effect.Transforms {
+			transforms = append(transforms, Transform{
+				Key:  transform.Key,
+				Kind: transform.Transform,
+			})
+
 			if !transform.Transform.IsWriteTransfer() {
 				continue
 			}
@@ -126,11 +131,6 @@ func NewExecutionResultFromV1(v1 ExecutionResultV1) ExecutionResult {
 				Source: writeTransfer.Source,
 				Target: writeTransfer.Target,
 				To:     toHash,
-			})
-
-			transforms = append(transforms, Transform{
-				Key:  transform.Key,
-				Kind: transform.Transform,
 			})
 		}
 		return ExecutionResult{
