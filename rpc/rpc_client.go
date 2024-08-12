@@ -400,54 +400,36 @@ func (c *client) GetEraInfoByBlockHash(ctx context.Context, hash string) (ChainG
 }
 
 func (c *client) GetLatestBlock(ctx context.Context) (ChainGetBlockResult, error) {
-	var result chainGetBlockResultV1Compatible
+	var result ChainGetBlockResult
 
-	resp, err := c.processRequest(ctx, MethodGetBlock, nil, &result)
+	_, err := c.processRequest(ctx, MethodGetBlock, nil, &result)
 	if err != nil {
 		return ChainGetBlockResult{}, err
 	}
 
-	blockResult, err := newChainGetBlockResultFromV1Compatible(result, resp.Result)
-	if err != nil {
-		return ChainGetBlockResult{}, err
-	}
-
-	blockResult.rawJSON = resp.Result
-	return blockResult, nil
+	return result, nil
 }
 
 func (c *client) GetBlockByHash(ctx context.Context, hash string) (ChainGetBlockResult, error) {
-	var result chainGetBlockResultV1Compatible
+	var result ChainGetBlockResult
 
-	resp, err := c.processRequest(ctx, MethodGetBlock, NewParamBlockByHash(hash), &result)
+	_, err := c.processRequest(ctx, MethodGetBlock, NewParamBlockByHash(hash), &result)
 	if err != nil {
 		return ChainGetBlockResult{}, err
 	}
 
-	blockResult, err := newChainGetBlockResultFromV1Compatible(result, resp.Result)
-	if err != nil {
-		return ChainGetBlockResult{}, err
-	}
-
-	blockResult.rawJSON = resp.Result
-	return blockResult, nil
+	return result, nil
 }
 
 func (c *client) GetBlockByHeight(ctx context.Context, height uint64) (ChainGetBlockResult, error) {
-	var result chainGetBlockResultV1Compatible
+	var result ChainGetBlockResult
 
-	resp, err := c.processRequest(ctx, MethodGetBlock, NewParamBlockByHeight(height), &result)
+	_, err := c.processRequest(ctx, MethodGetBlock, NewParamBlockByHeight(height), &result)
 	if err != nil {
 		return ChainGetBlockResult{}, err
 	}
 
-	blockResult, err := newChainGetBlockResultFromV1Compatible(result, resp.Result)
-	if err != nil {
-		return ChainGetBlockResult{}, err
-	}
-
-	blockResult.rawJSON = resp.Result
-	return blockResult, nil
+	return result, nil
 }
 
 func (c *client) GetLatestBlockTransfers(ctx context.Context) (ChainGetBlockTransfersResult, error) {

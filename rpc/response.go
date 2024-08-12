@@ -89,6 +89,21 @@ func (b ChainGetBlockResult) GetRawJSON() json.RawMessage {
 	return b.rawJSON
 }
 
+func (v *ChainGetBlockResult) UnmarshalJSON(data []byte) error {
+	var res chainGetBlockResultV1Compatible
+	if err := json.Unmarshal(data, &res); err != nil {
+		return err
+	}
+
+	blockResult, err := newChainGetBlockResultFromV1Compatible(res, data)
+	if err != nil {
+		return err
+	}
+
+	*v = blockResult
+	return nil
+}
+
 type chainGetBlockResultV1Compatible struct {
 	APIVersion          string                     `json:"api_version"`
 	BlockWithSignatures *types.BlockWithSignatures `json:"block_with_signatures"`

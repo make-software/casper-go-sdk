@@ -13,7 +13,7 @@ type UnbondingPurse struct {
 	// Bonding purse
 	BondingPurse key.URef `json:"bonding_purse"`
 	// Era ID in which this unbonding request was created.
-	EraOfCreation uint32 `json:"era_of_creation"`
+	EraOfCreation uint64 `json:"era_of_creation"`
 	// Unbonder public key.
 	UnbonderPublicKey keypair.PublicKey `json:"unbonder_public_key"`
 	// The original validator's public key.

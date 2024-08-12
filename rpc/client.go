@@ -97,9 +97,9 @@ type ClientInformational interface {
 
 	// GetLatestEntity returns latest AddressableEntity from the network.
 	GetLatestEntity(ctx context.Context, entityIdentifier EntityIdentifier) (StateGetEntity, error)
-	// GetEntityByHash returns an AddressableEntity by block hash from the network.
+	// GetEntityByBlockHash returns an AddressableEntity by block hash from the network.
 	GetEntityByBlockHash(ctx context.Context, entityIdentifier EntityIdentifier, hash string) (StateGetEntity, error)
-	// GetEntityByHeight returns an AddressableEntity by block height from the network.
+	// GetEntityByBlockHeight returns an AddressableEntity by block height from the network.
 	GetEntityByBlockHeight(ctx context.Context, entityIdentifier EntityIdentifier, height uint64) (StateGetEntity, error)
 
 	// GetLatestBlock returns the latest types.Block from the network.
