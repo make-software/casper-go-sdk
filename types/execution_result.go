@@ -89,7 +89,7 @@ func (v *ExecutionResult) UnmarshalJSON(data []byte) error {
 }
 
 func NewExecutionResultFromV1(v1 ExecutionResultV1) ExecutionResult {
-	transforms := make([]Transform, 0, len(v1.Success.Effect.Transforms))
+	transforms := make([]Transform, 0)
 	transfers := make([]Transfer, 0)
 
 	if v1.Success != nil {
