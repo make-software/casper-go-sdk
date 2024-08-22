@@ -5,6 +5,7 @@
     "api_version": "2.0.0",
     "reward_amount": "62559062048560",
     "era_id": 13,
-    "delegation_rate": 1
+    "delegation_rate": 1,
+    "switch_block_hash": "0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f"
   }
 }
