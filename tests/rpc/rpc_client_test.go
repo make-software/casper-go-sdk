@@ -608,6 +608,7 @@ func Test_DefaultClient_GetReward(t *testing.T) {
 			assert.NotEmpty(t, result.EraID)
 			assert.NotEmpty(t, result.RewardAmount)
 			assert.Equal(t, result.RewardAmount.Value().Int64(), int64(62559062048560))
+			assert.Equal(t, result.SwitchBlockHash.ToHex(), "0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f")
 			assert.NotEmpty(t, result.GetRawJSON())
 		})
 	}

@@ -524,10 +524,11 @@ func (b QueryBalanceDetailsResult) GetRawJSON() json.RawMessage {
 }
 
 type InfoGetRewardResult struct {
-	APIVersion     string          `json:"api_version"`
-	DelegationRate float32         `json:"delegation_rate"`
-	EraID          uint64          `json:"era_id"`
-	RewardAmount   clvalue.UInt512 `json:"reward_amount"`
+	APIVersion      string          `json:"api_version"`
+	DelegationRate  float32         `json:"delegation_rate"`
+	EraID           uint64          `json:"era_id"`
+	RewardAmount    clvalue.UInt512 `json:"reward_amount"`
+	SwitchBlockHash key.Hash        `json:"switch_block_hash"`
 
 	rawJSON json.RawMessage
 }
