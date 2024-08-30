@@ -4,6 +4,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/make-software/casper-go-sdk/v2/types/clvalue"
 	"github.com/make-software/casper-go-sdk/v2/types/key"
@@ -104,14 +105,17 @@ func (t *TransactionTarget) UnmarshalJSON(data []byte) error {
 	}
 
 	var key string
-	if err := json.Unmarshal(data, &key); err == nil && key == "Native" {
+	if err := json.Unmarshal(data, &key); err != nil {
+		return err
+	}
+	if key == "Native" {
 		*t = TransactionTarget{
 			Native: &struct{}{},
 		}
 		return nil
 	}
 
-	return nil
+	return fmt.Errorf("unknown transaction target type: %s", key)
 }
 
 func (t TransactionTarget) MarshalJSON() ([]byte, error) {
