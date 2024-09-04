@@ -217,36 +217,36 @@ func (c *client) QueryGlobalStateByStateHash(ctx context.Context, stateRootHash 
 	return result, nil
 }
 
-func (c *client) GetLatestEntity(ctx context.Context, entityIdentifier EntityIdentifier) (StateGetEntity, error) {
-	var result StateGetEntity
+func (c *client) GetLatestEntity(ctx context.Context, entityIdentifier EntityIdentifier) (StateGetEntityResult, error) {
+	var result StateGetEntityResult
 
 	resp, err := c.processRequest(ctx, MethodGetStateEntity, ParamGetStateEntity{EntityIdentifier: entityIdentifier}, &result)
 	if err != nil {
-		return StateGetEntity{}, err
+		return StateGetEntityResult{}, err
 	}
 
 	result.rawJSON = resp.Result
 	return result, nil
 }
 
-func (c *client) GetEntityByBlockHash(ctx context.Context, entityIdentifier EntityIdentifier, hash string) (StateGetEntity, error) {
-	var result StateGetEntity
+func (c *client) GetEntityByBlockHash(ctx context.Context, entityIdentifier EntityIdentifier, hash string) (StateGetEntityResult, error) {
+	var result StateGetEntityResult
 
 	resp, err := c.processRequest(ctx, MethodGetStateEntity, ParamGetStateEntity{EntityIdentifier: entityIdentifier, BlockIdentifier: &BlockIdentifier{Hash: &hash}}, &result)
 	if err != nil {
-		return StateGetEntity{}, err
+		return StateGetEntityResult{}, err
 	}
 
 	result.rawJSON = resp.Result
 	return result, nil
 }
 
-func (c *client) GetEntityByBlockHeight(ctx context.Context, entityIdentifier EntityIdentifier, height uint64) (StateGetEntity, error) {
-	var result StateGetEntity
+func (c *client) GetEntityByBlockHeight(ctx context.Context, entityIdentifier EntityIdentifier, height uint64) (StateGetEntityResult, error) {
+	var result StateGetEntityResult
 
 	resp, err := c.processRequest(ctx, MethodGetStateEntity, ParamGetStateEntity{EntityIdentifier: entityIdentifier, BlockIdentifier: &BlockIdentifier{Height: &height}}, &result)
 	if err != nil {
-		return StateGetEntity{}, err
+		return StateGetEntityResult{}, err
 	}
 
 	result.rawJSON = resp.Result

@@ -9,8 +9,10 @@ type (
 	RpcHandler                  = rpc.Handler
 	RpcInformationalClient      = rpc.ClientInformational
 	InfoGetDeployResult         = rpc.InfoGetDeployResult
+	InfoGetTransactionResult    = rpc.InfoGetTransactionResult
 	ChainGetBlockResult         = rpc.ChainGetBlockResult
 	ChainGetEraInfoResult       = rpc.ChainGetEraInfoResult
+	StateGetEntity              = rpc.StateGetEntityResult
 	StateGetAuctionInfoResult   = rpc.StateGetAuctionInfoResult
 	StateGetItemResult          = rpc.StateGetItemResult
 	InfoGetStatusResult         = rpc.InfoGetStatusResult
