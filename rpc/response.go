@@ -68,7 +68,7 @@ type AddressableEntity struct {
 	EntryPoints []types.EntryPointValue `json:"entry_points,omitempty"`
 }
 
-type StateGetEntity struct {
+type StateGetEntityResult struct {
 	ApiVersion string `json:"api_version"`
 	// The addressable entity or a legacy account.
 	Entity EntityOrAccount `json:"entity"`
@@ -215,6 +215,19 @@ type InfoGetTransactionResult struct {
 	ExecutionInfo *types.ExecutionInfo `json:"execution_info"`
 
 	rawJSON json.RawMessage
+}
+
+func NewInfoGetTransactionResult(
+	apiVersion string,
+	transaction types.Transaction,
+	executionInfo *types.ExecutionInfo,
+	rawJSON json.RawMessage) InfoGetTransactionResult {
+	return InfoGetTransactionResult{
+		APIVersion:    apiVersion,
+		Transaction:   transaction,
+		ExecutionInfo: executionInfo,
+		rawJSON:       rawJSON,
+	}
 }
 
 func (b InfoGetTransactionResult) GetRawJSON() json.RawMessage {

@@ -96,11 +96,11 @@ type ClientInformational interface {
 	GetAccountInfo(ctx context.Context, blockIdentifier *ParamBlockIdentifier, accountIdentifier AccountIdentifier) (StateGetAccountInfo, error)
 
 	// GetLatestEntity returns latest AddressableEntity from the network.
-	GetLatestEntity(ctx context.Context, entityIdentifier EntityIdentifier) (StateGetEntity, error)
+	GetLatestEntity(ctx context.Context, entityIdentifier EntityIdentifier) (StateGetEntityResult, error)
 	// GetEntityByBlockHash returns an AddressableEntity by block hash from the network.
-	GetEntityByBlockHash(ctx context.Context, entityIdentifier EntityIdentifier, hash string) (StateGetEntity, error)
+	GetEntityByBlockHash(ctx context.Context, entityIdentifier EntityIdentifier, hash string) (StateGetEntityResult, error)
 	// GetEntityByBlockHeight returns an AddressableEntity by block height from the network.
-	GetEntityByBlockHeight(ctx context.Context, entityIdentifier EntityIdentifier, height uint64) (StateGetEntity, error)
+	GetEntityByBlockHeight(ctx context.Context, entityIdentifier EntityIdentifier, height uint64) (StateGetEntityResult, error)
 
 	// GetLatestBlock returns the latest types.Block from the network.
 	GetLatestBlock(ctx context.Context) (ChainGetBlockResult, error)
