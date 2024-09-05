@@ -16,6 +16,9 @@ const (
 	DeployProcessedEventType
 	DeployAcceptedEventType
 	DeployExpiredEventType
+	TransactionProcessedEventType
+	TransactionAcceptedEventType
+	TransactionExpiredEventType
 	EventIDEventType
 	FinalitySignatureType
 	StepEventType
@@ -24,15 +27,18 @@ const (
 )
 
 var AllEventsNames = map[EventType]string{
-	APIVersionEventType:      "ApiVersion",
-	BlockAddedEventType:      "BlockAdded",
-	DeployProcessedEventType: "DeployProcessed",
-	DeployAcceptedEventType:  "DeployAccepted",
-	DeployExpiredEventType:   "DeployExpired",
-	StepEventType:            "Step",
-	FaultEventType:           "Fault",
-	FinalitySignatureType:    "FinalitySignature",
-	ShutdownType:             "Shutdown",
+	APIVersionEventType:           "ApiVersion",
+	BlockAddedEventType:           "BlockAdded",
+	DeployProcessedEventType:      "DeployProcessed",
+	DeployAcceptedEventType:       "DeployAccepted",
+	DeployExpiredEventType:        "DeployExpired",
+	TransactionProcessedEventType: "TransactionProcessed",
+	TransactionAcceptedEventType:  "TransactionAccepted",
+	TransactionExpiredEventType:   "TransactionExpired",
+	StepEventType:                 "Step",
+	FaultEventType:                "Fault",
+	FinalitySignatureType:         "FinalitySignature",
+	ShutdownType:                  "Shutdown",
 }
 
 type (
