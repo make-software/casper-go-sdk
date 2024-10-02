@@ -239,13 +239,13 @@ type StoredTarget struct {
 
 type TransactionInvocationTarget struct {
 	// Hex-encoded entity address identifying the invocable entity.
-	ByHash *key.Hash `json:"ByHash"`
+	ByHash *key.Hash `json:"ByHash,omitempty"`
 	// The alias identifying the invocable entity.
-	ByName *string `json:"ByName"`
+	ByName *string `json:"ByName,omitempty"`
 	// The address and optional version identifying the package.
-	ByPackageHash *ByPackageHashInvocationTarget `json:"ByPackageHash"`
+	ByPackageHash *ByPackageHashInvocationTarget `json:"ByPackageHash,omitempty"`
 	// The alias and optional version identifying the package.
-	ByPackageName *ByPackageNameInvocationTarget `json:"ByPackageName"`
+	ByPackageName *ByPackageNameInvocationTarget `json:"ByPackageName,omitempty"`
 }
 
 // ByPackageHashInvocationTarget The address and optional version identifying the package.
