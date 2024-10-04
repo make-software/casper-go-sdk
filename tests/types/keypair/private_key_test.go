@@ -81,3 +81,41 @@ func Test_ED25Key_CreateAndValidateRawSignature(t *testing.T) {
 	err = privateKeyData.PublicKey().VerifyRawSignature(secretMessage, signature)
 	assert.NoError(t, err)
 }
+
+func Test_NewPrivateKeyFromHex(t *testing.T) {
+	t.Run("Valid ED25519 key", func(t *testing.T) {
+		// This is a sample ED25519 private key in hex format
+		hexKey := "dda433e404770ebbe9cec28cd7623770ce4222c4961dc4508b076145126c200ece69876ad8154b3c4ec5c2a6ca250e88efda5008cef9ca5ec6767045ee006b53"
+		privateKey, err := keypair.NewPrivateKeyFromHex(hexKey, keypair.ED25519)
+
+		require.NoError(t, err)
+		assert.NotNil(t, privateKey.PublicKey())
+		assert.Equal(t, "01ce69876ad8154b3c4ec5c2a6ca250e88efda5008cef9ca5ec6767045ee006b53", privateKey.PublicKey().ToHex())
+		assert.NotNil(t, privateKey)
+	})
+
+	t.Run("Valid SECP256K1 key", func(t *testing.T) {
+		// This is a sample SECP256K1 private key in hex format
+		hexKey := "1e99423a4ed27608a15a2616a2b0e9e52ced330ac530edcc32c8ffc6a526aedd"
+		privateKey, err := keypair.NewPrivateKeyFromHex(hexKey, keypair.SECP256K1)
+
+		require.NoError(t, err)
+		assert.NotNil(t, privateKey.PublicKey())
+	})
+
+	t.Run("Invalid hex for ED25519", func(t *testing.T) {
+		hexKey := "invalid_hex"
+		_, err := keypair.NewPrivateKeyFromHex(hexKey, keypair.ED25519)
+
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "failed to create private key")
+	})
+
+	t.Run("Invalid hex for SECP256K1", func(t *testing.T) {
+		hexKey := "invalid_hex"
+		_, err := keypair.NewPrivateKeyFromHex(hexKey, keypair.SECP256K1)
+
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "failed to create private key")
+	})
+}
