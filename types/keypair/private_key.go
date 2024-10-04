@@ -2,6 +2,7 @@ package keypair
 
 import (
 	"errors"
+	"fmt"
 	"os"
 
 	"github.com/make-software/casper-go-sdk/v2/types/keypair/ed25519"
@@ -105,6 +106,35 @@ func GeneratePrivateKey(algorithm keyAlgorithm) (PrivateKey, error) {
 	publicKey, err := NewPublicKeyFromBytes(append([]byte{byte(algorithm)}, priv.PublicKeyBytes()...))
 	if err != nil {
 		return PrivateKey{}, err
+	}
+
+	return PrivateKey{
+		alg:  algorithm,
+		pub:  publicKey,
+		priv: priv,
+	}, nil
+}
+
+func NewPrivateKeyFromHex(key string, algorithm keyAlgorithm) (PrivateKey, error) {
+	var priv PrivateKeyInternal
+	var err error
+
+	switch algorithm {
+	case ED25519:
+		priv, err = ed25519.NewPrivateKeyFromHex(key)
+	case SECP256K1:
+		priv, err = secp256k1.NewPrivateKeyFromHex(key)
+	default:
+		return PrivateKey{}, fmt.Errorf("unsupported key algorithm: %v", algorithm)
+	}
+
+	if err != nil {
+		return PrivateKey{}, fmt.Errorf("failed to create private key: %w", err)
+	}
+
+	publicKey, err := NewPublicKeyFromBytes(append([]byte{byte(algorithm)}, priv.PublicKeyBytes()...))
+	if err != nil {
+		return PrivateKey{}, fmt.Errorf("failed to create public key: %w", err)
 	}
 
 	return PrivateKey{
