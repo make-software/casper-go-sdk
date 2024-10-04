@@ -33,6 +33,6 @@ func NewPrivateKeyFromHex(key string) (PrivateKey, error) {
 	if err != nil {
 		return PrivateKey{}, fmt.Errorf("failed to decode hex: %v", err)
 	}
-	
+
 	return NewPrivateKeyFromBytes(b)
 }
