@@ -61,8 +61,8 @@ func (c *client) GetTransactionByTransactionHash(ctx context.Context, transactio
 		return InfoGetTransactionResult{}, err
 	}
 
-	var result infoGetTransactionResultV1Compatible
-	resp, err := c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
+	var result InfoGetTransactionResult
+	_, err = c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
 		TransactionHash: types.TransactionHash{
 			TransactionV1: &hash,
 		},
@@ -71,7 +71,7 @@ func (c *client) GetTransactionByTransactionHash(ctx context.Context, transactio
 		return InfoGetTransactionResult{}, err
 	}
 
-	return newInfoGetTransactionResultFromV1Compatible(result, resp.Result)
+	return result, nil
 }
 
 func (c *client) GetTransactionByDeployHash(ctx context.Context, deployHash string) (InfoGetTransactionResult, error) {
@@ -80,8 +80,8 @@ func (c *client) GetTransactionByDeployHash(ctx context.Context, deployHash stri
 		return InfoGetTransactionResult{}, err
 	}
 
-	var result infoGetTransactionResultV1Compatible
-	resp, err := c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
+	var result InfoGetTransactionResult
+	_, err = c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
 		TransactionHash: types.TransactionHash{
 			Deploy: &hash,
 		},
@@ -90,7 +90,7 @@ func (c *client) GetTransactionByDeployHash(ctx context.Context, deployHash stri
 		return InfoGetTransactionResult{}, err
 	}
 
-	return newInfoGetTransactionResultFromV1Compatible(result, resp.Result)
+	return result, nil
 }
 
 func (c *client) GetTransactionFinalizedApprovalByTransactionHash(ctx context.Context, transactionHash string) (InfoGetTransactionResult, error) {
@@ -99,8 +99,8 @@ func (c *client) GetTransactionFinalizedApprovalByTransactionHash(ctx context.Co
 		return InfoGetTransactionResult{}, err
 	}
 
-	var result infoGetTransactionResultV1Compatible
-	resp, err := c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
+	var result InfoGetTransactionResult
+	_, err = c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
 		TransactionHash: types.TransactionHash{
 			TransactionV1: &hash,
 		},
@@ -110,7 +110,7 @@ func (c *client) GetTransactionFinalizedApprovalByTransactionHash(ctx context.Co
 		return InfoGetTransactionResult{}, err
 	}
 
-	return newInfoGetTransactionResultFromV1Compatible(result, resp.Result)
+	return result, nil
 }
 
 func (c *client) GetTransactionFinalizedApprovalByDeployHash(ctx context.Context, deployHash string) (InfoGetTransactionResult, error) {
@@ -119,8 +119,8 @@ func (c *client) GetTransactionFinalizedApprovalByDeployHash(ctx context.Context
 		return InfoGetTransactionResult{}, err
 	}
 
-	var result infoGetTransactionResultV1Compatible
-	resp, err := c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
+	var result InfoGetTransactionResult
+	_, err = c.processRequest(ctx, MethodGetTransaction, ParamTransactionHash{
 		TransactionHash: types.TransactionHash{
 			Deploy: &hash,
 		},
@@ -130,7 +130,7 @@ func (c *client) GetTransactionFinalizedApprovalByDeployHash(ctx context.Context
 		return InfoGetTransactionResult{}, err
 	}
 
-	return newInfoGetTransactionResultFromV1Compatible(result, resp.Result)
+	return result, nil
 }
 
 func (c *client) GetStateItem(ctx context.Context, stateRootHash *string, key string, path []string) (StateGetItemResult, error) {

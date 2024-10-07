@@ -580,6 +580,22 @@ type queryGlobalStateResultV1Compatible struct {
 }
 
 // UnmarshalJSON handle the backward compatibility logic with V1
+func (h *InfoGetTransactionResult) UnmarshalJSON(bytes []byte) error {
+	var temp infoGetTransactionResultV1Compatible
+
+	if err := json.Unmarshal(bytes, &temp); err != nil {
+		return err
+	}
+
+	result, err := newInfoGetTransactionResultFromV1Compatible(temp, bytes)
+	if err != nil {
+		return err
+	}
+	*h = result
+	return nil
+}
+
+// UnmarshalJSON handle the backward compatibility logic with V1
 func (h *QueryGlobalStateResult) UnmarshalJSON(bytes []byte) error {
 	// Check the API version
 	version := struct {
