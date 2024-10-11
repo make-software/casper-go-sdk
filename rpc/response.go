@@ -160,6 +160,19 @@ type InfoGetDeployResult struct {
 	rawJSON json.RawMessage
 }
 
+func (r *InfoGetDeployResult) InfoGetTransactionResult() InfoGetTransactionResult {
+	return InfoGetTransactionResult{
+		APIVersion:  r.ApiVersion,
+		Transaction: types.NewTransactionFromDeploy(r.Deploy),
+		ExecutionInfo: &types.ExecutionInfo{
+			BlockHash:       r.ExecutionResults.BlockHash,
+			BlockHeight:     r.ExecutionResults.BlockHeight,
+			ExecutionResult: r.ExecutionResults.ExecutionResult,
+		},
+		rawJSON: r.GetRawJSON(),
+	}
+}
+
 type infoGetDeployResultV1Compatible struct {
 	ApiVersion       string                        `json:"api_version"`
 	Deploy           types.Deploy                  `json:"deploy"`
