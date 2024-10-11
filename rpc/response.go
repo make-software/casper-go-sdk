@@ -160,7 +160,7 @@ type InfoGetDeployResult struct {
 	rawJSON json.RawMessage
 }
 
-func (r *InfoGetDeployResult) InfoGetTransactionResult() InfoGetTransactionResult {
+func (r *InfoGetDeployResult) ToInfoGetTransactionResult() InfoGetTransactionResult {
 	return InfoGetTransactionResult{
 		APIVersion:  r.ApiVersion,
 		Transaction: types.NewTransactionFromDeploy(r.Deploy),
