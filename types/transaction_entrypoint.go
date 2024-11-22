@@ -3,8 +3,10 @@ package types
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 
-	"github.com/make-software/casper-go-sdk/v2/types/clvalue"
+	"github.com/make-software/casper-go-sdk/v2/types/serialization"
+	"github.com/make-software/casper-go-sdk/v2/types/serialization/encoding"
 )
 
 const (
@@ -21,7 +23,8 @@ const (
 )
 
 const (
-	TransactionEntryPointCustomTag = iota
+	TransactionEntryPointCallTag = iota
+	TransactionEntryPointCustomTag
 	TransactionEntryPointTransferTag
 	TransactionEntryPointAddBidTag
 	TransactionEntryPointWithdrawBidTag
@@ -30,8 +33,11 @@ const (
 	TransactionEntryPointRedelegateTag
 	TransactionEntryPointActivateBidTag
 	TransactionEntryPointChangeBidPublicKeyTag
-	TransactionEntryPointCallTag
+	TransactionEntryPointAddReservationTag
+	TransactionEntryCancelReservationTag
 )
+
+const CustomCustomIndex uint16 = 1
 
 type TransactionEntryPoint struct {
 	Custom *string
@@ -52,18 +58,17 @@ type TransactionEntryPoint struct {
 	ActivateBid *struct{}
 	// The `change_bid_public_key` native entry point, used to change a bid's public key.
 	ChangeBidPublicKey *struct{}
+	// The `add_reservations` native entry point, used to add delegator to validator's reserve list.
+	AddReservation *struct{}
+	// The `cancel_reservations` native entry point, used to remove delegator from validator's reserve list.
+	CancelReservation *struct{}
 	// Used to call entry point call() in session transactions
 	Call *struct{}
 }
 
-func (t *TransactionEntryPoint) Bytes() []byte {
-	result := make([]byte, 0, 2)
-	result = append(result, t.Tag())
-
-	if t.Custom != nil {
-		result = append(result, clvalue.NewCLString(*t.Custom).Bytes()...)
-	}
-	return result
+func (t *TransactionEntryPoint) SerializedLength() int {
+	envelope := serialization.CallTableSerializationEnvelope{}
+	return envelope.EstimateSize(t.serializedFieldLengths())
 }
 
 func (t *TransactionEntryPoint) Tag() byte {
@@ -88,6 +93,10 @@ func (t *TransactionEntryPoint) Tag() byte {
 		return TransactionEntryPointChangeBidPublicKeyTag
 	case t.Call != nil:
 		return TransactionEntryPointCallTag
+	case t.AddReservation != nil:
+		return TransactionEntryPointAddReservationTag
+	case t.CancelReservation != nil:
+		return TransactionEntryCancelReservationTag
 	default:
 		return 0
 	}
@@ -165,5 +174,206 @@ func (t TransactionEntryPoint) MarshalJSON() ([]byte, error) {
 		return json.Marshal(TransactionEntryPointCall)
 	default:
 		return nil, errors.New("unknown entry point")
+	}
+}
+
+type TransactionEntryPointFromBytesDecoder struct{}
+
+func (decoder *TransactionEntryPointFromBytesDecoder) FromBytes(bytes []byte) (*TransactionEntryPoint, []byte, error) {
+	envelope := &serialization.CallTableSerializationEnvelope{}
+	binaryPayload, remainder, err := envelope.FromBytes(2, bytes)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	window, err := binaryPayload.StartConsuming()
+	if err != nil || window == nil {
+		return nil, nil, serialization.ErrFormatting
+	}
+
+	if err = window.VerifyIndex(TagFieldIndex); err != nil {
+		return nil, nil, err
+	}
+
+	tag, nextWindow, err := serialization.DeserializeAndMaybeNext[uint8](window, &encoding.U8FromBytesDecoder{})
+	if err != nil {
+		return nil, nil, err
+	}
+
+	switch tag {
+	case TransactionEntryPointCallTag:
+		if nextWindow != nil {
+			return nil, nil, serialization.ErrFormatting
+		}
+		return &TransactionEntryPoint{Call: &struct{}{}}, remainder, nil
+
+	case TransactionEntryPointCustomTag:
+		if nextWindow == nil {
+			return nil, nil, serialization.ErrFormatting
+		}
+		if err = nextWindow.VerifyIndex(CustomCustomIndex); err != nil {
+			return nil, nil, err
+		}
+
+		custom, finalWindow, err := serialization.DeserializeAndMaybeNext[string](nextWindow, &encoding.StringFromBytesDecoder{})
+		if err != nil {
+			return nil, nil, err
+		}
+		if finalWindow != nil {
+			return nil, nil, serialization.ErrFormatting
+		}
+		return &TransactionEntryPoint{Custom: &custom}, remainder, nil
+
+	case TransactionEntryPointTransferTag:
+		if nextWindow != nil {
+			return nil, nil, serialization.ErrFormatting
+		}
+		return &TransactionEntryPoint{Transfer: &struct{}{}}, remainder, nil
+
+	case TransactionEntryPointAddBidTag:
+		if nextWindow != nil {
+			return nil, nil, serialization.ErrFormatting
+		}
+		return &TransactionEntryPoint{AddBid: &struct{}{}}, remainder, nil
+
+	case TransactionEntryPointWithdrawBidTag:
+		if nextWindow != nil {
+			return nil, nil, serialization.ErrFormatting
+		}
+		return &TransactionEntryPoint{WithdrawBid: &struct{}{}}, remainder, nil
+
+	case TransactionEntryPointDelegateTag:
+		if nextWindow != nil {
+			return nil, nil, serialization.ErrFormatting
+		}
+		return &TransactionEntryPoint{Delegate: &struct{}{}}, remainder, nil
+
+	case TransactionEntryPointUndelegateTag:
+		if nextWindow != nil {
+			return nil, nil, serialization.ErrFormatting
+		}
+		return &TransactionEntryPoint{Undelegate: &struct{}{}}, remainder, nil
+
+	case TransactionEntryPointRedelegateTag:
+		if nextWindow != nil {
+			return nil, nil, serialization.ErrFormatting
+		}
+		return &TransactionEntryPoint{Redelegate: &struct{}{}}, remainder, nil
+
+	case TransactionEntryPointActivateBidTag:
+		if nextWindow != nil {
+			return nil, nil, serialization.ErrFormatting
+		}
+		return &TransactionEntryPoint{ActivateBid: &struct{}{}}, remainder, nil
+
+	case TransactionEntryPointChangeBidPublicKeyTag:
+		if nextWindow != nil {
+			return nil, nil, serialization.ErrFormatting
+		}
+		return &TransactionEntryPoint{ChangeBidPublicKey: &struct{}{}}, remainder, nil
+
+	case TransactionEntryPointAddReservationTag:
+		if nextWindow != nil {
+			return nil, nil, serialization.ErrFormatting
+		}
+		return &TransactionEntryPoint{AddReservation: &struct{}{}}, remainder, nil
+
+	case TransactionEntryCancelReservationTag:
+		if nextWindow != nil {
+			return nil, nil, serialization.ErrFormatting
+		}
+		return &TransactionEntryPoint{CancelReservation: &struct{}{}}, remainder, nil
+
+	default:
+		return nil, nil, serialization.ErrFormatting
+	}
+}
+
+func (t *TransactionEntryPoint) Bytes() ([]byte, error) {
+	builder, err := serialization.NewCallTableSerializationEnvelopeBuilder(t.serializedFieldLengths())
+	if err != nil {
+		return nil, err
+	}
+
+	switch {
+	case t.Call != nil:
+		if err = builder.AddField(TagFieldIndex, []byte{TransactionEntryPointCallTag}); err != nil {
+			return nil, err
+		}
+
+	case t.Custom != nil:
+		if err = builder.AddField(TagFieldIndex, []byte{TransactionEntryPointCustomTag}); err != nil {
+			return nil, err
+		}
+
+		customBytes, _ := encoding.NewStringToBytesEncoder(*t.Custom).Bytes()
+		if err = builder.AddField(CustomCustomIndex, customBytes); err != nil {
+			return nil, err
+		}
+	case t.Transfer != nil:
+		if err = builder.AddField(TagFieldIndex, []byte{TransactionEntryPointTransferTag}); err != nil {
+			return nil, err
+		}
+
+	case t.AddBid != nil:
+		if err := builder.AddField(TagFieldIndex, []byte{TransactionEntryPointAddBidTag}); err != nil {
+			return nil, err
+		}
+	case t.WithdrawBid != nil:
+		if err := builder.AddField(TagFieldIndex, []byte{TransactionEntryPointWithdrawBidTag}); err != nil {
+			return nil, err
+		}
+	case t.Delegate != nil:
+		if err := builder.AddField(TagFieldIndex, []byte{TransactionEntryPointDelegateTag}); err != nil {
+			return nil, err
+		}
+		return builder.BinaryPayloadBytes()
+
+	case t.Undelegate != nil:
+		if err := builder.AddField(TagFieldIndex, []byte{TransactionEntryPointUndelegateTag}); err != nil {
+			return nil, err
+		}
+
+	case t.Redelegate != nil:
+		if err := builder.AddField(TagFieldIndex, []byte{TransactionEntryPointRedelegateTag}); err != nil {
+			return nil, err
+		}
+
+	case t.ActivateBid != nil:
+		if err := builder.AddField(TagFieldIndex, []byte{TransactionEntryPointActivateBidTag}); err != nil {
+			return nil, err
+		}
+
+	case t.ChangeBidPublicKey != nil:
+		if err := builder.AddField(TagFieldIndex, []byte{TransactionEntryPointChangeBidPublicKeyTag}); err != nil {
+			return nil, err
+		}
+
+	case t.AddReservation != nil:
+		if err := builder.AddField(TagFieldIndex, []byte{TransactionEntryPointAddReservationTag}); err != nil {
+			return nil, err
+		}
+
+	case t.CancelReservation != nil:
+		if err := builder.AddField(TagFieldIndex, []byte{TransactionEntryCancelReservationTag}); err != nil {
+			return nil, err
+		}
+	default:
+		return nil, fmt.Errorf("unsupported variant")
+	}
+	return builder.BinaryPayloadBytes()
+}
+
+func (t *TransactionEntryPoint) serializedFieldLengths() []int {
+	switch {
+	case t.Custom != nil:
+		return []int{
+			encoding.U8SerializedLength,
+			encoding.StringSerializedLength(*t.Custom),
+		}
+	default:
+		return []int{
+			encoding.U8SerializedLength,
+		}
 	}
 }

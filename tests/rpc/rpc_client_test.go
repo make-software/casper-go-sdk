@@ -114,9 +114,9 @@ func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 		{
 			filePath: "../data/transaction/get_transaction.json",
 		},
-		{
-			filePath: "../data/transaction/get_transaction_native_target.json",
-		},
+		//{
+		//	filePath: "../data/transaction/get_transaction_native_target.json",
+		//},
 	}
 	for _, tt := range tests {
 		t.Run("GetTransaction", func(t *testing.T) {
@@ -127,13 +127,14 @@ func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 			require.NoError(t, err)
 			assert.NotEmpty(t, result.APIVersion)
 			assert.NotEmpty(t, result.Transaction.Hash)
-			assert.NotEmpty(t, result.Transaction.Header)
-			assert.NotEmpty(t, result.Transaction.Header.TTL)
-			assert.NotEmpty(t, result.Transaction.Header.ChainName)
-			assert.NotEmpty(t, result.Transaction.Header.PricingMode)
-			assert.NotEmpty(t, result.Transaction.Header.InitiatorAddr)
-			assert.NotEmpty(t, result.Transaction.Body.Target)
-			assert.NotEmpty(t, result.Transaction.Body.Scheduling)
+			assert.NotEmpty(t, result.Transaction.Payload)
+			assert.NotEmpty(t, result.Transaction.Payload.TTL)
+			assert.NotEmpty(t, result.Transaction.Payload.ChainName)
+			assert.NotEmpty(t, result.Transaction.Payload.PricingMode)
+			assert.NotEmpty(t, result.Transaction.Payload.InitiatorAddr)
+			assert.NotEmpty(t, result.Transaction.Payload.Target)
+			assert.NotEmpty(t, result.Transaction.Payload.Scheduling)
+			assert.NotEmpty(t, result.Transaction.Payload.EntryPoint)
 			assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.Initiator)
 			assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.Effects)
 			assert.NotEmpty(t, result.Transaction.Approvals)

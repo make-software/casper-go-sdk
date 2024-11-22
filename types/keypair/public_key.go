@@ -27,9 +27,26 @@ type PublicKeyInternal interface {
 	VerifySignature(message []byte, sig []byte) bool
 }
 
+type PublicKeyFromBytesDecoder struct{}
+
+func (addr *PublicKeyFromBytesDecoder) FromBytes(bytes []byte) (PublicKey, []byte, error) {
+	panic("implement me")
+}
+
 type PublicKey struct {
 	cryptoAlg keyAlgorithm
 	key       PublicKeyInternal
+}
+
+func (t PublicKey) SerializedLength() int {
+	switch t.cryptoAlg {
+	case ED25519:
+		return ed25519.PublicKeySize
+	case SECP256K1:
+		return secp256k1.PublicKeySize
+	default:
+		return 0
+	}
 }
 
 func (v PublicKey) Bytes() []byte {
