@@ -41,9 +41,11 @@ type PublicKey struct {
 func (t PublicKey) SerializedLength() int {
 	switch t.cryptoAlg {
 	case ED25519:
-		return ed25519.PublicKeySize
+		// crypto algo byte + PubKey size
+		return 1 + ed25519.PublicKeySize
 	case SECP256K1:
-		return secp256k1.PublicKeySize
+		// crypto algo byte + PubKey size
+		return 1 + secp256k1.PublicKeySize
 	default:
 		return 0
 	}

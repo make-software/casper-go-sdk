@@ -260,14 +260,9 @@ type infoGetTransactionResultV1Compatible struct {
 func newInfoGetTransactionResultFromV1Compatible(result infoGetTransactionResultV1Compatible, rawJSON json.RawMessage) (InfoGetTransactionResult, error) {
 	if result.Transaction != nil {
 		if result.Transaction.TransactionV1 != nil {
-			transaction, err := types.NewTransactionFromTransactionV1(*result.Transaction.TransactionV1)
-			if err != nil {
-				return InfoGetTransactionResult{}, err
-			}
-
 			return InfoGetTransactionResult{
 				APIVersion:    result.APIVersion,
-				Transaction:   transaction,
+				Transaction:   types.NewTransactionFromTransactionV1(*result.Transaction.TransactionV1),
 				ExecutionInfo: result.ExecutionInfo,
 				rawJSON:       rawJSON,
 			}, nil

@@ -1,6 +1,7 @@
 package types
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -58,189 +59,7 @@ type SessionTarget struct {
 	Runtime          TransactionRuntime `json:"runtime"`
 	TransferredValue uint64             `json:"transferred_value"`
 	IsInstallUpgrade bool               `json:"is_install_upgrade"`
-	Seed             *key.Hash          `json:"seed"`
-}
-
-type TransactionTargetFromBytesDecoder struct{}
-
-func (addr *TransactionTargetFromBytesDecoder) FromBytes(bytes []byte) (*TransactionTarget, []byte, error) {
-	envelope := &serialization.CallTableSerializationEnvelope{}
-	binaryPayload, remainder, err := envelope.FromBytes(6, bytes)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	window, err := binaryPayload.StartConsuming()
-	if err != nil || window == nil {
-		return nil, nil, serialization.ErrFormatting
-	}
-
-	if err := window.VerifyIndex(TagFieldIndex); err != nil {
-		return nil, nil, err
-	}
-
-	tag, nextWindow, err := serialization.DeserializeAndMaybeNext[uint8](window, &encoding.U8FromBytesDecoder{})
-	if err != nil {
-		return nil, nil, err
-	}
-
-	switch tag {
-	case NativeVariant:
-		if nextWindow != nil {
-			return nil, nil, errors.New("unexpected additional data for native variant")
-		}
-		return &TransactionTarget{Native: &struct{}{}}, remainder, nil
-	case StoredVariant:
-		if nextWindow == nil {
-			return nil, nil, errors.New("formatting error")
-		}
-
-		if err = nextWindow.VerifyIndex(StoredIdIndex); err != nil {
-			return nil, nil, err
-		}
-
-		id, nextWindow, err := serialization.DeserializeAndMaybeNext(nextWindow, &TransactionInvocationTargetFromBytesDecoder{})
-		if err != nil {
-			return nil, nil, err
-		}
-
-		if nextWindow == nil {
-			return nil, nil, errors.New("formatting error")
-		}
-
-		if err = nextWindow.VerifyIndex(StoredRuntimeIndex); err != nil {
-			return nil, nil, err
-		}
-
-		runtime, nextWindow, err := serialization.DeserializeAndMaybeNext[TransactionRuntime](nextWindow, &TransactionRuntimeFromBytesDecoder{})
-		if err != nil {
-			return nil, nil, err
-		}
-
-		if nextWindow == nil {
-			return nil, nil, errors.New("formatting error")
-		}
-
-		if err = nextWindow.VerifyIndex(StoredTransferredValueIndex); err != nil {
-			return nil, nil, err
-		}
-
-		transferredValue, nextWindow, err := serialization.DeserializeAndMaybeNext[uint64](nextWindow, &encoding.U64FromBytesDecoder{})
-		if err != nil {
-			return nil, nil, err
-		}
-
-		if nextWindow != nil {
-			return nil, nil, errors.New("unexpected additional data for stored variant")
-		}
-
-		return &TransactionTarget{
-			Stored: &StoredTarget{
-				ID:               *id,
-				Runtime:          runtime,
-				TransferredValue: transferredValue,
-			},
-		}, remainder, nil
-
-	case SessionVariant:
-		if nextWindow == nil {
-			return nil, nil, errors.New("formatting error")
-		}
-
-		if err = nextWindow.VerifyIndex(SessionIsInstallIndex); err != nil {
-			return nil, nil, err
-		}
-
-		isInstallUpgrade, nextWindow, err := serialization.DeserializeAndMaybeNext[bool](nextWindow, &encoding.BoolFromBytesDecoder{})
-		if err != nil {
-			return nil, nil, err
-		}
-
-		if nextWindow == nil {
-			return nil, nil, errors.New("formatting error")
-		}
-
-		if err = nextWindow.VerifyIndex(SessionRuntimeIndex); err != nil {
-			return nil, nil, err
-		}
-
-		runtime, nextWindow, err := serialization.DeserializeAndMaybeNext[TransactionRuntime](nextWindow, &TransactionRuntimeFromBytesDecoder{})
-		if err != nil {
-			return nil, nil, err
-		}
-
-		if nextWindow == nil {
-			return nil, nil, errors.New("formatting error")
-		}
-
-		if err := nextWindow.VerifyIndex(SessionModuleBytesIndex); err != nil {
-			return nil, nil, err
-		}
-
-		sliceDecoder := encoding.SliceFromBytesDecoder[uint8, *encoding.U8FromBytesDecoder]{
-			Decoder: &encoding.U8FromBytesDecoder{},
-		}
-
-		moduleBytes, nextWindow, err := serialization.DeserializeAndMaybeNext(nextWindow, &sliceDecoder)
-		if err != nil {
-			return nil, nil, err
-		}
-
-		if nextWindow == nil {
-			return nil, nil, errors.New("formatting error")
-		}
-
-		if err = nextWindow.VerifyIndex(SessionTransferredValueIndex); err != nil {
-			return nil, nil, err
-		}
-
-		transferredValue, nextWindow, err := serialization.DeserializeAndMaybeNext[uint64](nextWindow, &encoding.U64FromBytesDecoder{})
-		if err != nil {
-			return nil, nil, err
-		}
-
-		if nextWindow == nil {
-			return nil, nil, errors.New("formatting error")
-		}
-
-		if err = nextWindow.VerifyIndex(SessionSeedIndex); err != nil {
-			return nil, nil, err
-		}
-
-		decoder := encoding.OptionFromBytesDecoder[[]uint8, *encoding.SliceFromBytesDecoder[uint8, *encoding.U8FromBytesDecoder]]{
-			Decoder: &encoding.SliceFromBytesDecoder[uint8, *encoding.U8FromBytesDecoder]{
-				Decoder: &encoding.U8FromBytesDecoder{},
-			},
-		}
-
-		optionSeed, nextWindow, err := serialization.DeserializeAndMaybeNext[encoding.Option[[]uint8]](nextWindow, &decoder)
-		if err != nil {
-			return nil, nil, err
-		}
-
-		if nextWindow != nil {
-			return nil, nil, errors.New("unexpected additional data for session variant")
-		}
-
-		var seed *key.Hash
-		if optionSeed.IsSome() {
-			hash := key.Hash(*optionSeed.Some)
-			seed = &hash
-		}
-
-		return &TransactionTarget{
-			Session: &SessionTarget{
-				IsInstallUpgrade: isInstallUpgrade,
-				ModuleBytes:      moduleBytes,
-				Runtime:          runtime,
-				TransferredValue: transferredValue,
-				Seed:             seed,
-			},
-		}, remainder, nil
-
-	default:
-		return nil, nil, errors.New("unknown variant tag")
-	}
+	Seed             *key.Hash          `json:"seed,omitempty"`
 }
 
 func (t *TransactionTarget) Bytes() ([]byte, error) {
@@ -285,27 +104,31 @@ func (t *TransactionTarget) Bytes() ([]byte, error) {
 			return nil, err
 		}
 
-		runtimeBytes, _ := encoding.NewStringToBytesEncoder(string(t.Session.Runtime)).Bytes()
-		if err = builder.AddField(SessionRuntimeIndex, runtimeBytes); err != nil {
+		if err = builder.AddField(SessionRuntimeIndex, []byte{t.Session.Runtime.RuntimeTag()}); err != nil {
 			return nil, err
 		}
 
-		moduleBytes, _ := encoding.NewStringToBytesEncoder(string(t.Session.ModuleBytes)).Bytes()
+		moduleBytes, _ := encoding.NewBytesToBytesEncoder(t.Session.ModuleBytes).Bytes()
 		if err = builder.AddField(SessionModuleBytesIndex, moduleBytes); err != nil {
 			return nil, err
 		}
 
 		transferredValuesBytes, _ := encoding.NewU64ToBytesEncoder(t.Session.TransferredValue).Bytes()
+		if err = builder.AddField(SessionTransferredValueIndex, transferredValuesBytes); err != nil {
+			return nil, err
+		}
 
+		var seedBytes []byte
 		if t.Session.Seed != nil {
-			if err = builder.AddField(SessionTransferredValueIndex, transferredValuesBytes); err != nil {
-				return nil, err
-			}
+			seedBytes = []byte{1} // Option Some tag
+			bytes, _ := encoding.NewStringToBytesEncoder(t.Session.Seed.String()).Bytes()
+			seedBytes = append(seedBytes, bytes...)
+		} else {
+			seedBytes = []byte{0} // Option none tag
+		}
 
-			seedBytes, _ := encoding.NewStringToBytesEncoder(t.Session.Seed.String()).Bytes()
-			if err = builder.AddField(SessionSeedIndex, seedBytes); err != nil {
-				return nil, err
-			}
+		if err = builder.AddField(SessionSeedIndex, seedBytes); err != nil {
+			return nil, err
 		}
 	default:
 		return nil, fmt.Errorf("invalid TransactionTarget")
@@ -328,12 +151,18 @@ func (t TransactionTarget) serializedFieldLengths() []int {
 			encoding.U64SerializedLength,
 		}
 	case t.Session != nil:
+		var seedSerializedLength int
+		if t.Session.Seed != nil {
+			seedSerializedLength = encoding.StringSerializedLength(t.Session.Seed.String())
+		}
+
 		return []int{
 			encoding.U8SerializedLength,
 			encoding.BoolSerializedLength,
 			encoding.U8SerializedLength,
 			encoding.BytesSerializedLength(t.Session.ModuleBytes),
 			encoding.U64SerializedLength,
+			encoding.U8SerializedLength + seedSerializedLength,
 		}
 	default:
 		return []int{}
@@ -342,13 +171,30 @@ func (t TransactionTarget) serializedFieldLengths() []int {
 
 func (t *TransactionTarget) UnmarshalJSON(data []byte) error {
 	var target struct {
-		Stored  *StoredTarget  `json:"Stored"`
-		Session *SessionTarget `json:"Session"`
+		Stored  *StoredTarget `json:"Stored"`
+		Session *struct {
+			Runtime          TransactionRuntime `json:"runtime"`
+			TransferredValue uint64             `json:"transferred_value"`
+			IsInstallUpgrade bool               `json:"is_install_upgrade"`
+			Seed             *key.Hash          `json:"seed,omitempty"`
+			Module           string             `json:"module_bytes"`
+		} `json:"Session"`
 	}
 	if err := json.Unmarshal(data, &target); err == nil {
 		if target.Session != nil {
+			decodedBytes, err := hex.DecodeString(target.Session.Module)
+			if err != nil {
+				return err
+			}
+
 			*t = TransactionTarget{
-				Session: target.Session,
+				Session: &SessionTarget{
+					ModuleBytes:      decodedBytes,
+					Runtime:          target.Session.Runtime,
+					TransferredValue: target.Session.TransferredValue,
+					IsInstallUpgrade: target.Session.IsInstallUpgrade,
+					Seed:             target.Session.Seed,
+				},
 			}
 		}
 
@@ -385,10 +231,24 @@ func (t TransactionTarget) MarshalJSON() ([]byte, error) {
 	}
 
 	if t.Session != nil {
+		type sessionTarget struct {
+			Runtime          TransactionRuntime `json:"runtime"`
+			TransferredValue uint64             `json:"transferred_value"`
+			IsInstallUpgrade bool               `json:"is_install_upgrade"`
+			Seed             *key.Hash          `json:"seed,omitempty"`
+			ModuleBytes      string             `json:"module_bytes"`
+		}
+
 		return json.Marshal(struct {
-			Session *SessionTarget `json:"Session"`
+			Session sessionTarget `json:"Session"`
 		}{
-			Session: t.Session,
+			Session: sessionTarget{
+				Runtime:          t.Session.Runtime,
+				TransferredValue: t.Session.TransferredValue,
+				IsInstallUpgrade: t.Session.IsInstallUpgrade,
+				Seed:             t.Session.Seed,
+				ModuleBytes:      hex.EncodeToString(t.Session.ModuleBytes),
+			},
 		})
 	}
 
@@ -404,9 +264,10 @@ func NewTransactionTargetFromSession(session ExecutableDeployItem) TransactionTa
 	}
 
 	if session.ModuleBytes != nil {
+		decodedBytes, _ := hex.DecodeString(session.ModuleBytes.ModuleBytes)
 		return TransactionTarget{
 			Session: &SessionTarget{
-				ModuleBytes: []byte(session.ModuleBytes.ModuleBytes),
+				ModuleBytes: decodedBytes,
 				Runtime:     "VmCasperV1",
 			},
 		}

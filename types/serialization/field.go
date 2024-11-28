@@ -5,17 +5,22 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"encoding/json"
-	"sort"
 
 	"github.com/make-software/casper-go-sdk/v2/types/serialization/encoding"
 )
 
 const FieldSerializedLength = 6
 
+type Fields map[uint16][]byte
+
 // Field represents an individual field in the serialization envelope.
 type Field struct {
 	Index  uint16
 	Offset uint32
+}
+
+func NewFields() Fields {
+	return make(map[uint16][]byte)
 }
 
 func (f Field) SerializedLength() int {
@@ -24,8 +29,8 @@ func (f Field) SerializedLength() int {
 
 func (f Field) Bytes() ([]byte, error) {
 	buffer := make([]byte, 6) // 2 bytes for Index + 4 bytes for Offset
-	binary.BigEndian.PutUint16(buffer[:2], f.Index)
-	binary.BigEndian.PutUint32(buffer[2:], f.Offset)
+	binary.LittleEndian.PutUint16(buffer[:2], f.Index)
+	binary.LittleEndian.PutUint32(buffer[2:], f.Offset)
 	return buffer, nil
 }
 
@@ -56,12 +61,6 @@ func (addr *FieldFromBytesDecoder) FromBytes(inputBytes []byte) (Field, []byte, 
 	}
 
 	return field, reminder, nil
-}
-
-type Fields map[uint16][]byte
-
-func NewFields() Fields {
-	return make(map[uint16][]byte)
 }
 
 func (f *Fields) AddField(key uint16, value encoding.ToBytes) error {
@@ -103,19 +102,21 @@ func (f *Fields) Bytes() ([]byte, error) {
 		return nil, err
 	}
 
-	keys := make([]uint16, 0, len(*f))
-	for key := range *f {
-		keys = append(keys, key)
-	}
+	for key := 0; key < len(*f); key++ {
+		data := (*f)[uint16(key)]
 
-	sort.Slice(keys, func(i, j int) bool {
-		return keys[i] < keys[j]
-	})
+		// encode key
+		if err := binary.Write(buf, binary.LittleEndian, uint16(key)); err != nil {
+			return nil, err
+		}
 
-	for _, key := range keys {
-		data := (*f)[key]
-		_, err := buf.Write(data)
-		if err != nil {
+		// encode bytes length
+		if err := binary.Write(buf, binary.LittleEndian, uint32(len(data))); err != nil {
+			return nil, err
+		}
+
+		// encode data
+		if _, err := buf.Write(data); err != nil {
 			return nil, err
 		}
 	}
@@ -125,9 +126,10 @@ func (f *Fields) Bytes() ([]byte, error) {
 
 func (f *Fields) SerializedLength() int {
 	length := encoding.U32SerializedLength
-	for range *f {
+	for _, value := range *f {
 		length += encoding.U16SerializedLength // key u16
-		length += Field{}.SerializedLength()   // field
+		length += encoding.U32SerializedLength // key data length u32
+		length += len(value)
 	}
 
 	return length

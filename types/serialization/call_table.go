@@ -29,10 +29,10 @@ func NewCallTableSerializationEnvelopeBuilder(expectedPayloadSizes []int) (*Call
 	payloadAndVecOverhead := encoding.U32SerializedLength + bytesOfPayloadSize
 
 	buffer := make([]byte, 0, fieldsSize+payloadAndVecOverhead)
-	buffer = append(buffer, make([]byte, fieldsSize)...)
+	buffer = append(buffer, make([]byte, fieldsSize)...) // Making room for the call table
 
 	uint32Buf := make([]byte, 4)
-	binary.BigEndian.PutUint32(uint32Buf, uint32(bytesOfPayloadSize))
+	binary.LittleEndian.PutUint32(uint32Buf, uint32(bytesOfPayloadSize))
 
 	buffer = append(buffer, uint32Buf...)
 

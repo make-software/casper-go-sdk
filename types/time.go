@@ -35,7 +35,7 @@ func (t *Timestamp) ToTime() time.Time {
 }
 
 func (d Timestamp) Bytes() ([]byte, error) {
-	return encoding.NewU64ToBytesEncoder(uint64(d.ToTime().Unix())).Bytes()
+	return encoding.NewU64ToBytesEncoder(uint64(d.ToTime().UnixMilli())).Bytes()
 }
 
 func (d Timestamp) SerializedLength() int {
@@ -94,7 +94,7 @@ func (d *Duration) UnmarshalJSON(data []byte) error {
 }
 
 func (d Duration) Bytes() ([]byte, error) {
-	return encoding.NewU64ToBytesEncoder(uint64(d)).Bytes()
+	return encoding.NewU64ToBytesEncoder(uint64(d) / uint64(time.Millisecond)).Bytes()
 }
 
 type DurationFromBytesDecoder struct{}

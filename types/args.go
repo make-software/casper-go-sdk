@@ -7,7 +7,6 @@ import (
 
 	"github.com/make-software/casper-go-sdk/v2/types/clvalue"
 	"github.com/make-software/casper-go-sdk/v2/types/clvalue/cltype"
-	"github.com/make-software/casper-go-sdk/v2/types/serialization/encoding"
 )
 
 var ErrArgumentNotFound = errors.New("argument is not found")
@@ -17,40 +16,6 @@ type Args []PairArgument
 func (args Args) SerializedLength() int {
 	//TODO implement me
 	panic("implement me")
-}
-
-type ArgsFromBytesDecoder struct{}
-
-func (a *ArgsFromBytesDecoder) FromBytes(bytes []byte) (*Args, []byte, error) {
-	u32Decoder := encoding.U32FromBytesDecoder{}
-	numberOfArgs, reminder, err := u32Decoder.FromBytes(bytes)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	args := make(Args, 0)
-	var stringDecoder = &encoding.StringFromBytesDecoder{}
-
-	for i := 0; i < int(numberOfArgs); i++ {
-		var argName string
-		argName, reminder, err = stringDecoder.FromBytes(reminder)
-		if err != nil {
-			return nil, nil, err
-		}
-
-		var argCLValue clvalue.CLValue
-		argCLValue, reminder, err = clvalue.FromBytes(reminder)
-		if err != nil {
-			return nil, nil, err
-		}
-
-		pair := PairArgument{}
-		pair[0] = &Argument{name: &argName}
-		pair[1] = &Argument{value: &argCLValue}
-		args = append(args, pair)
-	}
-
-	return &args, reminder, err
 }
 
 func (args Args) Bytes() ([]byte, error) {

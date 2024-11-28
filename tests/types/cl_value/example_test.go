@@ -18,7 +18,7 @@ func Test_DecodeTypeAndValue(t *testing.T) {
 	sourceString := `0f00000001000000030000004142430a000000110a01`
 	hexData, err := hex.DecodeString(sourceString)
 	require.NoError(t, err)
-	data, err := clvalue.FromBytes(hexData)
+	data, _, err := clvalue.FromBytes(hexData)
 	require.NoError(t, err)
 	assert.Equal(t, int32(10), data.Map.Get("ABC").I32.Value())
 }

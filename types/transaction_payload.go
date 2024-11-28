@@ -21,6 +21,76 @@ const (
 	SchedulingMapKey
 )
 
+type NamedArgs struct {
+	Args *Args `json:"Named,omitempty"`
+}
+
+func NewNamedArgs(args *Args) NamedArgs {
+	return NamedArgs{
+		Args: args,
+	}
+}
+
+func (n NamedArgs) SerializedLength() int {
+	return n.Args.SerializedLength()
+}
+
+func (n NamedArgs) Bytes() ([]byte, error) {
+	argsBytes, err := n.Args.Bytes()
+	if err != nil {
+		return nil, err
+	}
+
+	result := make([]byte, 1) // adding extra leading byte
+	return append(result, argsBytes...), nil
+}
+
+type TransactionV1Fields struct {
+	// binary representation of fields
+	fields serialization.Fields `json:"-"`
+
+	NamedArgs NamedArgs `json:"args,omitempty"`
+	// Execution target of a Transaction.
+	Target TransactionTarget `json:"target"`
+	// Entry point of a Transaction.
+	TransactionEntryPoint TransactionEntryPoint `json:"entry_point"`
+	// Scheduling mode of a Transaction.
+	TransactionScheduling TransactionScheduling `json:"scheduling"`
+}
+
+func NewTransactionV1Fields(
+	namedArgs NamedArgs,
+	target TransactionTarget,
+	entryPoint TransactionEntryPoint,
+	scheduling TransactionScheduling,
+) (TransactionV1Fields, error) {
+	fields := serialization.NewFields()
+
+	if err := fields.AddField(ArgsMapKey, namedArgs); err != nil {
+		return TransactionV1Fields{}, err
+	}
+
+	if err := fields.AddField(TargetMapKey, &target); err != nil {
+		return TransactionV1Fields{}, err
+	}
+
+	if err := fields.AddField(EntryPointMapKey, &entryPoint); err != nil {
+		return TransactionV1Fields{}, err
+	}
+
+	if err := fields.AddField(SchedulingMapKey, &scheduling); err != nil {
+		return TransactionV1Fields{}, err
+	}
+
+	return TransactionV1Fields{
+		fields:                fields,
+		NamedArgs:             namedArgs,
+		Target:                target,
+		TransactionEntryPoint: entryPoint,
+		TransactionScheduling: scheduling,
+	}, nil
+}
+
 type TransactionV1Payload struct {
 	// The address of the initiator of a TransactionV1.
 	InitiatorAddr InitiatorAddr `json:"initiator_addr"`
@@ -31,8 +101,17 @@ type TransactionV1Payload struct {
 	// Chain name
 	ChainName string `json:"chain_name"`
 	// Pricing mode of a Transaction.
-	PricingMode PricingMode          `json:"pricing_mode"`
-	Fields      serialization.Fields `json:"fields"`
+	PricingMode PricingMode `json:"pricing_mode"`
+
+	Fields TransactionV1Fields `json:"fields"`
+}
+
+func (f *TransactionV1Fields) Bytes() ([]byte, error) {
+	return f.fields.Bytes()
+}
+
+func (f *TransactionV1Fields) SerializedLength() int {
+	return f.fields.SerializedLength()
 }
 
 func NewTransactionV1Payload(
@@ -41,32 +120,23 @@ func NewTransactionV1Payload(
 	ttL Duration,
 	chainName string,
 	pricingMode PricingMode,
-	args *Args,
+	args NamedArgs,
 	target TransactionTarget,
 	entryPoint TransactionEntryPoint,
 	scheduling TransactionScheduling,
 ) (TransactionV1Payload, error) {
-	fields := serialization.NewFields()
+	transactionFields, err := NewTransactionV1Fields(args, target, entryPoint, scheduling)
+	if err != nil {
+		return TransactionV1Payload{}, err
+	}
 
-	if err := fields.AddField(ArgsMapKey, args); err != nil {
-		return TransactionV1Payload{}, err
-	}
-	if err := fields.AddField(TargetMapKey, &target); err != nil {
-		return TransactionV1Payload{}, err
-	}
-	if err := fields.AddField(EntryPointMapKey, &entryPoint); err != nil {
-		return TransactionV1Payload{}, err
-	}
-	if err := fields.AddField(SchedulingMapKey, &scheduling); err != nil {
-		return TransactionV1Payload{}, err
-	}
 	return TransactionV1Payload{
 		InitiatorAddr: initiatorAddr,
 		Timestamp:     timestamp,
 		TTL:           ttL,
 		ChainName:     chainName,
 		PricingMode:   pricingMode,
-		Fields:        nil,
+		Fields:        transactionFields,
 	}, nil
 }
 
@@ -112,7 +182,7 @@ func (d TransactionV1Payload) Bytes() ([]byte, error) {
 		return nil, err
 	}
 
-	pricingModeBytes, err := d.TTL.Bytes()
+	pricingModeBytes, err := d.PricingMode.Bytes()
 	if err != nil {
 		return nil, err
 	}

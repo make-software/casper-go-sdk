@@ -38,7 +38,7 @@ const (
 type Transaction struct {
 	// Hex-encoded Transaction hash
 	Hash key.Hash `json:"hash"`
-	// The header portion of a Transaction
+	// The Transaction payload
 	Payload TransactionPayload `json:"payload"`
 	// List of signers and signatures for this Transaction
 	Approvals []Approval `json:"approvals"`
@@ -92,38 +92,7 @@ func (t *Transaction) GetTransactionV1() *TransactionV1 {
 	return t.originTransactionV1
 }
 
-func NewTransactionFromTransactionV1(v1 TransactionV1) (Transaction, error) {
-	var (
-		args                  *Args
-		transactionTarget     *TransactionTarget
-		transactionEntryPoint *TransactionEntryPoint
-		transactionScheduling *TransactionScheduling
-	)
-
-	for key, rawData := range v1.Payload.Fields {
-		var err error
-		switch key {
-		case 0:
-			decoder := &ArgsFromBytesDecoder{}
-			args, _, err = decoder.FromBytes(rawData)
-		case 1:
-			decoder := TransactionTargetFromBytesDecoder{}
-			transactionTarget, _, err = decoder.FromBytes(rawData)
-		case 2:
-			decoder := TransactionEntryPointFromBytesDecoder{}
-			transactionEntryPoint, _, err = decoder.FromBytes(rawData)
-		case 3:
-			decoder := TransactionSchedulingFromBytesDecoder{}
-			transactionScheduling, _, err = decoder.FromBytes(rawData)
-		default:
-			return Transaction{}, errors.New("unsupported field key")
-		}
-
-		if err != nil {
-			return Transaction{}, err
-		}
-	}
-
+func NewTransactionFromTransactionV1(v1 TransactionV1) Transaction {
 	return Transaction{
 		Hash: v1.Hash,
 		Payload: TransactionPayload{
@@ -132,14 +101,14 @@ func NewTransactionFromTransactionV1(v1 TransactionV1) (Transaction, error) {
 			TTL:           v1.Payload.TTL,
 			InitiatorAddr: v1.Payload.InitiatorAddr,
 			PricingMode:   v1.Payload.PricingMode,
-			Args:          args,
-			Target:        *transactionTarget,
-			EntryPoint:    *transactionEntryPoint,
-			Scheduling:    *transactionScheduling,
+			Args:          v1.Payload.Fields.NamedArgs.Args,
+			Target:        v1.Payload.Fields.Target,
+			EntryPoint:    v1.Payload.Fields.TransactionEntryPoint,
+			Scheduling:    v1.Payload.Fields.TransactionScheduling,
 		},
 		Approvals:           v1.Approvals,
 		originTransactionV1: &v1,
-	}, nil
+	}
 }
 
 func NewTransactionFromDeploy(deploy Deploy) Transaction {
@@ -223,8 +192,6 @@ type TransactionV1 struct {
 	Hash key.Hash `json:"hash"`
 	// Transaction payload
 	Payload TransactionV1Payload `json:"payload"`
-	// Body of a `TransactionV1`
-	Body TransactionV1Body `json:"body"`
 	// List of signers and signatures for this `deploy`
 	Approvals []Approval `json:"approvals"`
 }
@@ -280,18 +247,14 @@ func (t *TransactionV1) Sign(keys keypair.PrivateKey) error {
 }
 
 func (t *TransactionV1) Validate() error {
-	//bodyBytes, err := t.Body.Bytes()
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//if t.Header.BodyHash != blake2b.Sum256(bodyBytes) {
-	//	return ErrInvalidBodyHash
-	//}
-	//
-	//if t.Hash != blake2b.Sum256(t.Header.Bytes()) {
-	//	return ErrInvalidTransactionHash
-	//}
+	payloadBytes, err := t.Payload.Bytes()
+	if err != nil {
+		return err
+	}
+
+	if t.Hash != blake2b.Sum256(payloadBytes) {
+		return ErrInvalidTransactionHash
+	}
 
 	for _, one := range t.Approvals {
 		if one.Signer.VerifySignature(t.Hash.Bytes(), one.Signature) != nil {

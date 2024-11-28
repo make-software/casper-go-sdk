@@ -1,57 +1,50 @@
 {
   "TransactionAccepted": {
     "Version1": {
-      "hash": "35ae20f399194f469d74acebe7fae333b59a8b63868f24648e7ce62d3e6ea930",
-      "header": {
-        "chain_name": "dev-net",
-        "timestamp": "2024-07-12T10:08:27.782Z",
+      "hash": "446f9511258112c6e5150ee13d57c421da2bc30e0058db6165855a9d1ba4b868",
+      "payload": {
+        "initiator_addr": {
+          "PublicKey": "0184f6d260f4ee6869ddb36affe15456de6ae045278fa2f467bb677561ce0dad55"
+        },
+        "timestamp": "2024-11-27T17:24:10.516Z",
         "ttl": "30m",
-        "body_hash": "08f9a371124b26f8038fba6b6bc72851139d861fcb77e1823fd71e8ae438c5e3",
+        "chain_name": "casper-net-1",
         "pricing_mode": {
           "Fixed": {
-            "gas_price_tolerance": 3
+            "additional_computation_factor": 0,
+            "gas_price_tolerance": 1
           }
         },
-        "initiator_addr": {
-          "PublicKey": "0202c57b8226aadc7bd004860b9d34b0c7bb9652698c508d1c01368cbb5f198d5d32"
+        "fields": {
+          "args": {
+            "Named": [
+              [
+                "target",
+                {
+                  "cl_type": "PublicKey",
+                  "bytes": "0106ed45915392c02b37136618372ac8dde8e0e3b8ee6190b2ca6db539b354ede4",
+                  "parsed": "0106ed45915392c02b37136618372ac8dde8e0e3b8ee6190b2ca6db539b354ede4"
+                }
+              ],
+              [
+                "amount",
+                {
+                  "cl_type": "U512",
+                  "bytes": "0400f90295",
+                  "parsed": "2500000000"
+                }
+              ]
+            ]
+          },
+          "entry_point": "Transfer",
+          "scheduling": "Standard",
+          "target": "Native"
         }
-      },
-      "body": {
-        "args": [
-          [
-            "validator",
-            {
-              "cl_type": "PublicKey",
-              "bytes": "017536433a73f7562526f3e9fcb8d720428ae2d28788a9909f3c6f637a9d848a4b",
-              "parsed": "017536433a73f7562526f3e9fcb8d720428ae2d28788a9909f3c6f637a9d848a4b"
-            }
-          ],
-          [
-            "amount",
-            {
-              "cl_type": "U512",
-              "bytes": "050052eda574",
-              "parsed": "501000000000"
-            }
-          ],
-          [
-            "delegator",
-            {
-              "cl_type": "PublicKey",
-              "bytes": "0202c57b8226aadc7bd004860b9d34b0c7bb9652698c508d1c01368cbb5f198d5d32",
-              "parsed": "0202c57b8226aadc7bd004860b9d34b0c7bb9652698c508d1c01368cbb5f198d5d32"
-            }
-          ]
-        ],
-        "target": "Native",
-        "entry_point": "Delegate",
-        "transaction_category": 1,
-        "scheduling": "Standard"
       },
       "approvals": [
         {
-          "signer": "0202c57b8226aadc7bd004860b9d34b0c7bb9652698c508d1c01368cbb5f198d5d32",
-          "signature": "02bae820a71f24b503921a7d2fac93cf454ffd39cee932f70cc82686c57793f8a3222b599243fa9db275a97e299033a7836f7b5dc33534147989887b2fb506b644"
+          "signer": "0184f6d260f4ee6869ddb36affe15456de6ae045278fa2f467bb677561ce0dad55",
+          "signature": "016bfe70925847f5bedd2cd031b0316d73b8c9b3573b31ed8ba9ead069eb69800a6ef66136e10571b327866b2e03e1369e2982b20428628641bbdd4d641475ea05"
         }
       ]
     }

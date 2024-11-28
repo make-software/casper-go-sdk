@@ -29,10 +29,6 @@ func StringSerializedLength(val string) int {
 	return U32SerializedLength + len(val)
 }
 
-func BytesSerializedLength(val []byte) int {
-	return U32SerializedLength + len(val)
-}
-
 type StringToBytesEncoder struct {
 	val string
 }
@@ -45,4 +41,27 @@ func NewStringToBytesEncoder(val string) StringToBytesEncoder {
 
 func (enc StringToBytesEncoder) Bytes() ([]byte, error) {
 	return clvalue.NewCLString(enc.val).Bytes(), nil
+}
+
+func BytesSerializedLength(val []byte) int {
+	return U32SerializedLength + len(val)
+}
+
+type BytesToBytesEncoder struct {
+	val []byte
+}
+
+func NewBytesToBytesEncoder(val []byte) BytesToBytesEncoder {
+	return BytesToBytesEncoder{
+		val,
+	}
+}
+
+func (enc BytesToBytesEncoder) Bytes() ([]byte, error) {
+	sizeByte, err := NewU32ToBytesEncoder(uint32(len(enc.val))).Bytes()
+	if err != nil {
+		return nil, err
+	}
+
+	return append(sizeByte, enc.val...), nil
 }
