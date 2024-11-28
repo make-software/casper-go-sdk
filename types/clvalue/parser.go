@@ -13,18 +13,26 @@ var (
 	ErrUnsupportedCLType = errors.New("buffer constructor is not found")
 )
 
-func FromBytes(source []byte) (CLValue, error) {
+func FromBytes(source []byte) (CLValue, []byte, error) {
 	buffer := bytes.NewBuffer(source)
+
 	valueLength, err := TrimByteSize(buffer)
 	if err != nil {
-		return CLValue{}, err
-	}
-	clType, err := cltype.FromBytes(buffer.Bytes()[valueLength:])
-	if err != nil {
-		return CLValue{}, err
+		return CLValue{}, nil, err
 	}
 
-	return FromBytesByType(buffer.Bytes()[:valueLength], clType)
+	next := buffer.Next(int(valueLength))
+	clType, err := cltype.FromBuffer(buffer)
+	if err != nil {
+		return CLValue{}, nil, err
+	}
+
+	clValue, err := FromBytesByType(next, clType)
+	if err != nil {
+		return CLValue{}, nil, err
+	}
+
+	return clValue, buffer.Bytes(), nil
 }
 
 func FromBuffer(buffer *bytes.Buffer) (CLValue, error) {

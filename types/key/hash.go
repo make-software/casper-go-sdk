@@ -96,3 +96,9 @@ func NewByteHashFromBuffer(buf *bytes.Buffer) (result Hash, err error) {
 	copy(result[:], buf.Next(ByteHashLen))
 	return result, nil
 }
+
+type HashFromBytesDecoder struct{}
+
+func (addr *HashFromBytesDecoder) FromBytes(bytes []byte) (Hash, []byte, error) {
+	panic("implement me")
+}

@@ -7,42 +7,39 @@ import (
 )
 
 type (
-	AuctionState        = types.AuctionState
-	Args                = types.Args
-	ValidatorBid        = types.ValidatorBid
-	Bid                 = types.Bid
-	Block               = types.Block
-	BlockV1             = types.BlockV1
-	BlockHeaderV1       = types.BlockHeaderV1
-	BlockBodyV1         = types.BlockBodyV1
-	BlockV2             = types.BlockV2
-	BlockHeaderV2       = types.BlockHeaderV2
-	BlockBodyV2         = types.BlockBodyV2
-	ContractPackage     = types.ContractPackage
-	ContractVersion     = types.ContractVersion
-	Contract            = types.Contract
-	Transaction         = types.Transaction
-	TransactionV1       = types.TransactionV1
-	TransactionHeader   = types.TransactionHeader
-	TransactionV1Header = types.TransactionV1Header
-	TransactionBody     = types.TransactionBody
-	TransactionV1Body   = types.TransactionV1Body
-	Deploy              = types.Deploy
-	DeployHeader        = types.DeployHeader
-	DeployApproval      = types.Approval
-	EntryPointV1        = types.EntryPointV1
-	EntryPointV2        = types.EntryPointV2
-	ExecutionResult     = types.ExecutionResult
-	NamedKeys           = types.NamedKeys
-	NamedKey            = types.NamedKey
-	TransformKey        = types.TransformKey
-	Transform           = types.Transform
-	Argument            = types.Argument
-	Account             = types.Account
-	PublicKeyAndBid     = types.PublicKeyAndBid
-	Reward              = types.EraReward
-	WriteTransfer       = types.WriteTransfer
-	UnbondingPurse      = types.UnbondingPurse
+	AuctionState         = types.AuctionState
+	Args                 = types.Args
+	ValidatorBid         = types.ValidatorBid
+	Bid                  = types.Bid
+	Block                = types.Block
+	BlockV1              = types.BlockV1
+	BlockHeaderV1        = types.BlockHeaderV1
+	BlockBodyV1          = types.BlockBodyV1
+	BlockV2              = types.BlockV2
+	BlockHeaderV2        = types.BlockHeaderV2
+	BlockBodyV2          = types.BlockBodyV2
+	ContractPackage      = types.ContractPackage
+	ContractVersion      = types.ContractVersion
+	Contract             = types.Contract
+	Transaction          = types.Transaction
+	TransactionV1        = types.TransactionV1
+	TransactionV1Payload = types.TransactionV1Payload
+	Deploy               = types.Deploy
+	DeployHeader         = types.DeployHeader
+	DeployApproval       = types.Approval
+	EntryPointV1         = types.EntryPointV1
+	EntryPointV2         = types.EntryPointV2
+	ExecutionResult      = types.ExecutionResult
+	NamedKeys            = types.NamedKeys
+	NamedKey             = types.NamedKey
+	TransformKey         = types.TransformKey
+	Transform            = types.Transform
+	Argument             = types.Argument
+	Account              = types.Account
+	PublicKeyAndBid      = types.PublicKeyAndBid
+	Reward               = types.EraReward
+	WriteTransfer        = types.WriteTransfer
+	UnbondingPurse       = types.UnbondingPurse
 )
 
 type (

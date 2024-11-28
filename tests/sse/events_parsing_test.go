@@ -204,8 +204,15 @@ func Test_RawEvent_ParseAsTransactionAcceptedEvent(t *testing.T) {
 			}
 
 			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction)
-			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.Header)
-			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.Body)
+			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.Args)
+			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.ChainName)
+			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.Timestamp)
+			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.TTL)
+			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.InitiatorAddr)
+			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.PricingMode)
+			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.Target)
+			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.EntryPoint)
+			require.NotEmpty(t, res.TransactionAcceptedPayload.Transaction.Scheduling)
 		})
 	}
 }

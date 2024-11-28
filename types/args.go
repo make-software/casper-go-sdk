@@ -13,6 +13,11 @@ var ErrArgumentNotFound = errors.New("argument is not found")
 
 type Args []PairArgument
 
+func (args Args) SerializedLength() int {
+	bytes, _ := args.Bytes()
+	return len(bytes)
+}
+
 func (args Args) Bytes() ([]byte, error) {
 	var result []byte
 	result = append(result, clvalue.SizeToBytes(len(args))...)

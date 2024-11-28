@@ -15,7 +15,7 @@ func Test_ByteParser_ParseValueWithType_FromByteToMap(t *testing.T) {
 	sourceData := `0f00000001000000030000004142430a000000110a01`
 	decoded, err := hex.DecodeString(sourceData)
 	require.NoError(t, err)
-	data, err := clvalue.FromBytes(decoded)
+	data, _, err := clvalue.FromBytes(decoded)
 	require.NoError(t, err)
 	assert.Equal(t, int32(10), data.Map.Get("ABC").I32.Value())
 }

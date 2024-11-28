@@ -4,22 +4,31 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"fmt"
 
-	"github.com/make-software/casper-go-sdk/v2/types/clvalue"
 	"github.com/make-software/casper-go-sdk/v2/types/key"
+	"github.com/make-software/casper-go-sdk/v2/types/serialization"
+	"github.com/make-software/casper-go-sdk/v2/types/serialization/encoding"
+)
+
+const (
+	SessionIsInstallIndex uint16 = iota + 1
+	SessionRuntimeIndex
+	SessionModuleBytesIndex
+	SessionTransferredValueIndex
+	SessionSeedIndex
+)
+
+const (
+	StoredIdIndex uint16 = iota + 1
+	StoredRuntimeIndex
+	StoredTransferredValueIndex
 )
 
 const (
 	TransactionTargetTypeNative = iota
 	TransactionTargetTypeStored
 	TransactionTargetTypeSession
-)
-
-const (
-	InvocationTargetTagByHash = iota
-	InvocationTargetTagByName
-	InvocationTargetTagByPackageHash
-	InvocationTargetTagByPackageName
 )
 
 type TransactionTarget struct {
@@ -31,67 +40,158 @@ type TransactionTarget struct {
 	Session *SessionTarget `json:"Session"`
 }
 
+func (t *TransactionTarget) SerializedLength() int {
+	envelope := serialization.CallTableSerializationEnvelope{}
+	return envelope.EstimateSize(t.serializedFieldLengths())
+}
+
+type StoredTarget struct {
+	ID               TransactionInvocationTarget `json:"id"`
+	Runtime          TransactionRuntime          `json:"runtime"`
+	TransferredValue uint64                      `json:"transferred_value"`
+}
+
+type SessionTarget struct {
+	ModuleBytes      []byte             `json:"module_bytes"`
+	Runtime          TransactionRuntime `json:"runtime"`
+	TransferredValue uint64             `json:"transferred_value"`
+	IsInstallUpgrade bool               `json:"is_install_upgrade"`
+	Seed             *key.Hash          `json:"seed,omitempty"`
+}
+
 func (t *TransactionTarget) Bytes() ([]byte, error) {
-	result := make([]byte, 0, 8)
-
-	if t.Native != nil {
-		result = append(result, TransactionTargetTypeNative)
-	} else if t.Stored != nil {
-		result = append(result, TransactionTargetTypeStored)
-		if byHash := t.Stored.ID.ByHash; byHash != nil {
-			result = append(result, InvocationTargetTagByHash)
-			result = append(result, byHash.Bytes()...)
-		} else if byName := t.Stored.ID.ByName; byName != nil {
-			result = append(result, InvocationTargetTagByName)
-			result = append(result, clvalue.NewCLString(*byName).Bytes()...)
-		} else if byPackageHash := t.Stored.ID.ByPackageHash; byPackageHash != nil {
-			result = append(result, InvocationTargetTagByPackageHash)
-			result = append(result, byPackageHash.Addr.Bytes()...)
-			if byPackageHash.Version != nil {
-				result = append(result, 1)
-				result = append(result, clvalue.NewCLUInt32(*byPackageHash.Version).Bytes()...)
-			} else {
-				result = append(result, 0)
-			}
-		} else if byPackageName := t.Stored.ID.ByPackageName; byPackageName != nil {
-			result = append(result, InvocationTargetTagByPackageName)
-			result = append(result, clvalue.NewCLString(byPackageName.Name).Bytes()...)
-			if byPackageHash.Version != nil {
-				result = append(result, 1)
-				result = append(result, clvalue.NewCLUInt32(*byPackageName.Version).Bytes()...)
-			} else {
-				result = append(result, 0)
-			}
-		}
-		result = append(result, t.Stored.Runtime.RuntimeTag())
-	} else if t.Session != nil {
-		result = append(result, TransactionTargetTypeSession)
-		if len(t.Session.ModuleBytes) == 0 {
-			result = append(result, clvalue.NewCLInt32(0).Bytes()...)
-		} else {
-			bytes, err := hex.DecodeString(t.Session.ModuleBytes)
-			if err != nil {
-				return nil, err
-			}
-			result = append(result, clvalue.NewCLUInt32(uint32(len(bytes))).Bytes()...)
-			result = append(result, clvalue.NewCLByteArray(bytes).Bytes()...)
-		}
-
-		result = append(result, t.Session.Runtime.RuntimeTag())
+	builder, err := serialization.NewCallTableSerializationEnvelopeBuilder(t.serializedFieldLengths())
+	if err != nil {
+		return nil, err
 	}
 
-	return result, nil
+	switch {
+	case t.Native != nil:
+		if err = builder.AddField(TagFieldIndex, []byte{TransactionTargetTypeNative}); err != nil {
+			return nil, err
+		}
+	case t.Stored != nil:
+		if err = builder.AddField(TagFieldIndex, []byte{TransactionTargetTypeStored}); err != nil {
+			return nil, err
+		}
+
+		storedIDBytes, err := t.Stored.ID.Bytes()
+		if err != nil {
+			return nil, err
+		}
+
+		if err = builder.AddField(StoredIdIndex, storedIDBytes); err != nil {
+			return nil, err
+		}
+
+		runtimeBytes, _ := encoding.NewStringToBytesEncoder(string(t.Stored.Runtime)).Bytes()
+		if err = builder.AddField(StoredRuntimeIndex, runtimeBytes); err != nil {
+			return nil, err
+		}
+		if err = builder.AddField(StoredTransferredValueIndex, []byte{byte(t.Stored.TransferredValue)}); err != nil {
+			return nil, err
+		}
+	case t.Session != nil:
+		if err = builder.AddField(TagFieldIndex, []byte{TransactionTargetTypeSession}); err != nil {
+			return nil, err
+		}
+
+		IsInstallUpgradeBytes, _ := encoding.NewBoolToBytesEncoder(t.Session.IsInstallUpgrade).Bytes()
+		if err = builder.AddField(SessionIsInstallIndex, IsInstallUpgradeBytes); err != nil {
+			return nil, err
+		}
+
+		if err = builder.AddField(SessionRuntimeIndex, []byte{t.Session.Runtime.RuntimeTag()}); err != nil {
+			return nil, err
+		}
+
+		moduleBytes, _ := encoding.NewBytesToBytesEncoder(t.Session.ModuleBytes).Bytes()
+		if err = builder.AddField(SessionModuleBytesIndex, moduleBytes); err != nil {
+			return nil, err
+		}
+
+		transferredValuesBytes, _ := encoding.NewU64ToBytesEncoder(t.Session.TransferredValue).Bytes()
+		if err = builder.AddField(SessionTransferredValueIndex, transferredValuesBytes); err != nil {
+			return nil, err
+		}
+
+		var seedBytes []byte
+		if t.Session.Seed != nil {
+			seedBytes = []byte{1} // Option Some tag
+			bytes, _ := encoding.NewStringToBytesEncoder(t.Session.Seed.String()).Bytes()
+			seedBytes = append(seedBytes, bytes...)
+		} else {
+			seedBytes = []byte{0} // Option none tag
+		}
+
+		if err = builder.AddField(SessionSeedIndex, seedBytes); err != nil {
+			return nil, err
+		}
+	default:
+		return nil, fmt.Errorf("invalid TransactionTarget")
+	}
+
+	return builder.BinaryPayloadBytes()
+}
+
+func (t TransactionTarget) serializedFieldLengths() []int {
+	switch {
+	case t.Native != nil:
+		return []int{
+			encoding.U8SerializedLength,
+		}
+	case t.Stored != nil:
+		return []int{
+			encoding.U8SerializedLength,
+			t.Stored.ID.SerializedLength(),
+			encoding.U8SerializedLength,
+			encoding.U64SerializedLength,
+		}
+	case t.Session != nil:
+		var seedSerializedLength int
+		if t.Session.Seed != nil {
+			seedSerializedLength = encoding.StringSerializedLength(t.Session.Seed.String())
+		}
+
+		return []int{
+			encoding.U8SerializedLength,
+			encoding.BoolSerializedLength,
+			encoding.U8SerializedLength,
+			encoding.BytesSerializedLength(t.Session.ModuleBytes),
+			encoding.U64SerializedLength,
+			encoding.U8SerializedLength + seedSerializedLength,
+		}
+	default:
+		return []int{}
+	}
 }
 
 func (t *TransactionTarget) UnmarshalJSON(data []byte) error {
 	var target struct {
-		Stored  *StoredTarget  `json:"Stored"`
-		Session *SessionTarget `json:"Session"`
+		Stored  *StoredTarget `json:"Stored"`
+		Session *struct {
+			Runtime          TransactionRuntime `json:"runtime"`
+			TransferredValue uint64             `json:"transferred_value"`
+			IsInstallUpgrade bool               `json:"is_install_upgrade"`
+			Seed             *key.Hash          `json:"seed,omitempty"`
+			Module           string             `json:"module_bytes"`
+		} `json:"Session"`
 	}
 	if err := json.Unmarshal(data, &target); err == nil {
 		if target.Session != nil {
+			decodedBytes, err := hex.DecodeString(target.Session.Module)
+			if err != nil {
+				return err
+			}
+
 			*t = TransactionTarget{
-				Session: target.Session,
+				Session: &SessionTarget{
+					ModuleBytes:      decodedBytes,
+					Runtime:          target.Session.Runtime,
+					TransferredValue: target.Session.TransferredValue,
+					IsInstallUpgrade: target.Session.IsInstallUpgrade,
+					Seed:             target.Session.Seed,
+				},
 			}
 		}
 
@@ -128,10 +228,24 @@ func (t TransactionTarget) MarshalJSON() ([]byte, error) {
 	}
 
 	if t.Session != nil {
+		type sessionTarget struct {
+			Runtime          TransactionRuntime `json:"runtime"`
+			TransferredValue uint64             `json:"transferred_value"`
+			IsInstallUpgrade bool               `json:"is_install_upgrade"`
+			Seed             *key.Hash          `json:"seed,omitempty"`
+			ModuleBytes      string             `json:"module_bytes"`
+		}
+
 		return json.Marshal(struct {
-			Session *SessionTarget `json:"Session"`
+			Session sessionTarget `json:"Session"`
 		}{
-			Session: t.Session,
+			Session: sessionTarget{
+				Runtime:          t.Session.Runtime,
+				TransferredValue: t.Session.TransferredValue,
+				IsInstallUpgrade: t.Session.IsInstallUpgrade,
+				Seed:             t.Session.Seed,
+				ModuleBytes:      hex.EncodeToString(t.Session.ModuleBytes),
+			},
 		})
 	}
 
@@ -147,9 +261,10 @@ func NewTransactionTargetFromSession(session ExecutableDeployItem) TransactionTa
 	}
 
 	if session.ModuleBytes != nil {
+		decodedBytes, _ := hex.DecodeString(session.ModuleBytes.ModuleBytes)
 		return TransactionTarget{
 			Session: &SessionTarget{
-				ModuleBytes: session.ModuleBytes.ModuleBytes,
+				ModuleBytes: decodedBytes,
 				Runtime:     "VmCasperV1",
 			},
 		}
@@ -229,38 +344,4 @@ func NewTransactionTargetFromSession(session ExecutableDeployItem) TransactionTa
 	}
 
 	return TransactionTarget{}
-}
-
-type StoredTarget struct {
-	// Identifier of a `Stored` transaction target.
-	ID      TransactionInvocationTarget `json:"id"`
-	Runtime TransactionRuntime          `json:"runtime"`
-}
-
-type TransactionInvocationTarget struct {
-	// Hex-encoded entity address identifying the invocable entity.
-	ByHash *key.Hash `json:"ByHash,omitempty"`
-	// The alias identifying the invocable entity.
-	ByName *string `json:"ByName,omitempty"`
-	// The address and optional version identifying the package.
-	ByPackageHash *ByPackageHashInvocationTarget `json:"ByPackageHash,omitempty"`
-	// The alias and optional version identifying the package.
-	ByPackageName *ByPackageNameInvocationTarget `json:"ByPackageName,omitempty"`
-}
-
-// ByPackageHashInvocationTarget The address and optional version identifying the package.
-type ByPackageHashInvocationTarget struct {
-	Addr    key.Hash `json:"addr"`
-	Version *uint32  `json:"version"`
-}
-
-// ByPackageNameInvocationTarget The alias and optional version identifying the package.
-type ByPackageNameInvocationTarget struct {
-	Name    string  `json:"name"`
-	Version *uint32 `json:"version"`
-}
-
-type SessionTarget struct {
-	ModuleBytes string             `json:"module_bytes"`
-	Runtime     TransactionRuntime `json:"runtime"`
 }

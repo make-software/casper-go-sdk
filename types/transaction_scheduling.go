@@ -6,12 +6,19 @@ import (
 	"time"
 
 	"github.com/make-software/casper-go-sdk/v2/types/clvalue"
+	"github.com/make-software/casper-go-sdk/v2/types/serialization"
+	"github.com/make-software/casper-go-sdk/v2/types/serialization/encoding"
 )
 
 const (
-	TransactionSchedulingNativeTag = iota
+	TransactionSchedulingStandardTag = iota
 	TransactionSchedulingFutureEraTag
 	TransactionSchedulingFutureTimestampTag
+)
+
+const (
+	FutureEraEraIDIndex           uint16 = 1
+	FutureTimestampTimestampIndex uint16 = 1
 )
 
 type TransactionScheduling struct {
@@ -23,10 +30,15 @@ type TransactionScheduling struct {
 	FutureTimestamp *FutureTimestampScheduling `json:"FutureEra,omitempty"`
 }
 
+func (t *TransactionScheduling) SerializedLength() int {
+	envelope := serialization.CallTableSerializationEnvelope{}
+	return envelope.EstimateSize(t.serializedFieldLengths())
+}
+
 func (t *TransactionScheduling) Tag() byte {
 	switch {
 	case t.Standard != nil:
-		return TransactionSchedulingNativeTag
+		return TransactionSchedulingStandardTag
 	case t.FutureEra != nil:
 		return TransactionSchedulingFutureEraTag
 	case t.FutureTimestamp != nil:
@@ -34,18 +46,6 @@ func (t *TransactionScheduling) Tag() byte {
 	default:
 		return 0
 	}
-}
-
-func (t *TransactionScheduling) Bytes() []byte {
-	result := make([]byte, 0, 2)
-	result = append(result, t.Tag())
-
-	if t.FutureEra != nil {
-		result = append(result, clvalue.NewCLUInt64(t.FutureEra.EraID).Bytes()...)
-	} else if t.FutureTimestamp != nil {
-		result = append(result, clvalue.NewCLUInt64(uint64(time.Time(t.FutureTimestamp.TimeStamp).UnixMilli())).Bytes()...)
-	}
-	return result
 }
 
 func (t *TransactionScheduling) UnmarshalJSON(data []byte) error {
@@ -113,4 +113,58 @@ type FutureEraScheduling struct {
 
 type FutureTimestampScheduling struct {
 	TimeStamp Timestamp `json:"FutureTimestamp"`
+}
+
+func (t *TransactionScheduling) Bytes() ([]byte, error) {
+	builder, err := serialization.NewCallTableSerializationEnvelopeBuilder(t.serializedFieldLengths())
+	if err != nil {
+		return nil, err
+	}
+
+	switch {
+	case t.Standard != nil:
+		if err = builder.AddField(TagFieldIndex, []byte{TransactionSchedulingStandardTag}); err != nil {
+			return nil, err
+		}
+	case t.FutureEra != nil:
+		if err = builder.AddField(TagFieldIndex, []byte{TransactionSchedulingFutureEraTag}); err != nil {
+			return nil, err
+		}
+
+		eraIDBytes, _ := encoding.NewU64ToBytesEncoder(t.FutureEra.EraID).Bytes()
+		if err = builder.AddField(FutureEraEraIDIndex, eraIDBytes); err != nil {
+			return nil, err
+		}
+	case t.FutureTimestamp != nil:
+		if err = builder.AddField(TagFieldIndex, []byte{TransactionSchedulingFutureTimestampTag}); err != nil {
+			return nil, err
+		}
+
+		timestampBytes := clvalue.NewCLUInt64(uint64(time.Time(t.FutureTimestamp.TimeStamp).UnixMilli())).Bytes()
+		if err = builder.AddField(FutureTimestampTimestampIndex, timestampBytes); err != nil {
+			return nil, err
+		}
+	}
+	return builder.BinaryPayloadBytes()
+}
+
+func (d TransactionScheduling) serializedFieldLengths() []int {
+	switch {
+	case d.Standard != nil:
+		return []int{
+			encoding.U8SerializedLength,
+		}
+	case d.FutureEra != nil:
+		return []int{
+			encoding.U8SerializedLength,
+			encoding.U64SerializedLength,
+		}
+	case d.FutureTimestamp != nil:
+		return []int{
+			encoding.U8SerializedLength,
+			encoding.U64SerializedLength,
+		}
+	default:
+		return []int{}
+	}
 }
