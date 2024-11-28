@@ -23,7 +23,6 @@ type (
 	Contract             = types.Contract
 	Transaction          = types.Transaction
 	TransactionV1        = types.TransactionV1
-	TransactionPayload   = types.TransactionPayload
 	TransactionV1Payload = types.TransactionV1Payload
 	Deploy               = types.Deploy
 	DeployHeader         = types.DeployHeader

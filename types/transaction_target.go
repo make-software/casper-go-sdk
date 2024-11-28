@@ -12,20 +12,17 @@ import (
 )
 
 const (
-	NativeVariant uint8 = 0
+	SessionIsInstallIndex uint16 = iota + 1
+	SessionRuntimeIndex
+	SessionModuleBytesIndex
+	SessionTransferredValueIndex
+	SessionSeedIndex
+)
 
-	StoredVariant uint8  = 1
-	StoredIdIndex uint16 = 1
-
-	StoredRuntimeIndex          uint16 = 2
-	StoredTransferredValueIndex uint16 = 3
-
-	SessionVariant               uint8  = 2
-	SessionIsInstallIndex        uint16 = 1
-	SessionRuntimeIndex          uint16 = 2
-	SessionModuleBytesIndex      uint16 = 3
-	SessionTransferredValueIndex uint16 = 4
-	SessionSeedIndex             uint16 = 5
+const (
+	StoredIdIndex uint16 = iota + 1
+	StoredRuntimeIndex
+	StoredTransferredValueIndex
 )
 
 const (

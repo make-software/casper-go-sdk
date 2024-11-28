@@ -14,8 +14,8 @@ var ErrArgumentNotFound = errors.New("argument is not found")
 type Args []PairArgument
 
 func (args Args) SerializedLength() int {
-	//TODO implement me
-	panic("implement me")
+	bytes, _ := args.Bytes()
+	return len(bytes)
 }
 
 func (args Args) Bytes() ([]byte, error) {

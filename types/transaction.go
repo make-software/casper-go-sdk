@@ -38,17 +38,6 @@ const (
 type Transaction struct {
 	// Hex-encoded Transaction hash
 	Hash key.Hash `json:"hash"`
-	// The Transaction payload
-	Payload TransactionPayload `json:"payload"`
-	// List of signers and signatures for this Transaction
-	Approvals []Approval `json:"approvals"`
-
-	// source DeployV1, nil if constructed from TransactionV1
-	originDeployV1      *Deploy
-	originTransactionV1 *TransactionV1
-}
-
-type TransactionPayload struct {
 	// Transaction chain name
 	ChainName string `json:"chain_name"`
 	// `Timestamp` formatted as per RFC 3339
@@ -59,7 +48,7 @@ type TransactionPayload struct {
 	InitiatorAddr InitiatorAddr `json:"initiator_addr"`
 	// Pricing mode of a Transaction.
 	PricingMode PricingMode `json:"pricing_mode"`
-	// ============== Transaction Body =====================
+	// Args transaction args
 	Args *Args `json:"args,omitempty"`
 	// Execution target of a Transaction.
 	Target TransactionTarget `json:"target"`
@@ -67,21 +56,13 @@ type TransactionPayload struct {
 	EntryPoint TransactionEntryPoint `json:"entry_point"`
 	// Scheduling mode of a Transaction.
 	Scheduling TransactionScheduling `json:"scheduling"`
+	// List of signers and signatures for this Transaction
+	Approvals []Approval `json:"approvals"`
 	// Transaction category
 	Category uint8 `json:"transaction_category"`
-}
-
-type TransactionHeader struct {
-	// Transaction chain name
-	ChainName string `json:"chain_name"`
-	// `Timestamp` formatted as per RFC 3339
-	Timestamp Timestamp `json:"timestamp"`
-	// Duration of the `TransactionV1` in milliseconds (from timestamp).
-	TTL Duration `json:"ttl"`
-	// The address of the initiator of a Transaction.
-	InitiatorAddr InitiatorAddr `json:"initiator_addr"`
-	// Pricing mode of a Transaction.
-	PricingMode PricingMode `json:"pricing_mode"`
+	// source DeployV1, nil if constructed from TransactionV1
+	originDeployV1      *Deploy
+	originTransactionV1 *TransactionV1
 }
 
 func (t *Transaction) GetDeploy() *Deploy {
@@ -94,18 +75,16 @@ func (t *Transaction) GetTransactionV1() *TransactionV1 {
 
 func NewTransactionFromTransactionV1(v1 TransactionV1) Transaction {
 	return Transaction{
-		Hash: v1.Hash,
-		Payload: TransactionPayload{
-			ChainName:     v1.Payload.ChainName,
-			Timestamp:     v1.Payload.Timestamp,
-			TTL:           v1.Payload.TTL,
-			InitiatorAddr: v1.Payload.InitiatorAddr,
-			PricingMode:   v1.Payload.PricingMode,
-			Args:          v1.Payload.Fields.NamedArgs.Args,
-			Target:        v1.Payload.Fields.Target,
-			EntryPoint:    v1.Payload.Fields.TransactionEntryPoint,
-			Scheduling:    v1.Payload.Fields.TransactionScheduling,
-		},
+		Hash:                v1.Hash,
+		ChainName:           v1.Payload.ChainName,
+		Timestamp:           v1.Payload.Timestamp,
+		TTL:                 v1.Payload.TTL,
+		InitiatorAddr:       v1.Payload.InitiatorAddr,
+		PricingMode:         v1.Payload.PricingMode,
+		Args:                v1.Payload.Fields.NamedArgs.Args,
+		Target:              v1.Payload.Fields.Target,
+		EntryPoint:          v1.Payload.Fields.TransactionEntryPoint,
+		Scheduling:          v1.Payload.Fields.TransactionScheduling,
 		Approvals:           v1.Approvals,
 		originTransactionV1: &v1,
 	}
@@ -154,29 +133,27 @@ func NewTransactionFromDeploy(deploy Deploy) Transaction {
 	// Use StandardPayment as true only for payments without explicit `payment amount`
 	var standardPayment = paymentAmount == 0 && deploy.Payment.ModuleBytes == nil
 	return Transaction{
-		Hash: deploy.Hash,
-		Payload: TransactionPayload{
-			ChainName: deploy.Header.ChainName,
-			Timestamp: deploy.Header.Timestamp,
-			TTL:       deploy.Header.TTL,
-			InitiatorAddr: InitiatorAddr{
-				PublicKey: &deploy.Header.Account,
-			},
-			PricingMode: PricingMode{
-				Limited: &LimitedMode{
-					GasPriceTolerance: 1,
-					PaymentAmount:     paymentAmount,
-					StandardPayment:   standardPayment,
-				},
-			},
-			Args:       deploy.Session.Args(),
-			Target:     NewTransactionTargetFromSession(deploy.Session),
-			EntryPoint: transactionEntryPoint,
-			Scheduling: TransactionScheduling{
-				Standard: &struct{}{},
-			},
-			Category: uint8(transactionCategory),
+		Hash:      deploy.Hash,
+		ChainName: deploy.Header.ChainName,
+		Timestamp: deploy.Header.Timestamp,
+		TTL:       deploy.Header.TTL,
+		InitiatorAddr: InitiatorAddr{
+			PublicKey: &deploy.Header.Account,
 		},
+		PricingMode: PricingMode{
+			Limited: &LimitedMode{
+				GasPriceTolerance: 1,
+				PaymentAmount:     paymentAmount,
+				StandardPayment:   standardPayment,
+			},
+		},
+		Args:       deploy.Session.Args(),
+		Target:     NewTransactionTargetFromSession(deploy.Session),
+		EntryPoint: transactionEntryPoint,
+		Scheduling: TransactionScheduling{
+			Standard: &struct{}{},
+		},
+		Category:       uint8(transactionCategory),
 		Approvals:      deploy.Approvals,
 		originDeployV1: &deploy,
 	}

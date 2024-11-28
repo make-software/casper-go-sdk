@@ -7,15 +7,20 @@ import (
 )
 
 const (
-	PaymentLimitedVariantTag             uint8  = 0
-	PaymentLimitedPaymentAmountIndex     uint16 = 1
-	PaymentLimitedGasPriceToleranceIndex uint16 = 2
-	PaymentLimitedStandardPaymentIndex   uint16 = 3
+	PaymentLimitedPaymentAmountIndex uint16 = iota + 1
+	PaymentLimitedGasPriceToleranceIndex
+	PaymentLimitedStandardPaymentIndex
+)
 
-	FixedVariantTag                       uint8  = 1
+const (
+	PaymentLimitedVariantTag uint8 = iota
+	FixedVariantTag
+	ReservedVariantTag
+)
+
+const (
 	FixedGasPriceToleranceIndex           uint16 = 1
 	FixedAdditionalComputationFactorIndex uint16 = 2
-	ReservedVariantTag                    uint8  = 2
 	ReservedReceiptIndex                  uint16 = 1
 )
 
@@ -237,9 +242,10 @@ func (p *PricingMode) Bytes() ([]byte, error) {
 			return nil, err
 		}
 
-		//if err = builder.AddField(ReservedReceiptIndex, p.Receipt); err != nil {
-		//	return nil, err
-		//}
+		receiptBytes, _ := encoding.NewBytesToBytesEncoder(p.Prepaid.Receipt.Bytes()).Bytes()
+		if err = builder.AddField(ReservedReceiptIndex, receiptBytes); err != nil {
+			return nil, err
+		}
 	default:
 		return nil, serialization.ErrFormatting
 	}
