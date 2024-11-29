@@ -1,7 +1,11 @@
 package types
 
 import (
+	"encoding/json"
+	"errors"
+
 	"github.com/make-software/casper-go-sdk/v2/types/clvalue"
+	"github.com/make-software/casper-go-sdk/v2/types/key"
 	"github.com/make-software/casper-go-sdk/v2/types/keypair"
 )
 
@@ -26,9 +30,57 @@ type ValidatorAllocation struct {
 
 type DelegatorAllocation struct {
 	// Public key of the delegator
-	DelegatorPublicKey keypair.PublicKey `json:"delegator_public_key"`
+	DelegatorKind DelegatorKind `json:"delegator_kind"`
 	// Public key of the validator
 	ValidatorPublicKey keypair.PublicKey `json:"validator_public_key"`
 	// Amount allocated as a reward.
 	Amount clvalue.UInt512 `json:"amount"`
+}
+
+func (t *DelegatorAllocation) UnmarshalJSON(data []byte) error {
+	if t == nil {
+		return errors.New("json.RawMessage: UnmarshalJSON on nil pointer")
+	}
+	temp := struct {
+		// Public key of the delegator
+		DelegatorKind *DelegatorKind `json:"delegator_kind"`
+		// Public key of the validator
+		DelegatorPublicKey *keypair.PublicKey `json:"delegator_public_key"`
+		// Public key of the validator
+		ValidatorPublicKey keypair.PublicKey `json:"validator_public_key"`
+		// Amount allocated as a reward.
+		Amount clvalue.UInt512 `json:"amount"`
+	}{}
+
+	if err := json.Unmarshal(data, &temp); err != nil {
+		return err
+	}
+
+	if temp.DelegatorKind != nil {
+		*t = DelegatorAllocation{
+			DelegatorKind:      *temp.DelegatorKind,
+			ValidatorPublicKey: temp.ValidatorPublicKey,
+			Amount:             temp.Amount,
+		}
+	} else if temp.DelegatorPublicKey != nil {
+		*t = DelegatorAllocation{
+			DelegatorKind: DelegatorKind{
+				PublicKey: temp.DelegatorPublicKey,
+			},
+			ValidatorPublicKey: temp.ValidatorPublicKey,
+			Amount:             temp.Amount,
+		}
+	} else {
+		return errors.New("unexpected DelegatorAllocation format")
+	}
+
+	return nil
+}
+
+// DelegatorKind Auction bid variants. Kinds of delegation bids.
+type DelegatorKind struct {
+	// Delegation from public key.
+	PublicKey *keypair.PublicKey `json:"PublicKey,omitempty"`
+	// Delegation from purse.
+	Purse *key.URef `json:"Purse,omitempty"`
 }

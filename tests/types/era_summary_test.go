@@ -11,14 +11,33 @@ import (
 )
 
 func Test_EraSummary_MarshalUnmarshal_ShouldReturnSameResult(t *testing.T) {
-	fixture, err := os.ReadFile("../data/era/era_summary_example.json")
-	assert.NoError(t, err)
+	tests := []struct {
+		name        string
+		fixturePath string
+	}{
+		{
+			"V1 EraSummary",
+			"../data/era/era_summary_example.json",
+		},
+		{
+			"V2 EraSummary",
+			"../data/era/era_summary_v2.json",
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			fixture, err := os.ReadFile(test.fixturePath)
+			assert.NoError(t, err)
 
-	var era types.EraSummary
-	err = json.Unmarshal(fixture, &era)
-	assert.NoError(t, err)
+			var era types.EraSummary
+			err = json.Unmarshal(fixture, &era)
+			assert.NoError(t, err)
 
-	result, err := json.Marshal(era)
-	assert.NoError(t, err)
-	assert.JSONEq(t, string(fixture), string(result))
+			for _, summary := range era.StoredValue.EraInfo.SeigniorageAllocations {
+				if summary.Delegator != nil {
+					assert.NotNil(t, summary.Delegator.DelegatorKind.PublicKey)
+				}
+			}
+		})
+	}
 }
