@@ -12,7 +12,7 @@ type BidKind struct {
 	Bridge *Bridge `json:"Bridge,omitempty"`
 	// New validator public key associated with the bid.
 	Credit *Credit `json:"Credit,omitempty"`
-	//// Represents a validator reserving a slot for specific delegator
-	//Reservation *Reservation `json:"Reservation,omitempty"`
-	//Unbond      *Unbond       `json:"Unbond,omitempty"`
+	// Represents a validator reserving a slot for specific delegator
+	Reservation *Reservation `json:"Reservation,omitempty"`
+	Unbond      *Unbond      `json:"Unbond,omitempty"`
 }
