@@ -145,3 +145,37 @@ type VestingSchedule struct {
 	InitialReleaseTimestampMillis uint64            `json:"initial_release_timestamp_millis"`
 	LockedAmounts                 []clvalue.UInt512 `json:"locked_amounts"`
 }
+
+// Reservation represents a validator reserving a slot for specific delegator
+type Reservation struct {
+	// Individual delegation rate.
+	DelegationRate uint8 `json:"delegation_rate"`
+	// Validator's public key.
+	ValidatorPublicKey keypair.PublicKey `json:"validator_public_key"`
+	// Delegator kind.
+	DelegatorKind DelegatorKind `json:"delegator_kind"`
+}
+
+type Unbond struct {
+	// Validator's public key.
+	ValidatorPublicKey keypair.PublicKey `json:"validator_public_key"`
+	// Unbond kind
+	UnbondKind UnbondKind `json:"unbond_kind"`
+	// List of Unbond eras
+	Eras []UnbondEra `json:"eras"`
+}
+
+type UnbondKind struct {
+	Validator          keypair.PublicKey `json:"Validator"`
+	DelegatedPublicKey keypair.PublicKey `json:"DelegatedPublicKey"`
+	DelegatedPurse     key.URef          `json:"DelegatedPurse"`
+}
+
+type UnbondEra struct {
+	// Unbond amount
+	Amount clvalue.UInt512 `json:"amount"`
+	// Unbound era
+	EraOfCreation uint64 `json:"era_of_creation"`
+	// The purse was used for bonding
+	BondingPurse key.URef `json:"bonding_purse"`
+}
