@@ -16,16 +16,16 @@ func Test_EraSummary_MarshalUnmarshal_ShouldReturnSameResult(t *testing.T) {
 		fixturePath string
 		isPurse     bool
 	}{
-		//{
-		//	"V1 EraSummary",
-		//	"../data/era/era_summary_example.json",
-		//	false,
-		//},
-		//{
-		//	"V2 EraSummary",
-		//	"../data/era/era_summary_v2.json",
-		//	false,
-		//},
+		{
+			"V1 EraSummary",
+			"../data/era/era_summary_example.json",
+			false,
+		},
+		{
+			"V2 EraSummary",
+			"../data/era/era_summary_v2.json",
+			false,
+		},
 		{
 			"V2 EraSummary",
 			"../data/era/era_summary_v2_delegator_kind_purse.json",
