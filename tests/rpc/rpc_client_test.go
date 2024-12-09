@@ -117,6 +117,9 @@ func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 		{
 			filePath: "../data/transaction/get_transaction_native_target.json",
 		},
+		{
+			filePath: "../data/transaction/get_transaction_with_delegator_kind.json",
+		},
 	}
 	for _, tt := range tests {
 		t.Run("GetTransaction", func(t *testing.T) {

@@ -1,6 +1,7 @@
 package types
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 
@@ -83,4 +84,45 @@ type DelegatorKind struct {
 	PublicKey *keypair.PublicKey `json:"PublicKey,omitempty"`
 	// Delegation from purse.
 	Purse *key.URef `json:"Purse,omitempty"`
+}
+
+func (t *DelegatorKind) UnmarshalJSON(data []byte) error {
+	if t == nil {
+		return errors.New("json.RawMessage: UnmarshalJSON on nil pointer")
+	}
+	temp := struct {
+		PublicKey *keypair.PublicKey `json:"PublicKey,omitempty"`
+		// purse is represented not in format at uref-{uref-bytes}-{access}
+		// but just a hex bytes
+		Purse *string `json:"Purse,omitempty"`
+	}{}
+
+	if err := json.Unmarshal(data, &temp); err != nil {
+		return err
+	}
+
+	if temp.PublicKey != nil {
+		*t = DelegatorKind{
+			PublicKey: temp.PublicKey,
+		}
+	} else if temp.Purse != nil {
+		urefBytes, err := hex.DecodeString(*temp.Purse)
+		if err != nil {
+			return err
+		}
+
+		// added one byte for default access
+		uref, err := key.NewURefFromBytes(append(urefBytes, byte(7)))
+		if err != nil {
+			return err
+		}
+
+		*t = DelegatorKind{
+			Purse: &uref,
+		}
+	} else {
+		return errors.New("unexpected DelegatorKind format")
+	}
+
+	return nil
 }
