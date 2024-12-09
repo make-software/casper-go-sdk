@@ -31,6 +31,10 @@ type URef struct {
 	access UrefAccess
 }
 
+func (v URef) DataBytes() []byte {
+	return v.data[:]
+}
+
 func (v URef) Bytes() []byte {
 	return append(v.data[:], []byte{v.access}...)
 }
