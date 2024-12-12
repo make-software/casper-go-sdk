@@ -3,6 +3,7 @@ package rpc
 import (
 	"context"
 	"strconv"
+	"strings"
 
 	"github.com/make-software/casper-go-sdk/v2/types"
 	"github.com/make-software/casper-go-sdk/v2/types/key"
@@ -38,6 +39,7 @@ const (
 	MethodGetDictionaryItem   Method = "state_get_dictionary_item"
 	MethodGetStateBalance     Method = "state_get_balance"
 	MethodGetStateAccount     Method = "state_get_account_info"
+	MethodGetStatePackage     Method = "state_get_package"
 	MethodGetStateEntity      Method = "state_get_entity"
 	MethodGetEraInfo          Method = "chain_get_era_info_by_switch_block"
 	MethodGetBlock            Method = "chain_get_block"
@@ -209,6 +211,27 @@ type ParamDictionaryIdentifierURef struct {
 type SpeculativeExecParams struct {
 	Deploy          types.Deploy     `json:"deploy"`
 	BlockIdentifier *BlockIdentifier `json:"block_identifier,omitempty"`
+}
+
+type ParamStateGetPackage struct {
+	PackageIdentifier PackageIdentifier `json:"package_identifier"`
+	ParamBlockIdentifier
+}
+
+type PackageIdentifier struct {
+	PackageAddr         *string `json:"PackageAddr,omitempty"`
+	ContractPackageHash *string `json:"ContractPackageHash,omitempty"`
+}
+
+func NewPackageIdentifierFromHash(hash string) PackageIdentifier {
+	if strings.HasPrefix(hash, "package-") {
+		return PackageIdentifier{
+			PackageAddr: &hash,
+		}
+	}
+	return PackageIdentifier{
+		ContractPackageHash: &hash,
+	}
 }
 
 type PurseIdentifier struct {

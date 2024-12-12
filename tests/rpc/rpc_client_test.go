@@ -89,6 +89,37 @@ func Test_DefaultClient_GetDeploy_Example(t *testing.T) {
 	}
 }
 
+func Test_DefaultClient_GetPackage_Example(t *testing.T) {
+	tests := []struct {
+		filePath  string
+		isPackage bool
+	}{
+		{
+			filePath: "../data/package/get-package-result-contract-package-v200.json",
+		},
+		{
+			filePath:  "../data/package/get-package-result-package-v200.json",
+			isPackage: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run("GetTransaction", func(t *testing.T) {
+			server := SetupServer(t, tt.filePath)
+			defer server.Close()
+			client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+			result, err := client.GetPackageByBlockHeight(context.Background(), "package-0009ea4441f4700325d9c38b0b6df415537596e1204abe4f6a94b6996aebf2f1", 0)
+			require.NoError(t, err)
+			require.NotEmpty(t, result)
+
+			if tt.isPackage {
+				require.NotEmpty(t, result.Package.Package)
+			} else {
+				require.NotEmpty(t, result.Package.ContractPackage)
+			}
+		})
+	}
+}
+
 func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 	tests := []struct {
 		filePath          string
@@ -467,7 +498,7 @@ func Test_DefaultClient_GetAccountInfoByBlochHash(t *testing.T) {
 	pubKey, err := casper.NewPublicKey("01018525deae6091abccab6704a0fa44e12c495eec9e8fe6929862e1b75580e715")
 	require.NoError(t, err)
 	blockHash := "bf06bdb1616050cea5862333d1f4787718f1011c95574ba92378419eefeeee59"
-	res, err := client.GetAccountInfoByBlochHash(context.Background(), blockHash, pubKey)
+	res, err := client.GetAccountInfoByBlockHash(context.Background(), blockHash, pubKey)
 	require.NoError(t, err)
 	assert.Equal(t, "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c", res.Account.AccountHash.ToPrefixedString())
 }
@@ -478,7 +509,7 @@ func Test_DefaultClient_GetAccountInfoByBlochHeight(t *testing.T) {
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
 	pubKey, err := casper.NewPublicKey("01018525deae6091abccab6704a0fa44e12c495eec9e8fe6929862e1b75580e715")
 	require.NoError(t, err)
-	res, err := client.GetAccountInfoByBlochHeight(context.Background(), 185, pubKey)
+	res, err := client.GetAccountInfoByBlockHeight(context.Background(), 185, pubKey)
 	require.NoError(t, err)
 	assert.Equal(t, "account-hash-e94daaff79c2ab8d9c31d9c3058d7d0a0dd31204a5638dc1451fa67b2e3fb88c", res.Account.AccountHash.ToPrefixedString())
 }

@@ -85,15 +85,24 @@ type ClientInformational interface {
 	// If the param stateRootHash is nil, the client will make an additional RPC call to retrieve the latest stateRootHash.
 	QueryGlobalStateByStateHash(ctx context.Context, stateRootHash *string, key string, path []string) (QueryGlobalStateResult, error)
 
-	// GetAccountInfoByBlochHash returns a JSON representation of an Account from the network.
+	// GetAccountInfoByBlockHash returns a JSON representation of an Account from the network.
 	// The blockHash must refer to a  Block after the Account's creation, or the method will return an empty response.
-	GetAccountInfoByBlochHash(ctx context.Context, blockHash string, pub keypair.PublicKey) (StateGetAccountInfo, error)
-	// GetAccountInfoByBlochHeight returns a JSON representation of an Account from the network.
+	GetAccountInfoByBlockHash(ctx context.Context, blockHash string, pub keypair.PublicKey) (StateGetAccountInfo, error)
+	// GetAccountInfoByBlockHeight returns a JSON representation of an Account from the network.
 	// The blockHeight must refer to a Block after the Account's creation, or the method will return an empty response.
-	GetAccountInfoByBlochHeight(ctx context.Context, blockHeight uint64, pub keypair.PublicKey) (StateGetAccountInfo, error)
+	GetAccountInfoByBlockHeight(ctx context.Context, blockHeight uint64, pub keypair.PublicKey) (StateGetAccountInfo, error)
 	// GetAccountInfo returns a JSON representation of an Account from the network.
 	// This is the most generic interface.
 	GetAccountInfo(ctx context.Context, blockIdentifier *ParamBlockIdentifier, accountIdentifier AccountIdentifier) (StateGetAccountInfo, error)
+	// GetPackageByBlockHeight returns a Package from the network by BlockHeight
+	// The blockHeight must refer to a Block after the Package's creation, or the method will return an empty response.
+	GetPackageByBlockHeight(ctx context.Context, packageHash string, blockHeight uint64) (StateGetPackage, error)
+	// GetPackageByBlockHash returns a Package from the network by BlockHash
+	// The blockHash must refer to a Block after the Package's creation, or the method will return an empty response.
+	GetPackageByBlockHash(ctx context.Context, packageHash string, blockHash string) (StateGetPackage, error)
+	// GetPackage returns a Package from the network
+	// This is the most generic interface.
+	GetPackage(ctx context.Context, packageIdentifier PackageIdentifier, blockIdentifier *ParamBlockIdentifier) (StateGetPackage, error)
 
 	// GetLatestEntity returns latest AddressableEntity from the network.
 	GetLatestEntity(ctx context.Context, entityIdentifier EntityIdentifier) (StateGetEntityResult, error)

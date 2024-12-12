@@ -42,6 +42,24 @@ func (b StateGetBalanceResult) GetRawJSON() json.RawMessage {
 	return b.rawJSON
 }
 
+type StateGetPackage struct {
+	ApiVersion string  `json:"api_version"`
+	Package    Package `json:"package"`
+	//MerkleProof is a construction created using a merkle trie that allows verification of the associated hashes.
+	MerkleProof json.RawMessage `json:"merkle_proof"`
+
+	rawJSON json.RawMessage
+}
+
+type Package struct {
+	ContractPackage *types.ContractPackage `json:"ContractPackage"`
+	Package         *types.Package         `json:"Package"`
+}
+
+func (b StateGetPackage) GetRawJSON() json.RawMessage {
+	return b.rawJSON
+}
+
 type StateGetAccountInfo struct {
 	ApiVersion string        `json:"api_version"`
 	Account    types.Account `json:"account"`
