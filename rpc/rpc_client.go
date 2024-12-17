@@ -253,7 +253,7 @@ func (c *client) GetEntityByBlockHeight(ctx context.Context, entityIdentifier En
 	return result, nil
 }
 
-func (c *client) GetAccountInfoByBlochHash(ctx context.Context, blockHash string, pub keypair.PublicKey) (StateGetAccountInfo, error) {
+func (c *client) GetAccountInfoByBlockHash(ctx context.Context, blockHash string, pub keypair.PublicKey) (StateGetAccountInfo, error) {
 	var result StateGetAccountInfo
 
 	resp, err := c.processRequest(ctx, MethodGetStateAccount, ParamGetAccountInfoBalance{AccountIdentifier: pub.String(), ParamBlockIdentifier: NewParamBlockByHash(blockHash)}, &result)
@@ -265,7 +265,7 @@ func (c *client) GetAccountInfoByBlochHash(ctx context.Context, blockHash string
 	return result, nil
 }
 
-func (c *client) GetAccountInfoByBlochHeight(ctx context.Context, blockHeight uint64, pub keypair.PublicKey) (StateGetAccountInfo, error) {
+func (c *client) GetAccountInfoByBlockHeight(ctx context.Context, blockHeight uint64, pub keypair.PublicKey) (StateGetAccountInfo, error) {
 	var result StateGetAccountInfo
 	resp, err := c.processRequest(ctx, MethodGetStateAccount, ParamGetAccountInfoBalance{AccountIdentifier: pub.String(), ParamBlockIdentifier: NewParamBlockByHeight(blockHeight)}, &result)
 	if err != nil {
@@ -293,6 +293,45 @@ func (c *client) GetAccountInfo(ctx context.Context, blockIdentifier *ParamBlock
 	resp, err := c.processRequest(ctx, MethodGetStateAccount, ParamGetAccountInfoBalance{AccountIdentifier: accountParam, ParamBlockIdentifier: *blockIdentifier}, &result)
 	if err != nil {
 		return StateGetAccountInfo{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetPackageByBlockHeight(ctx context.Context, packageHash string, blockHeight uint64) (StateGetPackage, error) {
+	var result StateGetPackage
+
+	resp, err := c.processRequest(ctx, MethodGetStatePackage, ParamStateGetPackage{PackageIdentifier: NewPackageIdentifierFromHash(packageHash), ParamBlockIdentifier: NewParamBlockByHeight(blockHeight)}, &result)
+	if err != nil {
+		return StateGetPackage{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetPackageByBlockHash(ctx context.Context, packageHash string, blockHash string) (StateGetPackage, error) {
+	var result StateGetPackage
+
+	resp, err := c.processRequest(ctx, MethodGetStatePackage, ParamStateGetPackage{PackageIdentifier: NewPackageIdentifierFromHash(packageHash), ParamBlockIdentifier: NewParamBlockByHash(blockHash)}, &result)
+	if err != nil {
+		return StateGetPackage{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetPackage(ctx context.Context, packageIdentifier PackageIdentifier, blockIdentifier *ParamBlockIdentifier) (StateGetPackage, error) {
+	if blockIdentifier == nil {
+		blockIdentifier = &ParamBlockIdentifier{}
+	}
+
+	var result StateGetPackage
+	resp, err := c.processRequest(ctx, MethodGetStatePackage, ParamStateGetPackage{PackageIdentifier: packageIdentifier, ParamBlockIdentifier: *blockIdentifier}, &result)
+	if err != nil {
+		return StateGetPackage{}, err
 	}
 
 	result.rawJSON = resp.Result
