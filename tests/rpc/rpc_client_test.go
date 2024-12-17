@@ -378,9 +378,9 @@ func Test_DefaultClient_QueryGlobalStateByBlockHeight_StoredAddressableEntity_Pa
 	key := "package-8e08c43f144a13c915cf3681cc97bcd98c6a81d7b5da5164dc066318ec1c80a7"
 	res, err := client.QueryGlobalStateByBlockHeight(context.Background(), 1000, key, nil)
 	require.NoError(t, err)
-	assert.NotEmpty(t, res.StoredValue.Package)
-	assert.NotEmpty(t, res.StoredValue.Package.Versions)
-	assert.NotEmpty(t, res.StoredValue.Package.LockStatus)
+	assert.NotEmpty(t, res.StoredValue.SmartContract)
+	assert.NotEmpty(t, res.StoredValue.SmartContract.Versions)
+	assert.NotEmpty(t, res.StoredValue.SmartContract.LockStatus)
 }
 
 func Test_DefaultClient_QueryGlobalStateByBlockHeight_StoredAddressableEntity_Contract(t *testing.T) {

@@ -22,7 +22,6 @@ const (
 const (
 	StoredIdIndex uint16 = iota + 1
 	StoredRuntimeIndex
-	StoredTransferredValueIndex
 )
 
 const (
@@ -46,17 +45,14 @@ func (t *TransactionTarget) SerializedLength() int {
 }
 
 type StoredTarget struct {
-	ID               TransactionInvocationTarget `json:"id"`
-	Runtime          TransactionRuntime          `json:"runtime"`
-	TransferredValue uint64                      `json:"transferred_value"`
+	ID      TransactionInvocationTarget `json:"id"`
+	Runtime TransactionRuntime          `json:"runtime"`
 }
 
 type SessionTarget struct {
 	ModuleBytes      []byte             `json:"module_bytes"`
 	Runtime          TransactionRuntime `json:"runtime"`
-	TransferredValue uint64             `json:"transferred_value"`
 	IsInstallUpgrade bool               `json:"is_install_upgrade"`
-	Seed             *key.Hash          `json:"seed,omitempty"`
 }
 
 func (t *TransactionTarget) Bytes() ([]byte, error) {
@@ -88,9 +84,6 @@ func (t *TransactionTarget) Bytes() ([]byte, error) {
 		if err = builder.AddField(StoredRuntimeIndex, runtimeBytes); err != nil {
 			return nil, err
 		}
-		if err = builder.AddField(StoredTransferredValueIndex, []byte{byte(t.Stored.TransferredValue)}); err != nil {
-			return nil, err
-		}
 	case t.Session != nil:
 		if err = builder.AddField(TagFieldIndex, []byte{TransactionTargetTypeSession}); err != nil {
 			return nil, err
@@ -107,24 +100,6 @@ func (t *TransactionTarget) Bytes() ([]byte, error) {
 
 		moduleBytes, _ := encoding.NewBytesToBytesEncoder(t.Session.ModuleBytes).Bytes()
 		if err = builder.AddField(SessionModuleBytesIndex, moduleBytes); err != nil {
-			return nil, err
-		}
-
-		transferredValuesBytes, _ := encoding.NewU64ToBytesEncoder(t.Session.TransferredValue).Bytes()
-		if err = builder.AddField(SessionTransferredValueIndex, transferredValuesBytes); err != nil {
-			return nil, err
-		}
-
-		var seedBytes []byte
-		if t.Session.Seed != nil {
-			seedBytes = []byte{1} // Option Some tag
-			bytes, _ := encoding.NewStringToBytesEncoder(t.Session.Seed.String()).Bytes()
-			seedBytes = append(seedBytes, bytes...)
-		} else {
-			seedBytes = []byte{0} // Option none tag
-		}
-
-		if err = builder.AddField(SessionSeedIndex, seedBytes); err != nil {
 			return nil, err
 		}
 	default:
@@ -148,18 +123,11 @@ func (t TransactionTarget) serializedFieldLengths() []int {
 			encoding.U64SerializedLength,
 		}
 	case t.Session != nil:
-		var seedSerializedLength int
-		if t.Session.Seed != nil {
-			seedSerializedLength = encoding.StringSerializedLength(t.Session.Seed.String())
-		}
-
 		return []int{
 			encoding.U8SerializedLength,
 			encoding.BoolSerializedLength,
 			encoding.U8SerializedLength,
 			encoding.BytesSerializedLength(t.Session.ModuleBytes),
-			encoding.U64SerializedLength,
-			encoding.U8SerializedLength + seedSerializedLength,
 		}
 	default:
 		return []int{}
@@ -171,9 +139,7 @@ func (t *TransactionTarget) UnmarshalJSON(data []byte) error {
 		Stored  *StoredTarget `json:"Stored"`
 		Session *struct {
 			Runtime          TransactionRuntime `json:"runtime"`
-			TransferredValue uint64             `json:"transferred_value"`
 			IsInstallUpgrade bool               `json:"is_install_upgrade"`
-			Seed             *key.Hash          `json:"seed,omitempty"`
 			Module           string             `json:"module_bytes"`
 		} `json:"Session"`
 	}
@@ -188,9 +154,7 @@ func (t *TransactionTarget) UnmarshalJSON(data []byte) error {
 				Session: &SessionTarget{
 					ModuleBytes:      decodedBytes,
 					Runtime:          target.Session.Runtime,
-					TransferredValue: target.Session.TransferredValue,
 					IsInstallUpgrade: target.Session.IsInstallUpgrade,
-					Seed:             target.Session.Seed,
 				},
 			}
 		}
@@ -241,9 +205,7 @@ func (t TransactionTarget) MarshalJSON() ([]byte, error) {
 		}{
 			Session: sessionTarget{
 				Runtime:          t.Session.Runtime,
-				TransferredValue: t.Session.TransferredValue,
 				IsInstallUpgrade: t.Session.IsInstallUpgrade,
-				Seed:             t.Session.Seed,
 				ModuleBytes:      hex.EncodeToString(t.Session.ModuleBytes),
 			},
 		})
