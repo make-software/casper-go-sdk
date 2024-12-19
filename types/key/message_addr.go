@@ -12,8 +12,8 @@ const TopicPrefix = "topic-"
 
 // MessageAddr MessageTopicAddr
 type MessageAddr struct {
-	// The entity addr
-	EntityAddr EntityAddr
+	// The hash addr
+	HashAddr Hash
 	// The hash of the name of the message topic
 	TopicNameHash Hash
 	//  The message index.
@@ -48,12 +48,12 @@ func NewMessageAddr(source string) (MessageAddr, error) {
 		return MessageAddr{}, err
 	}
 
-	entityAddr, err := NewEntityAddr(strings.TrimPrefix(source, PrefixNameAddressableEntity))
+	hashAddr, err := NewHash(source)
 	if err != nil {
 		return MessageAddr{}, err
 	}
 
-	messageAddr.EntityAddr = entityAddr
+	messageAddr.HashAddr = hashAddr
 	return messageAddr, nil
 }
 
@@ -80,7 +80,7 @@ func (h MessageAddr) ToPrefixedString() string {
 	if h.MessageIndex == nil {
 		res += TopicPrefix
 	}
-	res += h.EntityAddr.ToPrefixedString()
+	res += h.HashAddr.String()
 	res += "-" + h.TopicNameHash.ToHex()
 	if h.MessageIndex != nil {
 		res += "-" + strconv.Itoa(int(*h.MessageIndex))
@@ -90,7 +90,7 @@ func (h MessageAddr) ToPrefixedString() string {
 
 func (h MessageAddr) Bytes() []byte {
 	res := make([]byte, 0, ByteHashLen)
-	res = append(res, h.EntityAddr.Bytes()...)
+	res = append(res, h.HashAddr.Bytes()...)
 	res = append(res, h.TopicNameHash.Bytes()...)
 
 	if h.MessageIndex != nil {
@@ -100,7 +100,7 @@ func (h MessageAddr) Bytes() []byte {
 }
 
 func NewMessageAddrFromBuffer(buf *bytes.Buffer) (MessageAddr, error) {
-	entityAddr, err := NewEntityAddrFromBuffer(buf)
+	hashAddr, err := NewByteHashFromBuffer(buf)
 	if err != nil {
 		return MessageAddr{}, err
 	}
@@ -117,7 +117,7 @@ func NewMessageAddrFromBuffer(buf *bytes.Buffer) (MessageAddr, error) {
 	}
 
 	return MessageAddr{
-		EntityAddr:    entityAddr,
+		HashAddr:      hashAddr,
 		TopicNameHash: topicNameHash,
 		MessageIndex:  msgIdx,
 	}, nil
