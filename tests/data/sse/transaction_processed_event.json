@@ -161,7 +161,7 @@
     },
     "messages": [
       {
-        "entity_hash": "entity-contract-a9987538f3cceb823d627d6e28174fd7b50022c847db44b96c36077818e322ed",
+        "hash_addr": "9038763d3066f0217047263ebd48dc7c839fadfdde141f5b990866563655b44a",
         "message": {
           "String": "Transfer(Transfer { sender: Key::AddressableEntity(account-9fa1fc0808d3a5b9ea9f3af4ca7c8c3655568fdf378d8afdf8a7e56e58abbfd4), recipient: Key::AddressableEntity(account-ffaa73331421de42fd71a28824e1606a1ca7fa754f91f501f0cf56015f7284cd), amount: 12502 })"
         },
