@@ -19,7 +19,7 @@ type StoredValue struct {
 	Unbonding         *UnbondingPurse      `json:"Unbonding,omitempty"`
 	AddressableEntity *AddressableEntity   `json:"AddressableEntity,omitempty"`
 	BidKind           *BidKind             `json:"BidKind,omitempty"`
-	SmartContract     *Package             `json:"SmartContract,omitempty"`
+	Package           *Package             `json:"Package,omitempty"`
 	ByteCode          *ByteCode            `json:"ByteCode,omitempty"`
 	MessageTopic      *MessageTopicSummary `json:"MessageTopic,omitempty"`
 	Message           *MessageChecksum     `json:"Message,omitempty"`

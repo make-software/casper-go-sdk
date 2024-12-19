@@ -173,32 +173,6 @@ type TransactionV1 struct {
 	Approvals []Approval `json:"approvals"`
 }
 
-type TransactionV1Header struct {
-	// `Hash` of the body part of this `Deploy`.
-	BodyHash  key.Hash `json:"body_hash"`
-	ChainName string   `json:"chain_name"`
-	// `Timestamp` formatted as per RFC 3339
-	Timestamp Timestamp `json:"timestamp"`
-	// Duration of the `Deploy` in milliseconds (from timestamp).
-	TTL Duration `json:"ttl"`
-	// The address of the initiator of a TransactionV1.
-	InitiatorAddr InitiatorAddr `json:"initiator_addr"`
-	// Pricing mode of a Transaction.
-	PricingMode PricingMode `json:"pricing_mode"`
-}
-
-type TransactionV1Body struct {
-	Args *Args `json:"args,omitempty"`
-	// Execution target of a Transaction.
-	Target TransactionTarget `json:"target"`
-	// Entry point of a Transaction.
-	TransactionEntryPoint TransactionEntryPoint `json:"entry_point"`
-	// Scheduling mode of a Transaction.
-	TransactionScheduling TransactionScheduling `json:"scheduling"`
-	// Transaction category
-	TransactionCategory uint8 `json:"transaction_category"`
-}
-
 // TransactionHash A versioned wrapper for a transaction hash or deploy hash
 type TransactionHash struct {
 	Deploy        *key.Hash `json:"Deploy,omitempty"`

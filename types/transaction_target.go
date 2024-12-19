@@ -15,8 +15,6 @@ const (
 	SessionIsInstallIndex uint16 = iota + 1
 	SessionRuntimeIndex
 	SessionModuleBytesIndex
-	SessionTransferredValueIndex
-	SessionSeedIndex
 )
 
 const (
@@ -80,7 +78,11 @@ func (t *TransactionTarget) Bytes() ([]byte, error) {
 			return nil, err
 		}
 
-		runtimeBytes, _ := encoding.NewStringToBytesEncoder(string(t.Stored.Runtime)).Bytes()
+		runtimeBytes, err := t.Stored.Runtime.Bytes()
+		if err != nil {
+			return nil, err
+		}
+
 		if err = builder.AddField(StoredRuntimeIndex, runtimeBytes); err != nil {
 			return nil, err
 		}
@@ -94,7 +96,12 @@ func (t *TransactionTarget) Bytes() ([]byte, error) {
 			return nil, err
 		}
 
-		if err = builder.AddField(SessionRuntimeIndex, []byte{t.Session.Runtime.RuntimeTag()}); err != nil {
+		runtimeBytes, err := t.Session.Runtime.Bytes()
+		if err != nil {
+			return nil, err
+		}
+
+		if err = builder.AddField(SessionRuntimeIndex, runtimeBytes); err != nil {
 			return nil, err
 		}
 

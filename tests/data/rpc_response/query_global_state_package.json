@@ -5,7 +5,7 @@
     "api_version": "2.0.0",
     "block_header": null,
     "stored_value": {
-      "SmartContract": {
+      "Package": {
         "versions": [
           {
             "entity_version_key": {
