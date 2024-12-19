@@ -25,6 +25,8 @@ type ValidatorBid struct {
 	MaximumDelegationAmount uint64 `json:"maximum_delegation_amount"`
 	// Vesting schedule for a genesis validator. `None` if non-genesis validator.
 	VestingSchedule *VestingSchedule `json:"vesting_schedule"`
+	// Number of slots reserved for specific delegators
+	ReservedSlots uint8 `json:"reserved_slots"`
 }
 
 // Bid An entry in the validator map.

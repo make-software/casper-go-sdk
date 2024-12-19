@@ -24,6 +24,6 @@ type StoredValue struct {
 	MessageTopic      *MessageTopicSummary `json:"MessageTopic,omitempty"`
 	Message           *MessageChecksum     `json:"Message,omitempty"`
 	NamedKey          *NamedKeyValue       `json:"NamedKey,omitempty"`
-	Reservation       *ReservationKind     `json:"Reservation,omitempty"`
+	Prepayment        *PrepaymentKind      `json:"Prepayment,omitempty"`
 	EntryPoint        *EntryPointValue     `json:"EntryPoint,omitempty"`
 }
