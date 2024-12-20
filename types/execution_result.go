@@ -152,14 +152,16 @@ func NewExecutionResultFromV1(v1 ExecutionResultV1) ExecutionResult {
 				Kind: TransformKind(transform.Transform),
 			})
 		}
+
+		return ExecutionResult{
+			ErrorMessage:            &v1.Failure.ErrorMessage,
+			Consumed:                v1.Failure.Cost,
+			Effects:                 transforms,
+			originExecutionResultV1: &v1,
+		}
 	}
 
-	return ExecutionResult{
-		ErrorMessage:            &v1.Failure.ErrorMessage,
-		Consumed:                v1.Failure.Cost,
-		Effects:                 transforms,
-		originExecutionResultV1: &v1,
-	}
+	return ExecutionResult{}
 }
 
 // ExecutionResultV2 represents the result of executing a single deploy for V2 version

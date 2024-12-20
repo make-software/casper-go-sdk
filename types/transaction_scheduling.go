@@ -3,6 +3,7 @@ package types
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/make-software/casper-go-sdk/v2/types/clvalue"
@@ -73,14 +74,17 @@ func (t *TransactionScheduling) UnmarshalJSON(data []byte) error {
 	}
 
 	var key string
-	if err := json.Unmarshal(data, &key); err == nil && key == "Standard" {
+	if err := json.Unmarshal(data, &key); err != nil {
+		return err
+	}
+	if key == "Standard" {
 		*t = TransactionScheduling{
 			Standard: &struct{}{},
 		}
 		return nil
 	}
 
-	return nil
+	return fmt.Errorf("unknown transaction scheduling type: %s", key)
 }
 
 func (t TransactionScheduling) MarshalJSON() ([]byte, error) {
