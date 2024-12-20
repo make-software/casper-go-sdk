@@ -75,7 +75,7 @@ func PemToPrivateKey(content []byte) (*secp256k1.PrivateKey, error) {
 
 	var privKey ecPrivateKey
 	if _, err := asn1.Unmarshal(block.Bytes, &privKey); err != nil {
-		return nil, fmt.Errorf("x509: failed to parse EC private key: " + err.Error())
+		return nil, fmt.Errorf("x509: failed to parse EC private key: %s", err.Error())
 	}
 	if privKey.Version != 1 {
 		return nil, fmt.Errorf("x509: unknown EC private key version %d", privKey.Version)
