@@ -19,7 +19,7 @@ const (
 	SystemKind EntityKind = iota
 	// AccountKind `EntityKind::Account` variant.
 	AccountKind
-	// SmartContractKind `EntityKind::SmartContract` variant.
+	// SmartContractKind `EntityKind::Package` variant.
 	SmartContractKind
 )
 

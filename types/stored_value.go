@@ -26,4 +26,5 @@ type StoredValue struct {
 	NamedKey          *NamedKeyValue       `json:"NamedKey,omitempty"`
 	Prepayment        *PrepaymentKind      `json:"Prepayment,omitempty"`
 	EntryPoint        *EntryPointValue     `json:"EntryPoint,omitempty"`
+	RawBytes          *string              `json:"RawBytes,omitempty"`
 }
