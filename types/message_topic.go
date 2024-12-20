@@ -35,7 +35,7 @@ type Message struct {
 	// The hash of the name of the topic.
 	TopicNameHash key.Hash `json:"topic_name_hash"`
 	// The identity of the entity that produced the message.
-	EntityHash key.EntityAddr `json:"entity_hash"`
+	HashAddr key.Hash `json:"hash_addr"`
 	// Message index in the block.
 	BlockIndex uint64 `json:"block_index"`
 	// Message index in the topic.

@@ -247,6 +247,7 @@ func Test_RawEvent_ParseAsTransactionProcessedEvent(t *testing.T) {
 			if tc.isTransaction {
 				require.NotEmpty(t, res.TransactionProcessedPayload.TransactionHash.TransactionV1)
 				require.NotEmpty(t, res.TransactionProcessedPayload.Messages)
+				require.NotEmpty(t, res.TransactionProcessedPayload.Messages[0].HashAddr)
 			} else {
 				require.NotEmpty(t, res.TransactionProcessedPayload.TransactionHash.Deploy)
 			}

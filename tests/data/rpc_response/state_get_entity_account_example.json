@@ -23,8 +23,7 @@
             "deployment": 1,
             "upgrade_management": 1,
             "key_management": 1
-          },
-          "message_topics": []
+          }
         },
         "named_keys": [],
         "entry_points": []

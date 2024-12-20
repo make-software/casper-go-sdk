@@ -17,8 +17,6 @@ type AddressableEntity struct {
 	MainPurse        key.URef               `json:"main_purse"`
 	// Casper Platform protocol version
 	ProtocolVersion string `json:"protocol_version"`
-
-	MessageTopics []MessageTopic `json:"message_topics"`
 }
 
 type NamedEntryPoint struct {
