@@ -26,7 +26,7 @@ const (
 
 type PricingMode struct {
 	// The original payment model, where the creator of the transaction specifies how much they will pay, at what gas price.
-	Limited *LimitedMode `json:"Limited,omitempty"`
+	Limited *LimitedMode `json:"PaymentLimited,omitempty"`
 	// The cost of the transaction is determined by the cost table, per the transaction kind.
 	Fixed *FixedMode `json:"Fixed,omitempty"`
 	// The payment for this transaction was previously reserved, as proven by the receipt hash.

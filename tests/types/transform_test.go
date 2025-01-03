@@ -26,6 +26,58 @@ func Test_Transform_AddUInt512(t *testing.T) {
 	assert.EqualValues(t, 100000000, val.Value().Int64())
 }
 
+func Test_Transform_ContractV1(t *testing.T) {
+	fixture, err := os.ReadFile("../data/transform/contract_v1.json")
+	require.NoError(t, err)
+	var transform types.TransformKey
+
+	err = json.Unmarshal(fixture, &transform)
+	require.NoError(t, err)
+	assert.True(t, transform.Transform.IsWriteContract())
+}
+
+func Test_Transform_ContractV2(t *testing.T) {
+	fixture, err := os.ReadFile("../data/transform/contract_v2.json")
+	require.NoError(t, err)
+	var transform types.Transform
+
+	err = json.Unmarshal(fixture, &transform)
+	require.NoError(t, err)
+
+	contract, err := transform.Kind.ParseAsWriteContract()
+	require.NoError(t, err)
+	require.NotEmpty(t, contract.ContractPackageHash)
+	require.NotEmpty(t, contract.ContractWasmHash)
+	require.NotEmpty(t, contract.NamedKeys)
+	require.NotEmpty(t, contract.EntryPoints)
+	assert.True(t, transform.Kind.IsWriteContract())
+}
+
+func Test_Transform_ContractPackageV1(t *testing.T) {
+	fixture, err := os.ReadFile("../data/transform/contract_package_v1.json")
+	require.NoError(t, err)
+	var transform types.TransformKey
+
+	err = json.Unmarshal(fixture, &transform)
+	require.NoError(t, err)
+	assert.True(t, transform.Transform.IsWriteContractPackage())
+}
+
+func Test_Transform_ContractPackageV2(t *testing.T) {
+	fixture, err := os.ReadFile("../data/transform/contract_package_v2.json")
+	require.NoError(t, err)
+	var transform types.Transform
+
+	err = json.Unmarshal(fixture, &transform)
+	require.NoError(t, err)
+
+	contractPackage, err := transform.Kind.ParseAsWriteContractPackage()
+	require.NoError(t, err)
+	require.NotEmpty(t, contractPackage.Versions)
+	require.NotEmpty(t, contractPackage.AccessKey)
+	assert.True(t, transform.Kind.IsWriteContractPackage())
+}
+
 func Test_Transform_CLValue(t *testing.T) {
 	fixture, err := os.ReadFile("../data/transform/cl_value_v1.json")
 	require.NoError(t, err)

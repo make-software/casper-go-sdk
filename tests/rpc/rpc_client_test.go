@@ -146,6 +146,9 @@ func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 			filePath: "../data/transaction/get_transaction.json",
 		},
 		{
+			filePath: "../data/transaction/get_transaction_install_contract.json",
+		},
+		{
 			filePath: "../data/transaction/get_transaction_native_target.json",
 		},
 		{
