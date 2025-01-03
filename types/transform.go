@@ -109,7 +109,7 @@ func (t *TransformKind) IsWriteContractPackage() bool {
 	}
 
 	jsonRes := rawData{}
-	json.Unmarshal(*t, &jsonRes)
+	_ = json.Unmarshal(*t, &jsonRes)
 
 	return jsonRes.Write != nil && jsonRes.Write.ContractPackage != nil
 }
@@ -128,7 +128,7 @@ func (t *TransformKind) IsWriteContract() bool {
 	}
 
 	jsonRes := rawData{}
-	json.Unmarshal(*t, &jsonRes)
+	_ = json.Unmarshal(*t, &jsonRes)
 
 	return jsonRes.Write != nil && jsonRes.Write.Contract != nil
 }
