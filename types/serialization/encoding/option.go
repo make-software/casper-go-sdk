@@ -1,16 +1,18 @@
 package encoding
 
-import "errors"
-
-type Option[T any] struct {
-	Some *T
-	None bool
-}
+import (
+	"errors"
+)
 
 const (
 	OptionNoneTag byte = 0
 	OptionSomeTag byte = 1
 )
+
+type Option[T any] struct {
+	Some *T
+	None bool
+}
 
 type OptionFromBytesDecoder[T any, D FromBytes[T]] struct {
 	Decoder D

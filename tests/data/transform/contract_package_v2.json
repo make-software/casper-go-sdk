@@ -1,0 +1,20 @@
+{
+  "key": "hash-b71675d8cf701d9bc584cb5152706873110e5158b004fb966ed28be49c66b39a",
+  "kind": {
+    "Write": {
+      "ContractPackage": {
+        "access_key": "uref-5268245ec93d03335ed91c860ac48885fa6ee15156871458a84daa93b2d04f06-007",
+        "versions": [
+          {
+            "protocol_version_major": 2,
+            "contract_version": 1,
+            "contract_hash": "contract-94b21891ae273b17eeb6a1899a52ab952bcc4da2e19626563f88d6cf7ab6a2bd"
+          }
+        ],
+        "disabled_versions": [],
+        "groups": [],
+        "lock_status": "Locked"
+      }
+    }
+  }
+}

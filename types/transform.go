@@ -95,8 +95,42 @@ func (t *TransformKind) ParseAsWriteAccount() (key.AccountHash, error) {
 	return jsonRes.WriteAccount, nil
 }
 
+func (t *TransformKind) IsWriteContractPackage() bool {
+	// v1 compatible check
+	if bytes.Equal(*t, []byte("\"WriteContractPackage\"")) {
+		return true
+	}
+
+	// v2 compatible check
+	type rawData struct {
+		Write *struct {
+			ContractPackage *struct{} `json:"ContractPackage"`
+		} `json:"Write"`
+	}
+
+	jsonRes := rawData{}
+	_ = json.Unmarshal(*t, &jsonRes)
+
+	return jsonRes.Write != nil && jsonRes.Write.ContractPackage != nil
+}
+
 func (t *TransformKind) IsWriteContract() bool {
-	return bytes.Equal(*t, []byte("\"WriteContract\""))
+	// v1 compatible check
+	if bytes.Equal(*t, []byte("\"WriteContract\"")) {
+		return true
+	}
+
+	// v2 compatible check
+	type rawData struct {
+		Write *struct {
+			Contract *struct{} `json:"Contract"`
+		} `json:"Write"`
+	}
+
+	jsonRes := rawData{}
+	_ = json.Unmarshal(*t, &jsonRes)
+
+	return jsonRes.Write != nil && jsonRes.Write.Contract != nil
 }
 
 func (t *TransformKind) IsWriteWithdraw() bool {
@@ -196,6 +230,44 @@ func (t *TransformKind) ParseAsWritePackage() (*Package, error) {
 	}
 
 	return jsonRes.Write.Package, nil
+}
+
+func (t *TransformKind) ParseAsWriteContract() (*Contract, error) {
+	type rawData struct {
+		Write *struct {
+			Contract *Contract `json:"Contract"`
+		} `json:"Write"`
+	}
+
+	jsonRes := rawData{}
+	if err := json.Unmarshal(*t, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	if jsonRes.Write == nil || jsonRes.Write.Contract == nil {
+		return nil, errors.New("error: empty response")
+	}
+
+	return jsonRes.Write.Contract, nil
+}
+
+func (t *TransformKind) ParseAsWriteContractPackage() (*ContractPackage, error) {
+	type rawData struct {
+		Write *struct {
+			ContractPackage *ContractPackage `json:"ContractPackage"`
+		} `json:"Write"`
+	}
+
+	jsonRes := rawData{}
+	if err := json.Unmarshal(*t, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	if jsonRes.Write == nil || jsonRes.Write.ContractPackage == nil {
+		return nil, errors.New("error: empty response")
+	}
+
+	return jsonRes.Write.ContractPackage, nil
 }
 
 func (t *TransformKind) ParseAsWriteBidKind() (*BidKind, error) {
