@@ -50,6 +50,15 @@ func Test_Transform_ContractV2(t *testing.T) {
 	require.NotEmpty(t, contract.ContractWasmHash)
 	require.NotEmpty(t, contract.NamedKeys)
 	require.NotEmpty(t, contract.EntryPoints)
+
+	for _, item := range contract.EntryPoints {
+		require.NotEmpty(t, item.EntryPoint)
+		require.NotEmpty(t, item.EntryPoint.EntryPointType)
+		require.NotEmpty(t, item.EntryPoint.Name)
+		require.NotEmpty(t, item.EntryPoint.Ret)
+		require.NotEmpty(t, item.EntryPoint.Access)
+	}
+
 	assert.True(t, transform.Kind.IsWriteContract())
 }
 
