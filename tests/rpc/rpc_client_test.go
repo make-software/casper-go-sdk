@@ -205,7 +205,7 @@ func Test_DefaultClient_GetDeploy(t *testing.T) {
 }
 
 func Test_DefaultClient_QueryGlobalState_ContractPackage(t *testing.T) {
-	server := SetupServer(t, "../data/state_item/contract_package.json")
+	server := SetupServer(t, "../data/state_item/contract_package_v2.json")
 	defer server.Close()
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
 	contractPackageHash := "19cf434b80aa05d506f475a52da877240517a0ab238a49a54015e46e02649bbd"
@@ -213,6 +213,19 @@ func Test_DefaultClient_QueryGlobalState_ContractPackage(t *testing.T) {
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.StoredValue.ContractPackage)
 	assert.NotEmpty(t, result.StoredValue.ContractPackage.DisabledVersions)
+	assert.NotEmpty(t, result.StoredValue.ContractPackage.Groups)
+}
+
+func Test_DefaultClient_QueryGlobalState_ContractPackageV1(t *testing.T) {
+	server := SetupServer(t, "../data/state_item/contract_package_v1.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	contractPackageHash := "19cf434b80aa05d506f475a52da877240517a0ab238a49a54015e46e02649bbd"
+	result, err := client.QueryLatestGlobalState(context.Background(), contractPackageHash, nil)
+	require.NoError(t, err)
+	assert.NotEmpty(t, result.StoredValue.ContractPackage)
+	assert.NotEmpty(t, result.StoredValue.ContractPackage.DisabledVersions)
+	assert.NotEmpty(t, result.StoredValue.ContractPackage.Groups)
 }
 
 func Test_DefaultClient_GetDeployFinalizedApproval(t *testing.T) {
