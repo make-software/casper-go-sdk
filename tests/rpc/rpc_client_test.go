@@ -204,6 +204,17 @@ func Test_DefaultClient_GetDeploy(t *testing.T) {
 	assert.Equal(t, deployHash, result.Deploy.Hash.ToHex())
 }
 
+func Test_DefaultClient_QueryGlobalState_ContractPackage(t *testing.T) {
+	server := SetupServer(t, "../data/state_item/contract_package.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	contractPackageHash := "19cf434b80aa05d506f475a52da877240517a0ab238a49a54015e46e02649bbd"
+	result, err := client.QueryLatestGlobalState(context.Background(), contractPackageHash, nil)
+	require.NoError(t, err)
+	assert.NotEmpty(t, result.StoredValue.ContractPackage)
+	assert.NotEmpty(t, result.StoredValue.ContractPackage.DisabledVersions)
+}
+
 func Test_DefaultClient_GetDeployFinalizedApproval(t *testing.T) {
 	server := SetupServer(t, "../data/deploy/get_raw_rpc_deploy.json")
 	defer server.Close()

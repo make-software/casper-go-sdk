@@ -7,7 +7,7 @@ type ContractPackage struct {
 	// Access key for this contract.
 	AccessKey key.URef `json:"access_key"`
 	// List of disabled versions of a contract.
-	DisabledVersions []DisabledContractVersion `json:"disabled_versions"`
+	DisabledVersions []ContractVersionKey `json:"disabled_versions"`
 	// Groups associate a set of URefs with a label. Entry points on a contract can be given
 	// a list of labels they accept and the runtime will check that a URef from at least one
 	// of the allowed groups is present in the caller’s context before execution.
@@ -35,10 +35,5 @@ type ContractVersion struct {
 	ProtocolVersionMajor uint16 `json:"protocol_version_major"`
 }
 
-// DisabledContractVersion is a disabled version of a contract.
-type DisabledContractVersion struct {
-	// Contract version.
-	Version uint16 `json:"contract_version"`
-	//  The major element of the protocol version this contract is compatible with.
-	ProtocolVersionMajor uint16 `json:"protocol_version_major"`
-}
+// ContractVersionKey Major element of `ProtocolVersion` combined with `ContractVersion`.
+type ContractVersionKey [2]int
