@@ -38,6 +38,11 @@ type EntryPointV2 struct {
 	FunctionIndex uint32 `json:"functionIndex"`
 }
 
+type EntryPoint struct {
+	Name       string       `json:"name"`
+	EntryPoint EntryPointV1 `json:"entry_point"`
+}
+
 // EntryPointV1 is a type signature of a method.
 // Order of arguments matter since can be referenced by index as well as name.
 type EntryPointV1 struct {
