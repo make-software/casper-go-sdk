@@ -34,6 +34,9 @@ func Test_Transform_ContractV1(t *testing.T) {
 	err = json.Unmarshal(fixture, &transform)
 	require.NoError(t, err)
 	assert.True(t, transform.Transform.IsWriteContract())
+	contract, err := transform.Transform.ParseAsWriteContract()
+	require.Error(t, err)
+	require.Nil(t, contract)
 }
 
 func Test_Transform_ContractV2(t *testing.T) {
