@@ -179,6 +179,16 @@ type TransactionHash struct {
 	TransactionV1 *key.Hash `json:"Version1,omitempty"`
 }
 
+func (t *TransactionHash) String() string {
+	if t.Deploy != nil {
+		return t.Deploy.String()
+	} else if t.TransactionV1 != nil {
+		return t.TransactionV1.String()
+	} else {
+		return ""
+	}
+}
+
 func (t *TransactionV1) Sign(keys keypair.PrivateKey) error {
 	signature, err := keys.Sign(t.Hash.Bytes())
 	if err != nil {

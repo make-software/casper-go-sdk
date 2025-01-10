@@ -188,8 +188,8 @@ func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 
 			if tt.withTransfers {
 				assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.Transfers)
-				assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.Transfers[0].TransactionHash.TransactionV1)
-				assert.Equal(t, result.ExecutionInfo.ExecutionResult.Transfers[0].TransactionHash.TransactionV1.ToHex(),
+				assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.Transfers[0].TransactionHash)
+				assert.Equal(t, result.ExecutionInfo.ExecutionResult.Transfers[0].TransactionHash.String(),
 					result.Transaction.Hash.ToHex())
 			}
 		})
