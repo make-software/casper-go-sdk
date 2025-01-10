@@ -46,7 +46,7 @@ func (c *ContractGroup) UnmarshalJSON(data []byte) error {
 	}
 
 	if temp.Group != "" {
-		group.GroupName = temp.GroupName
+		group.GroupName = temp.Group
 	}
 
 	if len(temp.Keys) != 0 {
