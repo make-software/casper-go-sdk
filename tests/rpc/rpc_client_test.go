@@ -872,6 +872,14 @@ func Test_DefaultClient_GetStatus(t *testing.T) {
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.ChainSpecName)
 	assert.NotEmpty(t, result.LatestSwitchBlockHash)
+	assert.NotNil(t, result.BlockSync.Forward)
+	assert.NotEmpty(t, result.BlockSync.Forward.BlockHash)
+	assert.NotEmpty(t, result.BlockSync.Forward.AcquisitionState)
+	assert.NotNil(t, result.BlockSync.Forward.BlockHeight)
+	assert.NotNil(t, result.BlockSync.Historical)
+	assert.NotEmpty(t, result.BlockSync.Historical.BlockHash)
+	assert.NotEmpty(t, result.BlockSync.Historical.AcquisitionState)
+	assert.NotNil(t, result.BlockSync.Historical.BlockHeight)
 }
 
 func Test_DefaultClient_GetPeers(t *testing.T) {

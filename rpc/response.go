@@ -489,12 +489,20 @@ type InfoGetStatusResult struct {
 		High uint64 `json:"high"`
 	} `json:"available_block_range"`
 	// Indicating the state of the block synchronizer component
-	BlockSync struct {
-		Historical string `json:"historical,omitempty"`
-		Forward    string `json:"forward,omitempty"`
-	} `json:"block_sync"`
+	BlockSync BlockSynchronizerStatus `json:"block_sync"`
 
 	rawJSON json.RawMessage
+}
+
+type BlockSynchronizerStatus struct {
+	Historical *BlockSyncStatus `json:"historical,omitempty"`
+	Forward    *BlockSyncStatus `json:"forward,omitempty"`
+}
+
+type BlockSyncStatus struct {
+	BlockHash        key.Hash `json:"block_hash"`
+	BlockHeight      *uint64  `json:"block_height,omitempty"`
+	AcquisitionState string   `json:"acquisition_state"`
 }
 
 // NodeNextUpgrade contains the information about the next protocol upgrade.
