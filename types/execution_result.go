@@ -121,7 +121,7 @@ func NewExecutionResultFromV1(v1 ExecutionResultV1) ExecutionResult {
 			transfers = append(transfers, Transfer{
 				Amount: writeTransfer.Amount,
 				TransactionHash: TransactionHash{
-					TransactionV1: &transform.Key.Transfer.Hash,
+					Deploy: &writeTransfer.DeployHash,
 				},
 				From: InitiatorAddr{
 					AccountHash: &writeTransfer.From,
