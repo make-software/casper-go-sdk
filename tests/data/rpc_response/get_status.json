@@ -48,8 +48,16 @@
       "high": 170022
     },
     "block_sync": {
-      "historical": null,
-      "forward": null
+      "historical": {
+        "block_hash": "16ddf28e2b3d2e17f4cef36f8b58827eca917af225d139b0c77df3b4a67dc55e",
+        "block_height": 40,
+        "acquisition_state": "have strict finality(40) for: block hash 16dd..c55e"
+      },
+      "forward": {
+        "block_hash": "59907b1e32a9158169c4d89d9ce5ac9164fc31240bfcfb0969227ece06d74983",
+        "block_height": 6701,
+        "acquisition_state": "have block body(6701) for: block hash 5990..4983"
+      }
     },
     "latest_switch_block_hash": "099cc3232b04ebb556c73328597c0b8c518fa4565c7d1f7981bc251414ce8c2f"
   }
