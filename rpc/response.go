@@ -31,14 +31,14 @@ func (b StateGetAuctionInfoV1Result) GetRawJSON() json.RawMessage {
 	return b.rawJSON
 }
 
-type StateGetAuctionInfoResultV2 struct {
+type StateGetAuctionInfoV2Result struct {
 	Version      string               `json:"api_version"`
 	AuctionState types.AuctionStateV2 `json:"auction_state"`
 
 	rawJSON json.RawMessage
 }
 
-func (b StateGetAuctionInfoResultV2) GetRawJSON() json.RawMessage {
+func (b StateGetAuctionInfoV2Result) GetRawJSON() json.RawMessage {
 	return b.rawJSON
 }
 

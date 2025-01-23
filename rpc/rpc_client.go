@@ -577,35 +577,35 @@ func (c *client) GetAuctionInfoV1ByHeight(ctx context.Context, height uint64) (S
 	return result, nil
 }
 
-func (c *client) GetLatestAuctionInfoV2(ctx context.Context) (StateGetAuctionInfoResultV2, error) {
-	var result StateGetAuctionInfoResultV2
+func (c *client) GetLatestAuctionInfoV2(ctx context.Context) (StateGetAuctionInfoV2Result, error) {
+	var result StateGetAuctionInfoV2Result
 
 	resp, err := c.processRequest(ctx, MethodGetAuctionInfoV2, nil, &result)
 	if err != nil {
-		return StateGetAuctionInfoResultV2{}, err
+		return StateGetAuctionInfoV2Result{}, err
 	}
 
 	result.rawJSON = resp.Result
 	return result, nil
 }
 
-func (c *client) GetAuctionInfoV2ByHash(ctx context.Context, blockHash string) (StateGetAuctionInfoResultV2, error) {
-	var result StateGetAuctionInfoResultV2
+func (c *client) GetAuctionInfoV2ByHash(ctx context.Context, blockHash string) (StateGetAuctionInfoV2Result, error) {
+	var result StateGetAuctionInfoV2Result
 	resp, err := c.processRequest(ctx, MethodGetAuctionInfoV2, NewParamBlockByHash(blockHash), &result)
 	if err != nil {
-		return StateGetAuctionInfoResultV2{}, err
+		return StateGetAuctionInfoV2Result{}, err
 	}
 
 	result.rawJSON = resp.Result
 	return result, nil
 }
 
-func (c *client) GetAuctionInfoV2ByHeight(ctx context.Context, height uint64) (StateGetAuctionInfoResultV2, error) {
-	var result StateGetAuctionInfoResultV2
+func (c *client) GetAuctionInfoV2ByHeight(ctx context.Context, height uint64) (StateGetAuctionInfoV2Result, error) {
+	var result StateGetAuctionInfoV2Result
 
 	resp, err := c.processRequest(ctx, MethodGetAuctionInfoV2, NewParamBlockByHeight(height), &result)
 	if err != nil {
-		return StateGetAuctionInfoResultV2{}, err
+		return StateGetAuctionInfoV2Result{}, err
 	}
 
 	result.rawJSON = resp.Result
