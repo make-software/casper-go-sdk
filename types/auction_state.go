@@ -4,6 +4,14 @@ import (
 	"github.com/make-software/casper-go-sdk/v2/types/keypair"
 )
 
+type AuctionState struct {
+	// All bids contained within a vector.
+	Bids          []BidKindWrapper `json:"bids"`
+	BlockHeight   uint64           `json:"block_height"`
+	EraValidators []EraValidators  `json:"era_validators"`
+	StateRootHash string           `json:"state_root_hash"`
+}
+
 // AuctionStateV1 is a data structure summarizing auction contract data (version V1).
 type AuctionStateV1 struct {
 	// All bids contained within a vector.
@@ -27,7 +35,7 @@ type AuctionStateV2 struct {
 	StateRootHash string           `json:"state_root_hash"`
 }
 
-func NewAuctionStateFromV1(v1 AuctionStateV1) AuctionStateV2 {
+func NewAuctionStateFromV1(v1 AuctionStateV1) AuctionState {
 	bids := make([]BidKindWrapper, 0, len(v1.Bids))
 	for _, bid := range v1.Bids {
 		bids = append(bids, BidKindWrapper{
@@ -38,11 +46,28 @@ func NewAuctionStateFromV1(v1 AuctionStateV1) AuctionStateV2 {
 		})
 	}
 
-	return AuctionStateV2{
+	return AuctionState{
 		Bids:          bids,
 		BlockHeight:   v1.BlockHeight,
 		EraValidators: v1.EraValidators,
 		StateRootHash: v1.StateRootHash,
+	}
+}
+
+func NewAuctionStateFromV2(v2 AuctionStateV2) AuctionState {
+	bids := make([]BidKindWrapper, 0, len(v2.Bids))
+	for _, bid := range v2.Bids {
+		bids = append(bids, BidKindWrapper{
+			PublicKey: bid.PublicKey,
+			Bid:       bid.Bid,
+		})
+	}
+
+	return AuctionState{
+		Bids:          bids,
+		BlockHeight:   v2.BlockHeight,
+		EraValidators: v2.EraValidators,
+		StateRootHash: v2.StateRootHash,
 	}
 }
 

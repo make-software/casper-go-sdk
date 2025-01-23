@@ -20,6 +20,17 @@ type RpcResponse struct {
 	Error   *RpcError       `json:"error,omitempty"`
 }
 
+type StateGetAuctionInfoResult struct {
+	Version      string             `json:"api_version"`
+	AuctionState types.AuctionState `json:"auction_state"`
+
+	rawJSON json.RawMessage
+}
+
+func (b StateGetAuctionInfoResult) GetRawJSON() json.RawMessage {
+	return b.rawJSON
+}
+
 type StateGetAuctionInfoV1Result struct {
 	Version      string               `json:"api_version"`
 	AuctionState types.AuctionStateV1 `json:"auction_state"`

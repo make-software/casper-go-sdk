@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/make-software/casper-go-sdk/v2/types"
 	"github.com/make-software/casper-go-sdk/v2/types/key"
@@ -541,6 +542,81 @@ func (c *client) GetEraSummaryByHeight(ctx context.Context, height uint64) (Chai
 
 	result.rawJSON = resp.Result
 	return result, nil
+}
+
+func (c *client) GetLatestAuctionInfo(ctx context.Context) (StateGetAuctionInfoResult, error) {
+	resV2, err := c.GetLatestAuctionInfoV2(ctx)
+	if err != nil {
+		if !strings.Contains(err.Error(), "Method not found") {
+			return StateGetAuctionInfoResult{}, err
+		}
+
+		resV1, err := c.GetLatestAuctionInfoV1(ctx)
+		if err != nil {
+			return StateGetAuctionInfoResult{}, err
+		}
+		return StateGetAuctionInfoResult{
+			Version:      resV1.Version,
+			AuctionState: types.NewAuctionStateFromV1(resV1.AuctionState),
+			rawJSON:      resV1.GetRawJSON(),
+		}, nil
+	}
+
+	return StateGetAuctionInfoResult{
+		Version:      resV2.Version,
+		AuctionState: types.NewAuctionStateFromV2(resV2.AuctionState),
+		rawJSON:      resV2.GetRawJSON(),
+	}, nil
+}
+
+func (c *client) GetAuctionInfoByHash(ctx context.Context, blockHash string) (StateGetAuctionInfoResult, error) {
+	resV2, err := c.GetAuctionInfoV2ByHash(ctx, blockHash)
+	if err != nil {
+		if !strings.Contains(err.Error(), "Method not found") {
+			return StateGetAuctionInfoResult{}, err
+		}
+
+		resV1, err := c.GetAuctionInfoV1ByHash(ctx, blockHash)
+		if err != nil {
+			return StateGetAuctionInfoResult{}, err
+		}
+		return StateGetAuctionInfoResult{
+			Version:      resV1.Version,
+			AuctionState: types.NewAuctionStateFromV1(resV1.AuctionState),
+			rawJSON:      resV1.GetRawJSON(),
+		}, nil
+	}
+
+	return StateGetAuctionInfoResult{
+		Version:      resV2.Version,
+		AuctionState: types.NewAuctionStateFromV2(resV2.AuctionState),
+		rawJSON:      resV2.GetRawJSON(),
+	}, nil
+}
+
+func (c *client) GetAuctionInfoByHeight(ctx context.Context, height uint64) (StateGetAuctionInfoResult, error) {
+	resV2, err := c.GetAuctionInfoV2ByHeight(ctx, height)
+	if err != nil {
+		if !strings.Contains(err.Error(), "Method not found") {
+			return StateGetAuctionInfoResult{}, err
+		}
+
+		resV1, err := c.GetAuctionInfoV1ByHeight(ctx, height)
+		if err != nil {
+			return StateGetAuctionInfoResult{}, err
+		}
+		return StateGetAuctionInfoResult{
+			Version:      resV1.Version,
+			AuctionState: types.NewAuctionStateFromV1(resV1.AuctionState),
+			rawJSON:      resV1.GetRawJSON(),
+		}, nil
+	}
+
+	return StateGetAuctionInfoResult{
+		Version:      resV2.Version,
+		AuctionState: types.NewAuctionStateFromV2(resV2.AuctionState),
+		rawJSON:      resV2.GetRawJSON(),
+	}, nil
 }
 
 func (c *client) GetLatestAuctionInfoV1(ctx context.Context) (StateGetAuctionInfoV1Result, error) {

@@ -13,6 +13,7 @@ type (
 	ChainGetBlockResult         = rpc.ChainGetBlockResult
 	ChainGetEraInfoResult       = rpc.ChainGetEraInfoResult
 	StateGetEntity              = rpc.StateGetEntityResult
+	StateGetAuctionInfoResult   = rpc.StateGetAuctionInfoResult
 	StateGetAuctionInfoV1Result = rpc.StateGetAuctionInfoV1Result
 	StateGetAuctionInfoV2Result = rpc.StateGetAuctionInfoV2Result
 	StateGetItemResult          = rpc.StateGetItemResult
