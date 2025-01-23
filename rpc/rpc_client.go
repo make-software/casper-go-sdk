@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-
 	"github.com/make-software/casper-go-sdk/v2/types"
 	"github.com/make-software/casper-go-sdk/v2/types/key"
 	"github.com/make-software/casper-go-sdk/v2/types/keypair"
@@ -543,35 +542,70 @@ func (c *client) GetEraSummaryByHeight(ctx context.Context, height uint64) (Chai
 	return result, nil
 }
 
-func (c *client) GetLatestAuctionInfo(ctx context.Context) (StateGetAuctionInfoResult, error) {
-	var result StateGetAuctionInfoResult
+func (c *client) GetLatestAuctionInfoV1(ctx context.Context) (StateGetAuctionInfoV1Result, error) {
+	var result StateGetAuctionInfoV1Result
 
 	resp, err := c.processRequest(ctx, MethodGetAuctionInfo, nil, &result)
 	if err != nil {
-		return StateGetAuctionInfoResult{}, err
+		return StateGetAuctionInfoV1Result{}, err
 	}
 
 	result.rawJSON = resp.Result
 	return result, nil
 }
 
-func (c *client) GetAuctionInfoByHash(ctx context.Context, blockHash string) (StateGetAuctionInfoResult, error) {
-	var result StateGetAuctionInfoResult
+func (c *client) GetAuctionInfoV1ByHash(ctx context.Context, blockHash string) (StateGetAuctionInfoV1Result, error) {
+	var result StateGetAuctionInfoV1Result
 	resp, err := c.processRequest(ctx, MethodGetAuctionInfo, NewParamBlockByHash(blockHash), &result)
 	if err != nil {
-		return StateGetAuctionInfoResult{}, err
+		return StateGetAuctionInfoV1Result{}, err
 	}
 
 	result.rawJSON = resp.Result
 	return result, nil
 }
 
-func (c *client) GetAuctionInfoByHeight(ctx context.Context, height uint64) (StateGetAuctionInfoResult, error) {
-	var result StateGetAuctionInfoResult
+func (c *client) GetAuctionInfoV1ByHeight(ctx context.Context, height uint64) (StateGetAuctionInfoV1Result, error) {
+	var result StateGetAuctionInfoV1Result
 
 	resp, err := c.processRequest(ctx, MethodGetAuctionInfo, NewParamBlockByHeight(height), &result)
 	if err != nil {
-		return StateGetAuctionInfoResult{}, err
+		return StateGetAuctionInfoV1Result{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetLatestAuctionInfoV2(ctx context.Context) (StateGetAuctionInfoResultV2, error) {
+	var result StateGetAuctionInfoResultV2
+
+	resp, err := c.processRequest(ctx, MethodGetAuctionInfoV2, nil, &result)
+	if err != nil {
+		return StateGetAuctionInfoResultV2{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetAuctionInfoV2ByHash(ctx context.Context, blockHash string) (StateGetAuctionInfoResultV2, error) {
+	var result StateGetAuctionInfoResultV2
+	resp, err := c.processRequest(ctx, MethodGetAuctionInfoV2, NewParamBlockByHash(blockHash), &result)
+	if err != nil {
+		return StateGetAuctionInfoResultV2{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetAuctionInfoV2ByHeight(ctx context.Context, height uint64) (StateGetAuctionInfoResultV2, error) {
+	var result StateGetAuctionInfoResultV2
+
+	resp, err := c.processRequest(ctx, MethodGetAuctionInfoV2, NewParamBlockByHeight(height), &result)
+	if err != nil {
+		return StateGetAuctionInfoResultV2{}, err
 	}
 
 	result.rawJSON = resp.Result
