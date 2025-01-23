@@ -7,6 +7,7 @@ import (
 )
 
 type (
+	AuctionState         = types.AuctionState
 	AuctionStateV1       = types.AuctionStateV1
 	AuctionStateV2       = types.AuctionStateV2
 	Args                 = types.Args
