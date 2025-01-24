@@ -949,7 +949,7 @@ func (c *client) processRequest(ctx context.Context, method Method, params inter
 	}
 
 	if resp.Error != nil {
-		return resp, fmt.Errorf("rpc call failed, details: %w", resp.Error)
+		return resp, fmt.Errorf("rpc call error ( method: %s), details: %w", method, resp.Error)
 	}
 
 	err = json.Unmarshal(resp.Result, &result)
