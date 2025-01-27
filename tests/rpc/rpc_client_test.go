@@ -834,7 +834,7 @@ func Test_DefaultClient_GetAuctionInfoByV2Hash(t *testing.T) {
 	server := SetupServer(t, "../data/rpc_response/state_get_auction_info_v2.json")
 	defer server.Close()
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetLatestAuctionInfoV2(context.Background())
+	result, err := client.GetLatestAuctionInfo(context.Background())
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.AuctionState.Bids)
 	for _, bid := range result.AuctionState.Bids {

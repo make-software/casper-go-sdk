@@ -34,15 +34,6 @@ type ClientPOS interface {
 	// GetAuctionInfoV1ByHeight returns the types.ValidatorBid and types.EraValidators of either a specific Block by height
 	// RPC: state_get_auction_info
 	GetAuctionInfoV1ByHeight(ctx context.Context, height uint64) (StateGetAuctionInfoV1Result, error)
-	// GetLatestAuctionInfoV2 returns the types.ValidatorBid and types.EraValidators from the most recent Block.
-	// RPC: state_get_auction_info_v2
-	GetLatestAuctionInfoV2(ctx context.Context) (StateGetAuctionInfoV2Result, error)
-	// GetAuctionInfoV2ByHash returns the types.ValidatorBid and types.EraValidators of either a specific Block by hash
-	// RPC: state_get_auction_info_v2
-	GetAuctionInfoV2ByHash(ctx context.Context, blockHash string) (StateGetAuctionInfoV2Result, error)
-	// GetAuctionInfoV2ByHeight returns the types.ValidatorBid and types.EraValidators of either a specific Block by height
-	// RPC: state_get_auction_info_v2
-	GetAuctionInfoV2ByHeight(ctx context.Context, height uint64) (StateGetAuctionInfoV2Result, error)
 	// GetEraInfoLatest returns an EraInfo from the network.
 	// Only the last Block in an era, known as a switch block, will contain an era_summary.
 	// This method return information about the latest block in the chain, it may not be the last block in the era.
