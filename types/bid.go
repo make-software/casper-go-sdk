@@ -91,8 +91,8 @@ type Delegator struct {
 	BondingPurse key.URef `json:"bonding_purse"`
 	// Amount of Casper token (in motes) delegated
 	StakedAmount clvalue.UInt512 `json:"staked_amount"`
-	// Public Key of the delegator
-	DelegatorPublicKey keypair.PublicKey `json:"delegator_public_key"`
+	// Delegator Kind of the delegator
+	DelegatorKind DelegatorKind `json:"delegator_kind"`
 	// Public key of the validator
 	ValidatorPublicKey keypair.PublicKey `json:"validator_public_key"`
 	// Vesting schedule for a genesis validator. `None` if non-genesis validator.
@@ -115,9 +115,11 @@ type DelegatorV1 struct {
 
 func NewDelegatorFromDelegatorV1(v1 DelegatorV1) Delegator {
 	return Delegator{
-		BondingPurse:       v1.BondingPurse,
-		StakedAmount:       v1.StakedAmount,
-		DelegatorPublicKey: v1.PublicKey,
+		BondingPurse: v1.BondingPurse,
+		StakedAmount: v1.StakedAmount,
+		DelegatorKind: DelegatorKind{
+			PublicKey: &v1.PublicKey,
+		},
 		ValidatorPublicKey: v1.Delegatee,
 		VestingSchedule:    v1.VestingSchedule,
 	}
@@ -170,7 +172,7 @@ type Unbond struct {
 type UnbondKind struct {
 	Validator          keypair.PublicKey `json:"Validator"`
 	DelegatedPublicKey keypair.PublicKey `json:"DelegatedPublicKey"`
-	DelegatedPurse     key.URef          `json:"DelegatedPurse"`
+	DelegatedPurse     string            `json:"DelegatedPurse"`
 }
 
 type UnbondEra struct {

@@ -8,6 +8,7 @@ import (
 
 type (
 	AuctionState         = types.AuctionState
+	AuctionStateV1       = types.AuctionStateV1
 	Args                 = types.Args
 	ValidatorBid         = types.ValidatorBid
 	Bid                  = types.Bid

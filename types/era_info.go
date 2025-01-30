@@ -86,6 +86,16 @@ type DelegatorKind struct {
 	Purse *key.URef `json:"Purse,omitempty"`
 }
 
+func (t *DelegatorKind) ToHex() string {
+	switch {
+	case t.Purse != nil:
+		return t.Purse.ToHex()
+	case t.PublicKey != nil:
+		return t.PublicKey.ToHex()
+	}
+	return ""
+}
+
 func (t *DelegatorKind) UnmarshalJSON(data []byte) error {
 	if t == nil {
 		return errors.New("json.RawMessage: UnmarshalJSON on nil pointer")

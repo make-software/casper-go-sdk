@@ -31,6 +31,28 @@ func (b StateGetAuctionInfoResult) GetRawJSON() json.RawMessage {
 	return b.rawJSON
 }
 
+type StateGetAuctionInfoV1Result struct {
+	Version      string               `json:"api_version"`
+	AuctionState types.AuctionStateV1 `json:"auction_state"`
+
+	rawJSON json.RawMessage
+}
+
+func (b StateGetAuctionInfoV1Result) GetRawJSON() json.RawMessage {
+	return b.rawJSON
+}
+
+type StateGetAuctionInfoV2Result struct {
+	Version      string               `json:"api_version"`
+	AuctionState types.AuctionStateV2 `json:"auction_state"`
+
+	rawJSON json.RawMessage
+}
+
+func (b StateGetAuctionInfoV2Result) GetRawJSON() json.RawMessage {
+	return b.rawJSON
+}
+
 type StateGetBalanceResult struct {
 	ApiVersion   string          `json:"api_version"`
 	BalanceValue clvalue.UInt512 `json:"balance_value"`

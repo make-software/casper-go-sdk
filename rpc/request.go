@@ -46,6 +46,7 @@ const (
 	MethodGetBlockTransfers   Method = "chain_get_block_transfers"
 	MethodGetEraSummary       Method = "chain_get_era_summary"
 	MethodGetAuctionInfo      Method = "state_get_auction_info"
+	MethodGetAuctionInfoV2    Method = "state_get_auction_info_v2"
 	MethodGetValidatorChanges Method = "info_get_validator_changes"
 	MethodGetStateRootHash    Method = "chain_get_state_root_hash"
 	MethodGetStatus           Method = "info_get_status"

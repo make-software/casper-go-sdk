@@ -43,6 +43,10 @@ func (v URef) String() string {
 	return v.ToPrefixedString()
 }
 
+func (v URef) ToHex() string {
+	return hex.EncodeToString(v.data[:])
+}
+
 func (v URef) ToPrefixedString() string {
 	return PrefixNameURef + hex.EncodeToString(v.data[:]) + "-0" + hex.EncodeToString([]byte{v.access})
 }

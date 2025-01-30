@@ -782,7 +782,7 @@ func Test_DefaultClient_GetEraSummaryLatest_byHeight(t *testing.T) {
 	assert.NotEmpty(t, result.EraSummary.StoredValue.EraInfo.SeigniorageAllocations)
 }
 
-func Test_DefaultClient_GetAuctionInfoLatest_Comaptible(t *testing.T) {
+func Test_DefaultClient_GetAuctionInfoLatestV1_Compatible(t *testing.T) {
 	tests := []struct {
 		filePath string
 		isV2     bool
@@ -796,11 +796,11 @@ func Test_DefaultClient_GetAuctionInfoLatest_Comaptible(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run("GetLatestAuctionInfo", func(t *testing.T) {
+		t.Run("GetLatestAuctionInfo Compatible", func(t *testing.T) {
 			server := SetupServer(t, tt.filePath)
 			defer server.Close()
 			client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-			result, err := client.GetLatestAuctionInfo(context.Background())
+			result, err := client.GetLatestAuctionInfoV1(context.Background())
 			require.NoError(t, err)
 			assert.NotEmpty(t, result.Version)
 			assert.NotEmpty(t, result.AuctionState.Bids)
@@ -825,16 +825,29 @@ func Test_DefaultClient_GetAuctionInfoByHash(t *testing.T) {
 	server := SetupServer(t, "../data/rpc_response/get_auction_info.json")
 	defer server.Close()
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetAuctionInfoByHash(context.Background(), "5dafbccc05cd3eb765ef9471a141877d8ffae306fb79c75fa4db46ab98bca370")
+	result, err := client.GetAuctionInfoV1ByHash(context.Background(), "5dafbccc05cd3eb765ef9471a141877d8ffae306fb79c75fa4db46ab98bca370")
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.AuctionState.Bids)
+}
+
+func Test_DefaultClient_GetAuctionInfoByV2Hash(t *testing.T) {
+	server := SetupServer(t, "../data/rpc_response/state_get_auction_info_v2.json")
+	defer server.Close()
+	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+	result, err := client.GetLatestAuctionInfo(context.Background())
+	require.NoError(t, err)
+	assert.NotEmpty(t, result.AuctionState.Bids)
+	for _, bid := range result.AuctionState.Bids {
+		assert.NotEmpty(t, bid.PublicKey)
+		assert.NotEmpty(t, bid.Bid)
+	}
 }
 
 func Test_DefaultClient_GetAuctionInfoByHeight(t *testing.T) {
 	server := SetupServer(t, "../data/rpc_response/get_auction_info.json")
 	defer server.Close()
 	client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
-	result, err := client.GetAuctionInfoByHeight(context.Background(), 1412462)
+	result, err := client.GetAuctionInfoV1ByHeight(context.Background(), 1412462)
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.AuctionState.Bids)
 }

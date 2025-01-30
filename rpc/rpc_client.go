@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/make-software/casper-go-sdk/v2/types"
 	"github.com/make-software/casper-go-sdk/v2/types/key"
@@ -544,34 +545,109 @@ func (c *client) GetEraSummaryByHeight(ctx context.Context, height uint64) (Chai
 }
 
 func (c *client) GetLatestAuctionInfo(ctx context.Context) (StateGetAuctionInfoResult, error) {
-	var result StateGetAuctionInfoResult
-
-	resp, err := c.processRequest(ctx, MethodGetAuctionInfo, nil, &result)
+	resV2, err := c.getLatestAuctionInfoV2(ctx)
 	if err != nil {
-		return StateGetAuctionInfoResult{}, err
+		if !strings.Contains(err.Error(), "Method not found") {
+			return StateGetAuctionInfoResult{}, err
+		}
+
+		resV1, err := c.GetLatestAuctionInfoV1(ctx)
+		if err != nil {
+			return StateGetAuctionInfoResult{}, err
+		}
+		return StateGetAuctionInfoResult{
+			Version:      resV1.Version,
+			AuctionState: types.NewAuctionStateFromV1(resV1.AuctionState),
+			rawJSON:      resV1.GetRawJSON(),
+		}, nil
 	}
 
-	result.rawJSON = resp.Result
-	return result, nil
+	return StateGetAuctionInfoResult{
+		Version:      resV2.Version,
+		AuctionState: types.NewAuctionStateFromV2(resV2.AuctionState),
+		rawJSON:      resV2.GetRawJSON(),
+	}, nil
 }
 
 func (c *client) GetAuctionInfoByHash(ctx context.Context, blockHash string) (StateGetAuctionInfoResult, error) {
-	var result StateGetAuctionInfoResult
-	resp, err := c.processRequest(ctx, MethodGetAuctionInfo, NewParamBlockByHash(blockHash), &result)
+	resV2, err := c.getAuctionInfoV2ByHash(ctx, blockHash)
 	if err != nil {
-		return StateGetAuctionInfoResult{}, err
+		if !strings.Contains(err.Error(), "Method not found") {
+			return StateGetAuctionInfoResult{}, err
+		}
+
+		resV1, err := c.GetAuctionInfoV1ByHash(ctx, blockHash)
+		if err != nil {
+			return StateGetAuctionInfoResult{}, err
+		}
+		return StateGetAuctionInfoResult{
+			Version:      resV1.Version,
+			AuctionState: types.NewAuctionStateFromV1(resV1.AuctionState),
+			rawJSON:      resV1.GetRawJSON(),
+		}, nil
+	}
+
+	return StateGetAuctionInfoResult{
+		Version:      resV2.Version,
+		AuctionState: types.NewAuctionStateFromV2(resV2.AuctionState),
+		rawJSON:      resV2.GetRawJSON(),
+	}, nil
+}
+
+func (c *client) GetAuctionInfoByHeight(ctx context.Context, height uint64) (StateGetAuctionInfoResult, error) {
+	resV2, err := c.getAuctionInfoV2ByHeight(ctx, height)
+	if err != nil {
+		if !strings.Contains(err.Error(), "Method not found") {
+			return StateGetAuctionInfoResult{}, err
+		}
+
+		resV1, err := c.GetAuctionInfoV1ByHeight(ctx, height)
+		if err != nil {
+			return StateGetAuctionInfoResult{}, err
+		}
+		return StateGetAuctionInfoResult{
+			Version:      resV1.Version,
+			AuctionState: types.NewAuctionStateFromV1(resV1.AuctionState),
+			rawJSON:      resV1.GetRawJSON(),
+		}, nil
+	}
+
+	return StateGetAuctionInfoResult{
+		Version:      resV2.Version,
+		AuctionState: types.NewAuctionStateFromV2(resV2.AuctionState),
+		rawJSON:      resV2.GetRawJSON(),
+	}, nil
+}
+
+func (c *client) GetLatestAuctionInfoV1(ctx context.Context) (StateGetAuctionInfoV1Result, error) {
+	var result StateGetAuctionInfoV1Result
+
+	resp, err := c.processRequest(ctx, MethodGetAuctionInfo, nil, &result)
+	if err != nil {
+		return StateGetAuctionInfoV1Result{}, err
 	}
 
 	result.rawJSON = resp.Result
 	return result, nil
 }
 
-func (c *client) GetAuctionInfoByHeight(ctx context.Context, height uint64) (StateGetAuctionInfoResult, error) {
-	var result StateGetAuctionInfoResult
+func (c *client) GetAuctionInfoV1ByHash(ctx context.Context, blockHash string) (StateGetAuctionInfoV1Result, error) {
+	var result StateGetAuctionInfoV1Result
+	resp, err := c.processRequest(ctx, MethodGetAuctionInfo, NewParamBlockByHash(blockHash), &result)
+	if err != nil {
+		return StateGetAuctionInfoV1Result{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) GetAuctionInfoV1ByHeight(ctx context.Context, height uint64) (StateGetAuctionInfoV1Result, error) {
+	var result StateGetAuctionInfoV1Result
 
 	resp, err := c.processRequest(ctx, MethodGetAuctionInfo, NewParamBlockByHeight(height), &result)
 	if err != nil {
-		return StateGetAuctionInfoResult{}, err
+		return StateGetAuctionInfoV1Result{}, err
 	}
 
 	result.rawJSON = resp.Result
@@ -932,6 +1008,41 @@ func (c *client) GetLatestDelegatorReward(ctx context.Context, validator, delega
 	}, &result)
 	if err != nil {
 		return InfoGetRewardResult{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) getLatestAuctionInfoV2(ctx context.Context) (StateGetAuctionInfoV2Result, error) {
+	var result StateGetAuctionInfoV2Result
+
+	resp, err := c.processRequest(ctx, MethodGetAuctionInfoV2, nil, &result)
+	if err != nil {
+		return StateGetAuctionInfoV2Result{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) getAuctionInfoV2ByHash(ctx context.Context, blockHash string) (StateGetAuctionInfoV2Result, error) {
+	var result StateGetAuctionInfoV2Result
+	resp, err := c.processRequest(ctx, MethodGetAuctionInfoV2, NewParamBlockByHash(blockHash), &result)
+	if err != nil {
+		return StateGetAuctionInfoV2Result{}, err
+	}
+
+	result.rawJSON = resp.Result
+	return result, nil
+}
+
+func (c *client) getAuctionInfoV2ByHeight(ctx context.Context, height uint64) (StateGetAuctionInfoV2Result, error) {
+	var result StateGetAuctionInfoV2Result
+
+	resp, err := c.processRequest(ctx, MethodGetAuctionInfoV2, NewParamBlockByHeight(height), &result)
+	if err != nil {
+		return StateGetAuctionInfoV2Result{}, err
 	}
 
 	result.rawJSON = resp.Result
