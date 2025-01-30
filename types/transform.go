@@ -79,20 +79,35 @@ func (t *TransformKind) ParseAsWriteTransfer() (*WriteTransfer, error) {
 }
 
 func (t *TransformKind) IsWriteAccount() bool {
-	return strings.Contains(string(*t), "WriteAccount")
+	return strings.Contains(string(*t), "Write") && strings.Contains(string(*t), "Account")
 }
 
+const ZeroAccountHash = "account-hash-0000000000000000000000000000000000000000000000000000000000000000"
+
 func (t *TransformKind) ParseAsWriteAccount() (key.AccountHash, error) {
-	type RawWriteAccountTransform struct {
+	type RawWriteAccount2XTransform struct {
+		Write struct {
+			Account struct {
+				AccountHash key.AccountHash `json:"account_hash"`
+			} `json:"Account"`
+		} `json:"Write"`
+	}
+
+	json2XRes := RawWriteAccount2XTransform{}
+	if err := json.Unmarshal(*t, &json2XRes); err == nil && json2XRes.Write.Account.AccountHash.ToPrefixedString() != ZeroAccountHash {
+		return json2XRes.Write.Account.AccountHash, nil
+	}
+
+	type RawWriteAccount1xTransform struct {
 		WriteAccount key.AccountHash `json:"WriteAccount"`
 	}
 
-	jsonRes := RawWriteAccountTransform{}
-	if err := json.Unmarshal(*t, &jsonRes); err != nil {
+	var json1XRes RawWriteAccount1xTransform
+	if err := json.Unmarshal(*t, &json1XRes); err != nil {
 		return key.AccountHash{}, err
 	}
 
-	return jsonRes.WriteAccount, nil
+	return json1XRes.WriteAccount, nil
 }
 
 func (t *TransformKind) IsWriteContractPackage() bool {
