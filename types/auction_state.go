@@ -4,6 +4,11 @@ import (
 	"github.com/make-software/casper-go-sdk/v2/types/keypair"
 )
 
+const (
+	DefaultMinimumDelegationAmount = 500 * 1_000_000_000
+	DefaultMaximumDelegationAmount = 1_000_000_000 * 1_000_000_000
+)
+
 type AuctionState struct {
 	// All bids contained within a vector.
 	Bids          []BidKindWrapper `json:"bids"`
@@ -41,9 +46,34 @@ func NewAuctionStateFromV1(v1 AuctionStateV1) AuctionState {
 		bids = append(bids, BidKindWrapper{
 			PublicKey: bid.PublicKey,
 			Bid: BidKind{
-				Unified: &bid.Bid,
+				Validator: &ValidatorBid{
+					ValidatorPublicKey:      bid.Bid.ValidatorPublicKey,
+					BondingPurse:            bid.Bid.BondingPurse,
+					DelegationRate:          bid.Bid.DelegationRate,
+					Inactive:                bid.Bid.Inactive,
+					StakedAmount:            bid.Bid.StakedAmount,
+					MinimumDelegationAmount: DefaultMinimumDelegationAmount,
+					MaximumDelegationAmount: DefaultMaximumDelegationAmount,
+					VestingSchedule:         bid.Bid.VestingSchedule,
+					ReservedSlots:           0,
+				},
 			},
 		})
+
+		for _, delegatorBid := range bid.Bid.Delegators {
+			bids = append(bids, BidKindWrapper{
+				PublicKey: bid.PublicKey,
+				Bid: BidKind{
+					Delegator: &Delegator{
+						BondingPurse:       delegatorBid.BondingPurse,
+						StakedAmount:       delegatorBid.StakedAmount,
+						DelegatorKind:      delegatorBid.DelegatorKind,
+						ValidatorPublicKey: delegatorBid.ValidatorPublicKey,
+						VestingSchedule:    delegatorBid.VestingSchedule,
+					},
+				},
+			})
+		}
 	}
 
 	return AuctionState{

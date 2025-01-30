@@ -3,7 +3,6 @@ package types
 import (
 	"encoding/json"
 	"errors"
-
 	"github.com/make-software/casper-go-sdk/v2/types/clvalue"
 	"github.com/make-software/casper-go-sdk/v2/types/key"
 	"github.com/make-software/casper-go-sdk/v2/types/keypair"
@@ -11,10 +10,12 @@ import (
 
 // ValidatorBid is an entry in the validator map.
 type ValidatorBid struct {
+	// Validator public key.
+	ValidatorPublicKey keypair.PublicKey `json:"validator_public_key"`
 	// The purse was used for bonding.
 	BondingPurse key.URef `json:"bonding_purse"`
 	// The delegation rate.
-	DelegationRate float32 `json:"delegation_rate"`
+	DelegationRate uint8 `json:"delegation_rate"`
 	// `true` if validator has been "evicted"
 	Inactive bool `json:"inactive"`
 	// The amount of tokens staked by a validator (not including delegators).
