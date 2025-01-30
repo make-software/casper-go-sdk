@@ -796,7 +796,7 @@ func Test_DefaultClient_GetAuctionInfoLatestV1_Compatible(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run("GetLatestAuctionInfoV2", func(t *testing.T) {
+		t.Run("GetLatestAuctionInfo Compatible", func(t *testing.T) {
 			server := SetupServer(t, tt.filePath)
 			defer server.Close()
 			client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
