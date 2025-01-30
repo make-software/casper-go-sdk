@@ -15,7 +15,6 @@ type (
 	StateGetEntity              = rpc.StateGetEntityResult
 	StateGetAuctionInfoResult   = rpc.StateGetAuctionInfoResult
 	StateGetAuctionInfoV1Result = rpc.StateGetAuctionInfoV1Result
-	StateGetAuctionInfoV2Result = rpc.StateGetAuctionInfoV2Result
 	StateGetItemResult          = rpc.StateGetItemResult
 	InfoGetStatusResult         = rpc.InfoGetStatusResult
 	NodePeer                    = rpc.NodePeer

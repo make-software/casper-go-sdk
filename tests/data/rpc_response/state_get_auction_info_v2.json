@@ -4,69 +4,69 @@
   "result": {
     "api_version": "2.0.0",
     "auction_state": {
-      "state_root_hash": "92fbe8c95d8c0446628e02246f297c4aec75b120cf20c59463b3e39c76261fc3",
-      "block_height": 3424447,
+      "state_root_hash": "07c6fbb4b887ee66abd499224d84c281bf012d35f8313eaca036dd2a9accb77b",
+      "block_height": 3445053,
       "era_validators": [
         {
-          "era_id": 14782,
+          "era_id": 14829,
           "validator_weights": [
             {
               "public_key": "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c",
-              "weight": "2018485691769085878"
+              "weight": "2022820734013861517"
             },
             {
               "public_key": "0126d4637eb0c0769274f03a696df1112383fa621c9f73f57af4c5c0fbadafa8cf",
-              "weight": "2018468074001820942"
+              "weight": "2022769842412982279"
             },
             {
               "public_key": "0140afe8f752e5ff100e0189c080bc207e8805b3e5e82f792ec608de2f11f39f6c",
-              "weight": "2018524402962335163"
+              "weight": "2022896519454105315"
             },
             {
               "public_key": "017536433a73f7562526f3e9fcb8d720428ae2d28788a9909f3c6f637a9d848a4b",
-              "weight": "2018478101413411232"
+              "weight": "2022793511228342317"
             }
           ]
         },
         {
-          "era_id": 14783,
+          "era_id": 14830,
           "validator_weights": [
             {
               "public_key": "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c",
-              "weight": "2018579210278753016"
+              "weight": "2022913025701934409"
             },
             {
               "public_key": "0126d4637eb0c0769274f03a696df1112383fa621c9f73f57af4c5c0fbadafa8cf",
-              "weight": "2018560589226693531"
+              "weight": "2022855909787054196"
             },
             {
               "public_key": "0140afe8f752e5ff100e0189c080bc207e8805b3e5e82f792ec608de2f11f39f6c",
-              "weight": "2018613910670557764"
+              "weight": "2022995637127834355"
             },
             {
               "public_key": "017536433a73f7562526f3e9fcb8d720428ae2d28788a9909f3c6f637a9d848a4b",
-              "weight": "2018571118115919651"
+              "weight": "2022884597484149087"
             }
           ]
         },
         {
-          "era_id": 14784,
+          "era_id": 14831,
           "validator_weights": [
             {
               "public_key": "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c",
-              "weight": "2018665898127231142"
+              "weight": "2023005117778722568"
             },
             {
               "public_key": "0126d4637eb0c0769274f03a696df1112383fa621c9f73f57af4c5c0fbadafa8cf",
-              "weight": "2018653607555248298"
+              "weight": "2022950510256683498"
             },
             {
               "public_key": "0140afe8f752e5ff100e0189c080bc207e8805b3e5e82f792ec608de2f11f39f6c",
-              "weight": "2018701037989186664"
+              "weight": "2023086224993885135"
             },
             {
               "public_key": "017536433a73f7562526f3e9fcb8d720428ae2d28788a9909f3c6f637a9d848a4b",
-              "weight": "2018668775011457073"
+              "weight": "2022976187198914214"
             }
           ]
         }
@@ -1514,7 +1514,7 @@
             "Validator": {
               "validator_public_key": "017536433a73f7562526f3e9fcb8d720428ae2d28788a9909f3c6f637a9d848a4b",
               "bonding_purse": "uref-a79800a3229abbcc44dacb0fce27a80da322b0c742550d05cf4db98612e614e3-007",
-              "staked_amount": "2018668775011457073",
+              "staked_amount": "2022976187198914214",
               "delegation_rate": 0,
               "vesting_schedule": null,
               "inactive": false,
@@ -2074,7 +2074,7 @@
             "Validator": {
               "validator_public_key": "0140afe8f752e5ff100e0189c080bc207e8805b3e5e82f792ec608de2f11f39f6c",
               "bonding_purse": "uref-b16e7d234a61bf51952d15867c8d2b6d2be87a843f226535b638bc9cdc7f5a42-007",
-              "staked_amount": "2018701037989186664",
+              "staked_amount": "2023086224993885135",
               "delegation_rate": 0,
               "vesting_schedule": null,
               "inactive": false,
@@ -2272,7 +2272,7 @@
             "Validator": {
               "validator_public_key": "0126d4637eb0c0769274f03a696df1112383fa621c9f73f57af4c5c0fbadafa8cf",
               "bonding_purse": "uref-4d26b67e006db633fe3676cfeed5b3d3b2e9f1d336209364fc19e91d2152a733-007",
-              "staked_amount": "2018653607555248298",
+              "staked_amount": "2022950510256683498",
               "delegation_rate": 0,
               "vesting_schedule": null,
               "inactive": false,
@@ -3052,7 +3052,7 @@
             "Validator": {
               "validator_public_key": "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c",
               "bonding_purse": "uref-2f0ecb6338d9672a1ba9b72a5f88ac03365ec6997c282f1923c0408f640c6bcc-007",
-              "staked_amount": "2018658182999007930",
+              "staked_amount": "2022997695536832180",
               "delegation_rate": 0,
               "vesting_schedule": null,
               "inactive": false,
@@ -54583,7 +54583,7 @@
               "delegator_kind": {
                 "Purse": "1cd4fc41e3f750e52024f54b1ac3a757027baad64d47ffb6d4e968967618740b"
               },
-              "staked_amount": "7215083603907",
+              "staked_amount": "6725779674440",
               "bonding_purse": "uref-30c3f9163e14b9b00c967daaecdba61d9a7a25f454b9f23d556200e1ab847955-007",
               "validator_public_key": "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c",
               "vesting_schedule": null
@@ -54597,10 +54597,29 @@
               "delegator_kind": {
                 "Purse": "8af7b77811970792f98b806779dfc0d1a9fef5bad205c6be8bb884210d7d323c"
               },
-              "staked_amount": "500044619305",
+              "staked_amount": "696462215948",
               "bonding_purse": "uref-d34ee21f5fe61feee2d9f15e0e369367aba62ba1b689e59c1e6ddc581ca99fdf-007",
               "validator_public_key": "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c",
               "vesting_schedule": null
+            }
+          }
+        },
+        {
+          "public_key": "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c",
+          "bid": {
+            "Unbond": {
+              "validator_public_key": "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c",
+              "unbond_kind": {
+                "DelegatedPurse": "8af7b77811970792f98b806779dfc0d1a9fef5bad205c6be8bb884210d7d323c"
+              },
+              "eras": [
+                {
+                  "bonding_purse": "uref-d34ee21f5fe61feee2d9f15e0e369367aba62ba1b689e59c1e6ddc581ca99fdf-007",
+                  "era_of_creation": 14828,
+                  "amount": "300631430545",
+                  "new_validator": null
+                }
+              ]
             }
           }
         }
