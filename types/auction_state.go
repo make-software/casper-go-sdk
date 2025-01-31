@@ -47,7 +47,7 @@ func NewAuctionStateFromV1(v1 AuctionStateV1) AuctionState {
 			PublicKey: bid.PublicKey,
 			Bid: BidKind{
 				Validator: &ValidatorBid{
-					ValidatorPublicKey:      bid.Bid.ValidatorPublicKey,
+					ValidatorPublicKey:      bid.PublicKey,
 					BondingPurse:            bid.Bid.BondingPurse,
 					DelegationRate:          bid.Bid.DelegationRate,
 					Inactive:                bid.Bid.Inactive,
