@@ -228,11 +228,11 @@ func Test_Transform_MessageTopic(t *testing.T) {
 }
 
 func Test_Transform_WriteDeployInfo(t *testing.T) {
-	fixute, err := os.ReadFile("../data/transform/WriteDeployInfo.json")
+	fixture, err := os.ReadFile("../data/transform/WriteDeployInfo.json")
 	require.NoError(t, err)
 	var transformKey types.TransformKey
 
-	err = json.Unmarshal(fixute, &transformKey)
+	err = json.Unmarshal(fixture, &transformKey)
 	require.NoError(t, err)
 
 	val, err := transformKey.Transform.ParseAsWriteDeployInfo()
@@ -240,4 +240,32 @@ func Test_Transform_WriteDeployInfo(t *testing.T) {
 
 	assert.True(t, transformKey.Transform.IsWriteDeployInfo())
 	assert.EqualValues(t, 1, len(val.Transfers))
+}
+
+func Test_Transform_WriteAccountV1(t *testing.T) {
+	fixture, err := os.ReadFile("../data/transform/write_account_v1.json")
+	require.NoError(t, err)
+	var transform types.TransformKey
+
+	err = json.Unmarshal(fixture, &transform)
+	require.NoError(t, err)
+
+	writeAccount, err := transform.Transform.ParseAsWriteAccount()
+	require.NoError(t, err)
+	require.NotEmpty(t, writeAccount.Hash)
+	assert.True(t, transform.Transform.IsWriteAccount())
+}
+
+func Test_Transform_WriteAccountV2(t *testing.T) {
+	fixture, err := os.ReadFile("../data/transform/write_account_v2.json")
+	require.NoError(t, err)
+	var transform types.Transform
+
+	err = json.Unmarshal(fixture, &transform)
+	require.NoError(t, err)
+
+	writeAccount, err := transform.Kind.ParseAsWriteAccount()
+	require.NoError(t, err)
+	require.NotEmpty(t, writeAccount.Hash)
+	assert.True(t, transform.Kind.IsWriteAccount())
 }
