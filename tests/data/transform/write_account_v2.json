@@ -1,0 +1,22 @@
+{
+  "key": "account-hash-44ec1f3f9114f49593d6dd70d38432947288f0c9f71f673555db1f5867aecf73",
+  "kind": {
+    "Write": {
+      "Account": {
+        "account_hash": "account-hash-44ec1f3f9114f49593d6dd70d38432947288f0c9f71f673555db1f5867aecf73",
+        "named_keys": [],
+        "main_purse": "uref-b7f9d1fe77817e0fd9bc5bd67d02ccc402ffcaeb9978015e118a39cd5dca463c-007",
+        "associated_keys": [
+          {
+            "account_hash": "account-hash-44ec1f3f9114f49593d6dd70d38432947288f0c9f71f673555db1f5867aecf73",
+            "weight": 1
+          }
+        ],
+        "action_thresholds": {
+          "deployment": 1,
+          "key_management": 1
+        }
+      }
+    }
+  }
+}
