@@ -183,4 +183,4 @@ Should you have any questions, issues, or suggestions, please don't hesitate to 
 
 Remember, the power of blockchain networks is in their communities. Every question you ask, issue you open, or contribution you make, helps to improve the Casper Go SDK and benefits the entire Casper ecosystem.
 
-Thank you for your interest in our project, we look forward to building the future of the Casper Network together!
+Thank you for your interest in our project, and we look forward to building the future of the Casper Network together!
