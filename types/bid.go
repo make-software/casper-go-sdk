@@ -172,9 +172,9 @@ type Unbond struct {
 }
 
 type UnbondKind struct {
-	Validator          keypair.PublicKey `json:"Validator"`
-	DelegatedPublicKey keypair.PublicKey `json:"DelegatedPublicKey"`
-	DelegatedPurse     string            `json:"DelegatedPurse"`
+	Validator          *keypair.PublicKey `json:"Validator"`
+	DelegatedPublicKey *keypair.PublicKey `json:"DelegatedPublicKey"`
+	DelegatedPurse     *string            `json:"DelegatedPurse"`
 }
 
 type UnbondEra struct {
