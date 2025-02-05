@@ -19,7 +19,7 @@ type EraInfo struct {
 // SeigniorageAllocation sores information about a seigniorage allocation
 type SeigniorageAllocation struct {
 	Validator *ValidatorAllocation `json:"Validator,omitempty"`
-	Delegator *DelegatorAllocation `json:"Delegator,omitempty"`
+	Delegator *DelegatorAllocation `json:"DelegatorKind,omitempty"`
 }
 
 type ValidatorAllocation struct {
@@ -38,41 +38,42 @@ type DelegatorAllocation struct {
 	Amount clvalue.UInt512 `json:"amount"`
 }
 
-func (t *DelegatorAllocation) UnmarshalJSON(data []byte) error {
+func (t *SeigniorageAllocation) UnmarshalJSON(data []byte) error {
 	if t == nil {
 		return errors.New("json.RawMessage: UnmarshalJSON on nil pointer")
 	}
 	temp := struct {
-		// Public key of the delegator
-		DelegatorKind *DelegatorKind `json:"delegator_kind"`
-		// Public key of the validator
-		DelegatorPublicKey *keypair.PublicKey `json:"delegator_public_key"`
-		// Public key of the validator
-		ValidatorPublicKey keypair.PublicKey `json:"validator_public_key"`
-		// Amount allocated as a reward.
-		Amount clvalue.UInt512 `json:"amount"`
+		Validator     *ValidatorAllocation `json:"Validator,omitempty"`
+		DelegatorKind *DelegatorAllocation `json:"DelegatorKind,omitempty"`
+		Delegator     *struct {
+			// Public key of the validator
+			DelegatorPublicKey *keypair.PublicKey `json:"delegator_public_key"`
+			// Public key of the validator
+			ValidatorPublicKey keypair.PublicKey `json:"validator_public_key"`
+			// Amount allocated as a reward.
+			Amount clvalue.UInt512 `json:"amount"`
+		} `json:"Delegator"`
 	}{}
 
 	if err := json.Unmarshal(data, &temp); err != nil {
 		return err
 	}
 
-	if temp.DelegatorKind != nil {
-		*t = DelegatorAllocation{
-			DelegatorKind:      *temp.DelegatorKind,
-			ValidatorPublicKey: temp.ValidatorPublicKey,
-			Amount:             temp.Amount,
-		}
-	} else if temp.DelegatorPublicKey != nil {
-		*t = DelegatorAllocation{
+	if temp.Delegator != nil {
+		t.Delegator = &DelegatorAllocation{
 			DelegatorKind: DelegatorKind{
-				PublicKey: temp.DelegatorPublicKey,
+				PublicKey: temp.Delegator.DelegatorPublicKey,
 			},
-			ValidatorPublicKey: temp.ValidatorPublicKey,
-			Amount:             temp.Amount,
+			ValidatorPublicKey: temp.Delegator.ValidatorPublicKey,
+			Amount:             temp.Delegator.Amount,
 		}
+		return nil
+	} else if temp.Validator != nil {
+		t.Validator = temp.Validator
+	} else if temp.DelegatorKind != nil {
+		t.Delegator = temp.DelegatorKind
 	} else {
-		return errors.New("unexpected DelegatorAllocation format")
+		return errors.New("incorrect SeigniorageAllocation format structure")
 	}
 
 	return nil
