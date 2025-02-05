@@ -243,6 +243,14 @@ func Test_Transform_WriteDeployInfo(t *testing.T) {
 }
 
 func Test_Transform_WriteAccountV1(t *testing.T) {
+	invalidFixture, err := os.ReadFile("../data/transform/write_clvalue_v1.json")
+	require.NoError(t, err)
+
+	var invalidTransform types.TransformKey
+	err = json.Unmarshal(invalidFixture, &invalidTransform)
+	require.NoError(t, err)
+	assert.False(t, invalidTransform.Transform.IsWriteAccount())
+
 	fixture, err := os.ReadFile("../data/transform/write_account_v1.json")
 	require.NoError(t, err)
 	var transform types.TransformKey
