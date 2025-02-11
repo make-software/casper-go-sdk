@@ -452,7 +452,7 @@ func Test_DefaultClient_QueryGlobalStateByBlockHeight_StoredAddressableEntity_Co
 	require.NoError(t, err)
 	assert.NotEmpty(t, res.StoredValue.AddressableEntity)
 	assert.NotEmpty(t, res.StoredValue.AddressableEntity.EntityKind)
-	assert.Equal(t, *res.StoredValue.AddressableEntity.EntityKind.SmartContract, types.TransactionRuntimeVmCasperV1)
+	assert.True(t, res.StoredValue.AddressableEntity.EntityKind.SmartContract.IsVmCasperV1())
 	assert.NotEmpty(t, res.StoredValue.AddressableEntity.ActionThresholds)
 	assert.NotEmpty(t, res.StoredValue.AddressableEntity.AssociatedKeys)
 	assert.NotEmpty(t, res.StoredValue.AddressableEntity.ByteCodeHash)

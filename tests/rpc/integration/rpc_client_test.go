@@ -47,7 +47,7 @@ func Test_DefaultClient_QueryBalanceDetails(t *testing.T) {
 
 	ctx := context.Background()
 
-	res, err := GetRpcClient().GetBlockLatest(ctx)
+	res, err := GetRpcClient().GetLatestBlock(ctx)
 	require.NoError(t, err)
 
 	accountHash := pubKey.AccountHash()
