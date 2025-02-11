@@ -17,7 +17,6 @@ const (
 
 type TransactionRuntime struct {
 	VmCasperV1 *struct{}
-	// The execution target is a stored entity or package.
 	VmCasperV2 *struct {
 		Seed             *key.Hash `json:"seed,omitempty"`
 		TransferredValue uint64    `json:"transferred_value"`
