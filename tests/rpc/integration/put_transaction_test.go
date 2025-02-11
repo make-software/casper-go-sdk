@@ -46,15 +46,17 @@ func Test_PutTransaction_ModuleBytesSession(t *testing.T) {
 		1800000000000,
 		"casper-net-1",
 		types.PricingMode{
-			Fixed: &types.FixedMode{
+			Limited: &types.LimitedMode{
 				GasPriceTolerance: 1,
+				StandardPayment:   true,
+				PaymentAmount:     100000000,
 			},
 		},
 		types.NewNamedArgs(args),
 		types.TransactionTarget{
 			Session: &types.SessionTarget{
 				ModuleBytes:      moduleBytes,
-				Runtime:          types.TransactionRuntimeVmCasperV1,
+				Runtime:          types.NewVmCasperV1TransactionRuntime(),
 				IsInstallUpgrade: true,
 			},
 		},
@@ -70,8 +72,8 @@ func Test_PutTransaction_ModuleBytesSession(t *testing.T) {
 	transaction, err := types.MakeTransactionV1(payload)
 	require.NoError(t, err)
 
-	err = transaction.Sign(keys)
-	require.NoError(t, err)
+	require.NoError(t, transaction.Sign(keys))
+	require.NoError(t, transaction.Validate())
 
 	rpcClient := rpc.NewClient(rpc.NewHttpHandler("http://127.0.0.1:11101/rpc", http.DefaultClient))
 	res, err := rpcClient.PutTransactionV1(context.Background(), *transaction)
@@ -109,8 +111,10 @@ func Test_PutTransaction_NativeTransfer(t *testing.T) {
 		1800000000000,
 		"casper-net-1",
 		types.PricingMode{
-			Fixed: &types.FixedMode{
+			Limited: &types.LimitedMode{
 				GasPriceTolerance: 1,
+				StandardPayment:   true,
+				PaymentAmount:     100000000,
 			},
 		},
 		types.NewNamedArgs(args),

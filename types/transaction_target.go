@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/make-software/casper-go-sdk/v2/types/key"
 	"github.com/make-software/casper-go-sdk/v2/types/serialization"
 	"github.com/make-software/casper-go-sdk/v2/types/serialization/encoding"
 )
@@ -126,14 +125,13 @@ func (t TransactionTarget) serializedFieldLengths() []int {
 		return []int{
 			encoding.U8SerializedLength,
 			t.Stored.ID.SerializedLength(),
-			encoding.U8SerializedLength,
-			encoding.U64SerializedLength,
+			t.Session.Runtime.SerializedLength(),
 		}
 	case t.Session != nil:
 		return []int{
 			encoding.U8SerializedLength,
 			encoding.BoolSerializedLength,
-			encoding.U8SerializedLength,
+			t.Session.Runtime.SerializedLength(),
 			encoding.BytesSerializedLength(t.Session.ModuleBytes),
 		}
 	default:
@@ -201,9 +199,7 @@ func (t TransactionTarget) MarshalJSON() ([]byte, error) {
 	if t.Session != nil {
 		type sessionTarget struct {
 			Runtime          TransactionRuntime `json:"runtime"`
-			TransferredValue uint64             `json:"transferred_value"`
 			IsInstallUpgrade bool               `json:"is_install_upgrade"`
-			Seed             *key.Hash          `json:"seed,omitempty"`
 			ModuleBytes      string             `json:"module_bytes"`
 		}
 
@@ -234,7 +230,7 @@ func NewTransactionTargetFromSession(session ExecutableDeployItem) TransactionTa
 		return TransactionTarget{
 			Session: &SessionTarget{
 				ModuleBytes: decodedBytes,
-				Runtime:     "VmCasperV1",
+				Runtime:     NewVmCasperV1TransactionRuntime(),
 			},
 		}
 	}
@@ -246,7 +242,7 @@ func NewTransactionTargetFromSession(session ExecutableDeployItem) TransactionTa
 				ID: TransactionInvocationTarget{
 					ByHash: &hash,
 				},
-				Runtime: "VmCasperV1",
+				Runtime: NewVmCasperV1TransactionRuntime(),
 			},
 		}
 	}
@@ -257,7 +253,7 @@ func NewTransactionTargetFromSession(session ExecutableDeployItem) TransactionTa
 				ID: TransactionInvocationTarget{
 					ByName: &session.StoredContractByName.Name,
 				},
-				Runtime: "VmCasperV1",
+				Runtime: NewVmCasperV1TransactionRuntime(),
 			},
 		}
 	}
@@ -280,7 +276,7 @@ func NewTransactionTargetFromSession(session ExecutableDeployItem) TransactionTa
 				ID: TransactionInvocationTarget{
 					ByPackageHash: &byHashTarget,
 				},
-				Runtime: "VmCasperV1",
+				Runtime: NewVmCasperV1TransactionRuntime(),
 			},
 		}
 	}
@@ -307,7 +303,7 @@ func NewTransactionTargetFromSession(session ExecutableDeployItem) TransactionTa
 				ID: TransactionInvocationTarget{
 					ByPackageName: &byNameTarget,
 				},
-				Runtime: "VmCasperV1",
+				Runtime: NewVmCasperV1TransactionRuntime(),
 			},
 		}
 	}
