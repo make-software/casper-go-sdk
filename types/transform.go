@@ -79,7 +79,7 @@ func (t *TransformKind) ParseAsWriteTransfer() (*WriteTransfer, error) {
 }
 
 func (t *TransformKind) IsWriteAccount() bool {
-	return strings.Contains(string(*t), "Write") && strings.Contains(string(*t), "Account")
+	return strings.Contains(string(*t), "WriteAccount") || strings.Contains(string(*t), `"Write"`) && strings.Contains(string(*t), `"Account"`)
 }
 
 const ZeroAccountHash = "account-hash-0000000000000000000000000000000000000000000000000000000000000000"
