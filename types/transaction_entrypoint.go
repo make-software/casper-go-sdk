@@ -214,8 +214,6 @@ func (t *TransactionEntryPoint) Bytes() ([]byte, error) {
 		if err = builder.AddField(TagFieldIndex, []byte{TransactionEntryPointDelegateTag}); err != nil {
 			return nil, err
 		}
-		return builder.BinaryPayloadBytes()
-
 	case t.Undelegate != nil:
 		if err = builder.AddField(TagFieldIndex, []byte{TransactionEntryPointUndelegateTag}); err != nil {
 			return nil, err
@@ -224,7 +222,6 @@ func (t *TransactionEntryPoint) Bytes() ([]byte, error) {
 		if err = builder.AddField(TagFieldIndex, []byte{TransactionEntryPointRedelegateTag}); err != nil {
 			return nil, err
 		}
-
 	case t.ActivateBid != nil:
 		if err = builder.AddField(TagFieldIndex, []byte{TransactionEntryPointActivateBidTag}); err != nil {
 			return nil, err

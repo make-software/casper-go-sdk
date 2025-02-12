@@ -19,6 +19,7 @@ import (
 	"github.com/make-software/casper-go-sdk/v2/rpc"
 	"github.com/make-software/casper-go-sdk/v2/types"
 	"github.com/make-software/casper-go-sdk/v2/types/clvalue"
+	"github.com/make-software/casper-go-sdk/v2/types/key"
 )
 
 func Test_PutTransaction_ModuleBytesSession(t *testing.T) {
@@ -88,6 +89,68 @@ func Test_PutTransaction_ModuleBytesSession(t *testing.T) {
 	require.NoError(t, err)
 	assert.NotEmpty(t, transactionRes.Transaction)
 	assert.NotEmpty(t, transactionRes.ExecutionInfo)
+}
+
+func Test_PutTransaction_StorageTarget(t *testing.T) {
+	keys, err := casper.NewED25519PrivateKeyFromPEMFile("../../data/keys/docker-nctl-rc3-secret.pem")
+	require.NoError(t, err)
+
+	pubKey := keys.PublicKey()
+	accountHash := pubKey.AccountHash()
+	entryPoint := "apple"
+
+	args := &types.Args{}
+	args.AddArgument("name", *clvalue.NewCLString("Test")).
+		AddArgument("symbol", *clvalue.NewCLString("test")).
+		AddArgument("decimals", *clvalue.NewCLUint8(9)).
+		AddArgument("total_supply", *clvalue.NewCLUInt256(big.NewInt(1_000_000_000_000_000))).
+		AddArgument("events_mode", *clvalue.NewCLUint8(2)).
+		AddArgument("enable_mint_burn", *clvalue.NewCLUint8(1))
+
+	hash, err := key.NewHash("a5542d422cc7102165bde32f8c8aa460a81dc64105b03efbcd9c612a7721dadb")
+
+	payload, err := types.NewTransactionV1Payload(
+		types.InitiatorAddr{
+			AccountHash: &accountHash,
+		},
+		types.Timestamp(time.Now().UTC()),
+		1800000000000,
+		"casper-net-1",
+		types.PricingMode{
+			Limited: &types.LimitedMode{
+				GasPriceTolerance: 1,
+				StandardPayment:   true,
+				PaymentAmount:     100000000,
+			},
+		},
+		types.NewNamedArgs(args),
+		types.TransactionTarget{
+			Stored: &types.StoredTarget{
+				ID: types.TransactionInvocationTarget{
+					ByHash: &hash,
+				},
+				Runtime: types.NewVmCasperV1TransactionRuntime(),
+			},
+		},
+		types.TransactionEntryPoint{
+			Custom: &entryPoint,
+		},
+		types.TransactionScheduling{
+			Standard: &struct{}{},
+		},
+	)
+	require.NoError(t, err)
+
+	transaction, err := types.MakeTransactionV1(payload)
+	require.NoError(t, err)
+
+	require.NoError(t, transaction.Sign(keys))
+	require.NoError(t, transaction.Validate())
+
+	rpcClient := rpc.NewClient(rpc.NewHttpHandler("http://127.0.0.1:11101/rpc", http.DefaultClient))
+	_, err = rpcClient.PutTransactionV1(context.Background(), *transaction)
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "no such contract at hash")
 }
 
 func Test_PutTransaction_NativeTransfer(t *testing.T) {

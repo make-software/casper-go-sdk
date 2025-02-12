@@ -3,6 +3,7 @@ package types
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/make-software/casper-go-sdk/v2/types/key"
 	"github.com/make-software/casper-go-sdk/v2/types/serialization"
@@ -13,6 +14,11 @@ import (
 const (
 	TransactionRuntimeTagVmCasperV1 = iota
 	TransactionRuntimeTagVmCasperV2
+)
+
+const (
+	TransferredValueIndex = 1
+	SeedValueIndex        = 2
 )
 
 type TransactionRuntime struct {
@@ -60,9 +66,35 @@ func (t *TransactionRuntime) Bytes() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err = builder.AddField(TagFieldIndex, []byte{t.RuntimeTag()}); err != nil {
-		return nil, err
+
+	if t.IsVmCasperV1() {
+		if err = builder.AddField(TagFieldIndex, []byte{t.RuntimeTag()}); err != nil {
+			return nil, err
+		}
+	} else if t.IsVmCasperV2() {
+		if err = builder.AddField(TagFieldIndex, []byte{t.RuntimeTag()}); err != nil {
+			return nil, err
+		}
+
+		transferredValueBytes, _ := encoding.NewU64ToBytesEncoder(t.VmCasperV2.TransferredValue).Bytes()
+		if err = builder.AddField(TransferredValueIndex, transferredValueBytes); err != nil {
+			return nil, err
+		}
+
+		var seedBytes []byte
+		if t.VmCasperV2.Seed != nil {
+			seedBytes = []byte{1} // Option Some tag
+			seedBytes = append(seedBytes, t.VmCasperV2.Seed.Bytes()...)
+		} else {
+			seedBytes = []byte{0} // Option none tag
+		}
+		if err = builder.AddField(SeedValueIndex, seedBytes); err != nil {
+			return nil, err
+		}
+	} else {
+		return nil, fmt.Errorf("invalid TransactionRuntime")
 	}
+
 	return builder.BinaryPayloadBytes()
 }
 
@@ -77,7 +109,7 @@ func (t TransactionRuntime) serializedFieldLengths() []int {
 	} else if t.VmCasperV2 != nil {
 		var seedSerializedLength int
 		if t.VmCasperV2.Seed != nil {
-			seedSerializedLength = encoding.StringSerializedLength(t.VmCasperV2.Seed.String())
+			seedSerializedLength = key.ByteHashLen
 		}
 
 		return []int{

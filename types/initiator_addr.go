@@ -119,21 +119,15 @@ func (d InitiatorAddr) Bytes() ([]byte, error) {
 		return nil, err
 	}
 
-	result := make([]byte, 0)
 	if d.AccountHash != nil {
 		if err = builder.AddField(TagFieldIndex, []byte{AccountHashVariantTag}); err != nil {
 			return nil, err
 		}
 
-		if err = builder.AddField(AccountHashFieldIndex, d.PublicKey.Bytes()); err != nil {
+		if err = builder.AddField(AccountHashFieldIndex, d.AccountHash.Bytes()); err != nil {
 			return nil, err
 		}
 
-		res, err := builder.BinaryPayloadBytes()
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, res...)
 	} else if d.PublicKey != nil {
 		if err = builder.AddField(TagFieldIndex, []byte{PublicKeyVariantTag}); err != nil {
 			return nil, err
@@ -142,13 +136,7 @@ func (d InitiatorAddr) Bytes() ([]byte, error) {
 		if err = builder.AddField(PublicKeyFieldIndex, d.PublicKey.Bytes()); err != nil {
 			return nil, err
 		}
-
-		res, err := builder.BinaryPayloadBytes()
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, res...)
 	}
 
-	return result, err
+	return builder.BinaryPayloadBytes()
 }
