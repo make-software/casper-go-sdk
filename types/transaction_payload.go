@@ -1,6 +1,8 @@
 package types
 
 import (
+	"encoding/json"
+
 	"github.com/make-software/casper-go-sdk/v2/types/serialization"
 	"github.com/make-software/casper-go-sdk/v2/types/serialization/encoding"
 )
@@ -89,6 +91,28 @@ func NewTransactionV1Fields(
 		TransactionEntryPoint: entryPoint,
 		TransactionScheduling: scheduling,
 	}, nil
+}
+
+func (h *TransactionV1Fields) UnmarshalJSON(bytes []byte) error {
+	var temp struct {
+		NamedArgs NamedArgs `json:"args,omitempty"`
+		// Execution target of a Transaction.
+		Target TransactionTarget `json:"target"`
+		// Entry point of a Transaction.
+		TransactionEntryPoint TransactionEntryPoint `json:"entry_point"`
+		// Scheduling mode of a Transaction.
+		TransactionScheduling TransactionScheduling `json:"scheduling"`
+	}
+	if err := json.Unmarshal(bytes, &temp); err != nil {
+		return err
+	}
+
+	fields, err := NewTransactionV1Fields(temp.NamedArgs, temp.Target, temp.TransactionEntryPoint, temp.TransactionScheduling)
+	if err != nil {
+		return err
+	}
+	*h = fields
+	return nil
 }
 
 type TransactionV1Payload struct {
