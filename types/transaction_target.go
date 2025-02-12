@@ -125,7 +125,7 @@ func (t TransactionTarget) serializedFieldLengths() []int {
 		return []int{
 			encoding.U8SerializedLength,
 			t.Stored.ID.SerializedLength(),
-			t.Session.Runtime.SerializedLength(),
+			t.Stored.Runtime.SerializedLength(),
 		}
 	case t.Session != nil:
 		return []int{

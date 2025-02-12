@@ -59,8 +59,7 @@ func (t *TransactionInvocationTarget) Bytes() ([]byte, error) {
 			return nil, err
 		}
 
-		byHashBytes, _ := encoding.NewStringToBytesEncoder(t.ByHash.String()).Bytes()
-		if err = builder.AddField(ByHashHashIndex, byHashBytes); err != nil {
+		if err = builder.AddField(ByHashHashIndex, t.ByHash.Bytes()); err != nil {
 			return nil, err
 		}
 	case t.ByName != nil:
@@ -78,12 +77,19 @@ func (t *TransactionInvocationTarget) Bytes() ([]byte, error) {
 			return nil, err
 		}
 
-		byPackageBytes, _ := encoding.NewStringToBytesEncoder(t.ByPackageHash.Addr.String()).Bytes()
-		if err = builder.AddField(ByPackageHashAddrIndex, byPackageBytes); err != nil {
+		if err = builder.AddField(ByPackageHashAddrIndex, t.ByPackageHash.Addr.Bytes()); err != nil {
 			return nil, err
 		}
 
-		versionBytes, _ := encoding.NewU32ToBytesEncoder(*t.ByPackageHash.Version).Bytes()
+		var versionBytes []byte
+		if t.ByPackageHash.Version != nil {
+			versionBytes = []byte{1} // Option Some tag
+			bytes, _ := encoding.NewU32ToBytesEncoder(*t.ByPackageHash.Version).Bytes()
+			versionBytes = append(versionBytes, bytes...)
+		} else {
+			versionBytes = []byte{0} // Option none tag
+		}
+
 		if err = builder.AddField(ByPackageHashVersionIndex, versionBytes); err != nil {
 			return nil, err
 		}
@@ -92,15 +98,24 @@ func (t *TransactionInvocationTarget) Bytes() ([]byte, error) {
 		if err = builder.AddField(TagFieldIndex, []byte{ByPackageNameVariant}); err != nil {
 			return nil, err
 		}
-		if err = builder.AddField(ByPackageNameNameIndex, []byte(t.ByPackageName.Name)); err != nil {
+
+		byPackageNameBytes, _ := encoding.NewStringToBytesEncoder(t.ByPackageName.Name).Bytes()
+		if err = builder.AddField(ByPackageNameNameIndex, byPackageNameBytes); err != nil {
 			return nil, err
 		}
 
-		versionBytes, _ := encoding.NewU32ToBytesEncoder(*t.ByPackageName.Version).Bytes()
+		var versionBytes []byte
+		if t.ByPackageName.Version != nil {
+			versionBytes = []byte{1} // Option Some tag
+			bytes, _ := encoding.NewU32ToBytesEncoder(*t.ByPackageName.Version).Bytes()
+			versionBytes = append(versionBytes, bytes...)
+		} else {
+			versionBytes = []byte{0} // Option none tag
+		}
+
 		if err = builder.AddField(ByPackageNameVersionIndex, versionBytes); err != nil {
 			return nil, err
 		}
-
 	default:
 		return nil, errors.New("unknown transaction invocation target")
 	}
@@ -118,13 +133,34 @@ func (t *TransactionInvocationTarget) serializedFieldLengths() []int {
 	case t.ByHash != nil:
 		return []int{
 			encoding.U8SerializedLength,
+			key.ByteHashLen,
 		}
 	case t.ByName != nil:
-		return []int{}
+		return []int{
+			encoding.U8SerializedLength,
+			encoding.StringSerializedLength(*t.ByName),
+		}
 	case t.ByPackageHash != nil:
-		return []int{}
+		var versionSerializedLength int
+		if t.ByPackageHash.Version != nil {
+			versionSerializedLength = encoding.U32SerializedLength
+		}
+
+		return []int{
+			encoding.U8SerializedLength,
+			key.ByteHashLen,
+			encoding.U8SerializedLength + versionSerializedLength,
+		}
 	case t.ByPackageName != nil:
-		return []int{}
+		var versionSerializedLength int
+		if t.ByPackageName.Version != nil {
+			versionSerializedLength = encoding.U32SerializedLength
+		}
+		return []int{
+			encoding.U8SerializedLength,
+			encoding.StringSerializedLength(t.ByPackageName.Name),
+			encoding.U8SerializedLength + versionSerializedLength,
+		}
 	default:
 		return []int{}
 	}
