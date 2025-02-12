@@ -178,6 +178,12 @@ func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 
 			if tt.isDeploy {
 				assert.NotEmpty(t, result.Transaction.GetDeploy())
+			} else {
+				transactionV1 := result.Transaction.GetTransactionV1()
+				assert.NotEmpty(t, transactionV1)
+				bytes, err := transactionV1.Payload.Fields.Bytes()
+				assert.Nil(t, err)
+				assert.True(t, len(bytes) > 4)
 			}
 
 			if tt.executionResultV1 {
