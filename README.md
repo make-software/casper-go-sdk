@@ -7,7 +7,7 @@ The Casper Go SDK provides a convenient way to interact with the Casper Network 
 ## Get started
 
 ```shell
-go get github.com/make-software/casper-go-sdk
+go get github.com/make-software/casper-go-sdk/v2/
 ```
 
 ## Base usage
@@ -84,47 +84,78 @@ SDK implements base functionality that allows to work with native Casper types.
 * Identifiers, hashes and related functions [details](types/key/README.md)
 * Cryptography public and private keys functionality [details](types/keypair/README.md)
 
-Example of how to construct a deploy and push it to the network:
+Example of how to construct a native transfer transaction and push it to the network:
 ```go
 package main
 
 import (
 	"context"
-	"encoding/hex"
 	"log"
 	"math/big"
 	"net/http"
+	"time"
 
 	"github.com/make-software/casper-go-sdk/v2/casper"
+	"github.com/make-software/casper-go-sdk/v2/rpc"
+	"github.com/make-software/casper-go-sdk/v2/types"
 	"github.com/make-software/casper-go-sdk/v2/types/clvalue"
 )
 
 func main() {
-	accountPublicKey, err := casper.NewPublicKey("012488699f9a31e36ecf002675cd7186b48e6a735d10ec1b308587ca719937752c")
-	if err != nil { return }
-	amount := big.NewInt(100000000)
-	session := casper.ExecutableDeployItem{
-		ModuleBytes: &casper.ModuleBytes{
-			ModuleBytes: hex.EncodeToString([]byte("<Contract WASM>")),
-			Args: (&casper.Args{}).
-				AddArgument("target", clvalue.NewCLByteArray(accountPublicKey.AccountHash().Bytes())).
-				AddArgument("amount", *clvalue.NewCLUInt512(amount)),
+	keys, _ := casper.NewED25519PrivateKeyFromPEMFile("./secret-key.pem")
+	pubKey := keys.PublicKey()
+
+	target, _ := casper.NewPublicKey("0106ed45915392c02b37136618372ac8dde8e0e3b8ee6190b2ca6db539b354ede4")
+
+	args := &types.Args{}
+	args.AddArgument("target", clvalue.NewCLPublicKey(target)).
+		AddArgument("amount", *clvalue.NewCLUInt512(big.NewInt(2500000000)))
+
+	payload, err := types.NewTransactionV1Payload(
+		types.InitiatorAddr{
+			PublicKey: &pubKey,
 		},
+		types.Timestamp(time.Now().UTC()),
+		1800000000000,
+		"casper-net-1",
+		types.PricingMode{
+			Limited: &types.LimitedMode{
+				GasPriceTolerance: 1,
+				StandardPayment:   true,
+				PaymentAmount:     100000000,
+			},
+		},
+		types.NewNamedArgs(args),
+		types.TransactionTarget{
+			Native: &struct{}{},
+		},
+		types.TransactionEntryPoint{
+			Transfer: &struct{}{},
+		},
+		types.TransactionScheduling{
+			Standard: &struct{}{},
+		},
+	)
+	if err != nil {
+		panic(err)
 	}
 
-	payment := casper.StandardPayment(amount)
+	transaction, err := types.MakeTransactionV1(payload)
+	if err != nil {
+		panic(err)
+	}
 
-	deployHeader := casper.DefaultHeader()
-	deployHeader.Account = accountPublicKey
-	deployHeader.ChainName = "casper-test"
+	err = transaction.Sign(keys)
+	if err != nil {
+		panic(err)
+	}
 
-	newDeploy, err := casper.MakeDeploy(deployHeader, payment, session)
-
-	handler := casper.NewRPCHandler("http://<Node Address>:7777/rpc", http.DefaultClient)
-	client := casper.NewRPCClient(handler)
-	result, err := client.PutDeploy(context.Background(), *newDeploy)
-	
-	log.Println(result.DeployHash)
+	rpcClient := rpc.NewClient(rpc.NewHttpHandler("http://<Node Address>:7777/rpc", http.DefaultClient))
+	res, err := rpcClient.PutTransactionV1(context.Background(), *transaction)
+	if err != nil {
+		panic(err)
+	}
+	log.Println("TransactionV1 submitted:", res.TransactionHash.TransactionV1)
 }
 ```
 
