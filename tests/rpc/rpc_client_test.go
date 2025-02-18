@@ -179,7 +179,6 @@ func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 
 			if tt.isDeploy {
 				assert.NotEmpty(t, result.Transaction.GetDeploy())
-				assert.True(t, result.ExecutionInfo.ExecutionResult.Consumed == 0)
 			} else {
 				transactionV1 := result.Transaction.GetTransactionV1()
 				assert.NotEmpty(t, transactionV1)
@@ -191,6 +190,7 @@ func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 
 			if tt.executionResultV1 {
 				assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.GetExecutionResultV1())
+				assert.True(t, result.ExecutionInfo.ExecutionResult.Consumed == 0)
 			} else {
 				assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.GetExecutionResultV2())
 			}
