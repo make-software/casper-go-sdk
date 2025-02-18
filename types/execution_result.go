@@ -134,8 +134,16 @@ func NewExecutionResultFromV1(v1 ExecutionResultV1) ExecutionResult {
 			})
 		}
 		return ExecutionResult{
-			Limit:                   0, // limit is unknown field for V1 Deploy
-			Consumed:                0, // Consumed is unknown field for V1 Deploy
+			Limit: 0, // limit is unknown field for V1 Deploy
+			// In ExecutionResultV1, the 'v1.Success.Cost' field actually represents the amount of consumed gas.
+			// However, in version 1.X, there is no distinction between 'cost' and 'consumed_gas'.
+			//
+			// e.g. for failed deploys without execution results, 'cost' is reported as 0, but the penalty charge
+			// (which is a cost) is reflected in the execution effects.
+			//
+			// In version V2, 'Consumed' and 'Cost' are explicitly separated.
+			// So to maintain backward compatibility for V1, 'v1.Success.Cost' is used for both 'Consumed' and 'Cost'.
+			Consumed:                v1.Success.Cost,
 			Cost:                    v1.Success.Cost,
 			Payment:                 nil,
 			Transfers:               transfers,
