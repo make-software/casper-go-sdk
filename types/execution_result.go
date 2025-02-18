@@ -135,8 +135,8 @@ func NewExecutionResultFromV1(v1 ExecutionResultV1) ExecutionResult {
 		}
 		return ExecutionResult{
 			Limit:                   0, // limit is unknown field for V1 Deploy
-			Consumed:                v1.Success.Cost,
-			Cost:                    0, // cost is unknown field for V1 Deploy
+			Consumed:                0, // Consumed is unknown field for V1 Deploy
+			Cost:                    v1.Success.Cost,
 			Payment:                 nil,
 			Transfers:               transfers,
 			Effects:                 transforms,
