@@ -175,6 +175,8 @@ func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 			assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.Initiator)
 			assert.NotEmpty(t, result.ExecutionInfo.ExecutionResult.Effects)
 			assert.NotEmpty(t, result.Transaction.Approvals)
+			assert.True(t, result.ExecutionInfo.ExecutionResult.Cost > 0)
+			assert.True(t, result.ExecutionInfo.ExecutionResult.Consumed > 0)
 
 			if tt.isDeploy {
 				assert.NotEmpty(t, result.Transaction.GetDeploy())
