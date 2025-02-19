@@ -154,13 +154,13 @@ type StoredVersionedContractByHash struct {
 	Hash key.ContractHash `json:"hash"`
 	// Entry point or method of the contract to call.
 	EntryPoint string       `json:"entry_point"`
-	Version    *json.Number `json:"version,omitempty"`
+	Version    *json.Number `json:"version"`
 	Args       *Args        `json:"args"`
 }
 
 func (m StoredVersionedContractByHash) Bytes() ([]byte, error) {
 	option := clvalue.Option{}
-	if m.Version != nil || m.Version.String() != "" {
+	if m.Version != nil && m.Version.String() != "" {
 		verVal, err := strconv.ParseUint(m.Version.String(), 10, 32)
 		if err != nil {
 			return nil, err
@@ -186,13 +186,13 @@ type StoredVersionedContractByName struct {
 	Name string `json:"name"`
 	// Entry point or method of the contract to call.
 	EntryPoint string       `json:"entry_point"`
-	Version    *json.Number `json:"version,omitempty"`
+	Version    *json.Number `json:"version"`
 	Args       *Args        `json:"args"`
 }
 
 func (m StoredVersionedContractByName) Bytes() ([]byte, error) {
 	option := clvalue.Option{}
-	if m.Version != nil || *m.Version != "" {
+	if m.Version != nil && m.Version.String() != "" {
 		verVal, err := strconv.ParseUint(m.Version.String(), 10, 32)
 		if err != nil {
 			return nil, err
