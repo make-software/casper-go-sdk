@@ -2,10 +2,13 @@ package clvalue
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 
 	"github.com/make-software/casper-go-sdk/v2/types/clvalue/cltype"
 )
+
+var ErrInvalidResultType = errors.New("invalid result type")
 
 type Result struct {
 	Type      *cltype.Result
@@ -14,7 +17,12 @@ type Result struct {
 }
 
 func (v *Result) Bytes() []byte {
-	return append([]byte{01}, v.Inner.Bytes()...)
+	var isSuccess byte
+	if v.IsSuccess {
+		isSuccess = 1
+	}
+
+	return append([]byte{isSuccess}, v.Inner.Bytes()...)
 }
 
 func (v *Result) String() string {
@@ -28,7 +36,17 @@ func (v *Result) Value() CLValue {
 	return v.Inner
 }
 
-func NewCLResult(innerOk, innerErr cltype.CLType, value CLValue, isSuccess bool) CLValue {
+func NewCLResult(innerOk, innerErr cltype.CLType, value CLValue, isSuccess bool) (CLValue, error) {
+	if isSuccess {
+		if innerOk != value.Type {
+			return CLValue{}, ErrInvalidResultType
+		}
+	} else {
+		if innerErr != value.Type {
+			return CLValue{}, ErrInvalidResultType
+		}
+	}
+
 	resultType := cltype.NewResultType(innerOk, innerErr)
 	return CLValue{
 		Type: resultType,
@@ -37,7 +55,7 @@ func NewCLResult(innerOk, innerErr cltype.CLType, value CLValue, isSuccess bool)
 			IsSuccess: isSuccess,
 			Inner:     value,
 		},
-	}
+	}, nil
 }
 
 func NewResultFromBytes(source []byte, clType *cltype.Result) (*Result, error) {

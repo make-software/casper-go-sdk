@@ -22,7 +22,7 @@ func (args Args) Bytes() ([]byte, error) {
 	var result []byte
 	result = append(result, clvalue.SizeToBytes(len(args))...)
 	for _, arg := range args {
-		val, err := arg.Value()
+		valueBytes, err := arg.Argument().Bytes()
 		if err != nil {
 			return nil, err
 		}
@@ -31,10 +31,6 @@ func (args Args) Bytes() ([]byte, error) {
 			return nil, err
 		}
 		result = append(result, clvalue.NewCLString(argName).Bytes()...)
-		valueBytes, err := clvalue.ToBytesWithType(val)
-		if err != nil {
-			return nil, err
-		}
 		result = append(result, valueBytes...)
 	}
 
