@@ -76,10 +76,10 @@ func (m *Map) Append(key CLValue, val CLValue) error {
 	if val.Type != m.Type.Val {
 		return errors.New("invalid value type")
 	}
-	m.data = append(m.data, *NewCLTuple2(key, val).Tuple2)
 	if _, found := m.indexedData[key.String()]; found {
 		return errors.New("map key is already exist")
 	}
+	m.data = append(m.data, *NewCLTuple2(key, val).Tuple2)
 	m.indexedData[key.String()] = val
 	return nil
 }
