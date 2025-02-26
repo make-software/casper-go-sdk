@@ -1,0 +1,187 @@
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "result": {
+    "api_version": "2.0.0",
+    "transaction": {
+      "Version1": {
+        "hash": "33d563212799c239b1deaf8bec8eb21b1949b057873990070c5c4de2f2a8a95f",
+        "payload": {
+          "ttl": "30m",
+          "fields": {
+            "args": {
+              "Named": [
+                [
+                  "reservations",
+                  {
+                    "bytes": "04000000000202c196dff3215230c28eb7a525d54a17e0187322dd0e1c86272ed03beec9198be1017fec504c642f2b321b8591f1c3008348c57a81acafceb5a392cf8416a5fb4a3c03000203a39e1323f82f401a512e29d4b47af30e60bfa320d3509733fcc2e5c935434988017fec504c642f2b321b8591f1c3008348c57a81acafceb5a392cf8416a5fb4a3c0600014c4656272cdc468cba8557ea49fdda78c7efc0d87948b1ebd4ff4380c8973c4f017fec504c642f2b321b8591f1c3008348c57a81acafceb5a392cf8416a5fb4a3c07018976068465d3b209d54dbe01c78581621eee0949dd318c2b2f7d23ca5e0a739b017fec504c642f2b321b8591f1c3008348c57a81acafceb5a392cf8416a5fb4a3c08",
+                    "parsed": null,
+                    "cl_type": {
+                      "List": "Any"
+                    }
+                  }
+                ]
+              ]
+            },
+            "target": "Native",
+            "scheduling": "Standard",
+            "entry_point": "AddReservations"
+          },
+          "timestamp": "2025-02-20T20:35:41.590Z",
+          "chain_name": "integration-test",
+          "pricing_mode": {
+            "PaymentLimited": {
+              "payment_amount": 100000000000,
+              "standard_payment": true,
+              "gas_price_tolerance": 1
+            }
+          },
+          "initiator_addr": {
+            "PublicKey": "017fec504c642f2b321b8591f1c3008348c57a81acafceb5a392cf8416a5fb4a3c"
+          }
+        },
+        "approvals": [
+          {
+            "signer": "017fec504c642f2b321b8591f1c3008348c57a81acafceb5a392cf8416a5fb4a3c",
+            "signature": "016ab7b62b6c0648a98100a514c8d9b05a7f4d2a1e0eef3943257e17359a31f190ecf674a4c46c60b196a0ad62dcbaa03f184df2861959ded688154285a5cb270e"
+          }
+        ]
+      }
+    },
+    "execution_info": {
+      "block_hash": "6d780a21aba1b621b93a80789e6a4b4b277ea1be15bdad5a4918e01098549c62",
+      "block_height": 4625922,
+      "execution_result": {
+        "Version2": {
+          "cost": "100000000000",
+          "limit": "100000000000",
+          "effects": [
+            {
+              "key": "balance-hold-01ad35d73a3bfb3b460acef3092ad95e96bf0b582c05a2d8dc8a61b6c99f4077fb431d142595010000",
+              "kind": {
+                "Write": {
+                  "CLValue": {
+                    "bytes": "0500e8764817",
+                    "parsed": "100000000000",
+                    "cl_type": "U512"
+                  }
+                }
+              }
+            },
+            {
+              "key": "bid-addr-01123cdd0aaf0ff20e60d2657a7bd9c8bdc949fb35ca3edd48dbeb05b7f5973a7d",
+              "kind": "Identity"
+            },
+            {
+              "key": "bid-addr-05123cdd0aaf0ff20e60d2657a7bd9c8bdc949fb35ca3edd48dbeb05b7f5973a7daef7d3849b756cb4ad57d476ca050144d6b9066080d6925cf0546284a0e9493e",
+              "kind": {
+                "Write": {
+                  "BidKind": {
+                    "Reservation": {
+                      "delegator_kind": {
+                        "PublicKey": "0202c196dff3215230c28eb7a525d54a17e0187322dd0e1c86272ed03beec9198be1"
+                      },
+                      "delegation_rate": 3,
+                      "validator_public_key": "017fec504c642f2b321b8591f1c3008348c57a81acafceb5a392cf8416a5fb4a3c"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "key": "bid-addr-01123cdd0aaf0ff20e60d2657a7bd9c8bdc949fb35ca3edd48dbeb05b7f5973a7d",
+              "kind": "Identity"
+            },
+            {
+              "key": "bid-addr-05123cdd0aaf0ff20e60d2657a7bd9c8bdc949fb35ca3edd48dbeb05b7f5973a7d5d6e3ae0ae0b43b1c1a48b1cb2b06538d0202b36683a9fb879170bbfd8b6bf89",
+              "kind": {
+                "Write": {
+                  "BidKind": {
+                    "Reservation": {
+                      "delegator_kind": {
+                        "PublicKey": "0203a39e1323f82f401a512e29d4b47af30e60bfa320d3509733fcc2e5c935434988"
+                      },
+                      "delegation_rate": 6,
+                      "validator_public_key": "017fec504c642f2b321b8591f1c3008348c57a81acafceb5a392cf8416a5fb4a3c"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "key": "bid-addr-01123cdd0aaf0ff20e60d2657a7bd9c8bdc949fb35ca3edd48dbeb05b7f5973a7d",
+              "kind": "Identity"
+            },
+            {
+              "key": "bid-addr-05123cdd0aaf0ff20e60d2657a7bd9c8bdc949fb35ca3edd48dbeb05b7f5973a7de532c2950d58f2c9885caf4a188a3f6267b723d70fa7a9d103bc7828eeee0e89",
+              "kind": {
+                "Write": {
+                  "BidKind": {
+                    "Reservation": {
+                      "delegator_kind": {
+                        "PublicKey": "014c4656272cdc468cba8557ea49fdda78c7efc0d87948b1ebd4ff4380c8973c4f"
+                      },
+                      "delegation_rate": 7,
+                      "validator_public_key": "017fec504c642f2b321b8591f1c3008348c57a81acafceb5a392cf8416a5fb4a3c"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "key": "bid-addr-01123cdd0aaf0ff20e60d2657a7bd9c8bdc949fb35ca3edd48dbeb05b7f5973a7d",
+              "kind": "Identity"
+            },
+            {
+              "key": "bid-addr-06123cdd0aaf0ff20e60d2657a7bd9c8bdc949fb35ca3edd48dbeb05b7f5973a7d8976068465d3b209d54dbe01c78581621eee0949dd318c2b2f7d23ca5e0a739b",
+              "kind": {
+                "Write": {
+                  "BidKind": {
+                    "Reservation": {
+                      "delegator_kind": {
+                        "Purse": "8976068465d3b209d54dbe01c78581621eee0949dd318c2b2f7d23ca5e0a739b"
+                      },
+                      "delegation_rate": 8,
+                      "validator_public_key": "017fec504c642f2b321b8591f1c3008348c57a81acafceb5a392cf8416a5fb4a3c"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "key": "balance-hold-01ad35d73a3bfb3b460acef3092ad95e96bf0b582c05a2d8dc8a61b6c99f4077fb431d142595010000",
+              "kind": {
+                "Prune": "balance-hold-01ad35d73a3bfb3b460acef3092ad95e96bf0b582c05a2d8dc8a61b6c99f4077fb431d142595010000"
+              }
+            },
+            {
+              "key": "balance-ad35d73a3bfb3b460acef3092ad95e96bf0b582c05a2d8dc8a61b6c99f4077fb",
+              "kind": {
+                "Write": {
+                  "CLValue": {
+                    "bytes": "073e8a97c4fe2b01",
+                    "parsed": "329848196663870",
+                    "cl_type": "U512"
+                  }
+                }
+              }
+            },
+            {
+              "key": "balance-e72205001e72c43810c54094b8c1d51fa56450a928df5296a523eeb1524e437b",
+              "kind": {
+                "AddUInt512": "100000000000"
+              }
+            }
+          ],
+          "consumed": "100000000000",
+          "initiator": {
+            "PublicKey": "017fec504c642f2b321b8591f1c3008348c57a81acafceb5a392cf8416a5fb4a3c"
+          },
+          "transfers": [],
+          "error_message": null,
+          "size_estimate": 714
+        }
+      }
+    }
+  }
+}
