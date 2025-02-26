@@ -155,6 +155,9 @@ func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 			filePath: "../data/transaction/get_transaction_native_target.json",
 		},
 		{
+			filePath: "../data/transaction/get_transaction_native_entry_point.json",
+		},
+		{
 			filePath: "../data/transaction/get_transaction_with_delegator_kind.json",
 		},
 	}

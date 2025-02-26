@@ -19,6 +19,8 @@ const (
 	TransactionEntryPointRedelegate         = "Redelegate"
 	TransactionEntryPointActivateBid        = "ActivateBid"
 	TransactionEntryPointChangeBidPublicKey = "ChangeBidPublicKey"
+	TransactionEntryPointAddReservations    = "AddReservations"
+	TransactionEntryPointCancelReservations = "CancelReservations"
 	TransactionEntryPointCall               = "Call"
 )
 
@@ -33,8 +35,8 @@ const (
 	TransactionEntryPointRedelegateTag
 	TransactionEntryPointActivateBidTag
 	TransactionEntryPointChangeBidPublicKeyTag
-	TransactionEntryPointAddReservationTag
-	TransactionEntryCancelReservationTag
+	TransactionEntryPointAddReservationsTag
+	TransactionEntryCancelReservationsTag
 )
 
 const CustomCustomIndex uint16 = 1
@@ -59,9 +61,9 @@ type TransactionEntryPoint struct {
 	// The `change_bid_public_key` native entry point, used to change a bid's public key.
 	ChangeBidPublicKey *struct{}
 	// The `add_reservations` native entry point, used to add delegator to validator's reserve list.
-	AddReservation *struct{}
+	AddReservations *struct{}
 	// The `cancel_reservations` native entry point, used to remove delegator from validator's reserve list.
-	CancelReservation *struct{}
+	CancelReservations *struct{}
 	// Used to call entry point call() in session transactions
 	Call *struct{}
 }
@@ -93,10 +95,10 @@ func (t *TransactionEntryPoint) Tag() byte {
 		return TransactionEntryPointChangeBidPublicKeyTag
 	case t.Call != nil:
 		return TransactionEntryPointCallTag
-	case t.AddReservation != nil:
-		return TransactionEntryPointAddReservationTag
-	case t.CancelReservation != nil:
-		return TransactionEntryCancelReservationTag
+	case t.AddReservations != nil:
+		return TransactionEntryPointAddReservationsTag
+	case t.CancelReservations != nil:
+		return TransactionEntryCancelReservationsTag
 	default:
 		return 0
 	}
@@ -136,6 +138,10 @@ func (t *TransactionEntryPoint) UnmarshalJSON(data []byte) error {
 		entryPoint.ActivateBid = &struct{}{}
 	case TransactionEntryPointChangeBidPublicKey:
 		entryPoint.ChangeBidPublicKey = &struct{}{}
+	case TransactionEntryPointAddReservations:
+		entryPoint.AddReservations = &struct{}{}
+	case TransactionEntryPointCancelReservations:
+		entryPoint.CancelReservations = &struct{}{}
 	case TransactionEntryPointCall:
 		entryPoint.Call = &struct{}{}
 	}
@@ -170,6 +176,10 @@ func (t TransactionEntryPoint) MarshalJSON() ([]byte, error) {
 		return json.Marshal(TransactionEntryPointActivateBid)
 	case t.ChangeBidPublicKey != nil:
 		return json.Marshal(TransactionEntryPointChangeBidPublicKey)
+	case t.AddReservations != nil:
+		return json.Marshal(TransactionEntryPointAddReservations)
+	case t.CancelReservations != nil:
+		return json.Marshal(TransactionEntryPointCancelReservations)
 	case t.Call != nil:
 		return json.Marshal(TransactionEntryPointCall)
 	default:
@@ -230,12 +240,12 @@ func (t *TransactionEntryPoint) Bytes() ([]byte, error) {
 		if err = builder.AddField(TagFieldIndex, []byte{TransactionEntryPointChangeBidPublicKeyTag}); err != nil {
 			return nil, err
 		}
-	case t.AddReservation != nil:
-		if err = builder.AddField(TagFieldIndex, []byte{TransactionEntryPointAddReservationTag}); err != nil {
+	case t.AddReservations != nil:
+		if err = builder.AddField(TagFieldIndex, []byte{TransactionEntryPointAddReservationsTag}); err != nil {
 			return nil, err
 		}
-	case t.CancelReservation != nil:
-		if err = builder.AddField(TagFieldIndex, []byte{TransactionEntryCancelReservationTag}); err != nil {
+	case t.CancelReservations != nil:
+		if err = builder.AddField(TagFieldIndex, []byte{TransactionEntryCancelReservationsTag}); err != nil {
 			return nil, err
 		}
 	default:
