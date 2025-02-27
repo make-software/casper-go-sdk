@@ -186,6 +186,7 @@ func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 
 			if tt.isDeploy {
 				assert.NotEmpty(t, result.Transaction.GetDeploy())
+				assert.True(t, result.Transaction.PricingMode.Limited.StandardPayment)
 			} else {
 				transactionV1 := result.Transaction.GetTransactionV1()
 				assert.NotEmpty(t, transactionV1)
