@@ -130,8 +130,8 @@ func NewTransactionFromDeploy(deploy Deploy) Transaction {
 		}
 	}
 
-	// Use StandardPayment as true only for payments without explicit `payment amount`
-	var standardPayment = paymentAmount == 0 && deploy.Payment.ModuleBytes == nil
+	// Use StandardPayment as true only for payments with module_bytes: ""
+	var standardPayment = deploy.Payment.ModuleBytes != nil && deploy.Payment.ModuleBytes.ModuleBytes == ""
 	return Transaction{
 		Hash:      deploy.Hash,
 		ChainName: deploy.Header.ChainName,
