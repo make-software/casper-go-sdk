@@ -44,3 +44,26 @@ func Test_Deploy_MarshalUnmarshal_ShouldBeSameResult(t *testing.T) {
 		})
 	}
 }
+
+func Test_VerifyValidDeploy(t *testing.T) {
+	tests := []struct {
+		name        string
+		fixturePath string
+	}{
+		{
+			"deploy with StoredContractByName",
+			"../data/deploy/deploy_valid_for_execution.json",
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			data, err := os.ReadFile(test.fixturePath)
+			require.NoError(t, err)
+
+			var deploy types.Deploy
+			err = json.Unmarshal(data, &deploy)
+			require.NoError(t, err)
+			require.NoError(t, deploy.Validate())
+		})
+	}
+}
