@@ -1,0 +1,62 @@
+{
+  "approvals": [
+    {
+      "signer": "0202b9bc60f881e1d76b1d5e1cda9069a683a01984fb1afba3a2df2cc22659e53aa6",
+      "signature": "02c24bd1d566c15fdb64349c1d4611739d7ae81185fcc83bd7ac92aad3054140d4588d5493a832229d371a550a84fb7dfee78bc0696b7986979e002e18fbd16117"
+    }
+  ],
+  "hash": "9864682e366accfba61f87db61156b1fb23cf3e93c6fd3bf897aad24cbb7e3b2",
+  "header": {
+    "account": "01c2c85ffd29874b0a99f7def73e9e7d8c380de8bfbd44d0889bccf1f734d8ea6a",
+    "body_hash": "0ce479fd54bba2156de4d33873910d7a9c36ed59d6df4b461f4bd89a96caa85a",
+    "chain_name": "dev-net",
+    "dependencies": [],
+    "gas_price": 1,
+    "timestamp": "2025-03-05T18:44:13.866Z",
+    "ttl": "2h"
+  },
+  "payment": {
+    "ModuleBytes": {
+      "module_bytes": "",
+      "args": [
+        [
+          "amount",
+          {
+            "bytes": "0400e1f505",
+            "cl_type": "U512"
+          }
+        ]
+      ]
+    }
+  },
+  "session": {
+    "Transfer": {
+      "args": [
+        [
+          "amount",
+          {
+            "bytes": "0400f90295",
+            "cl_type": "U512"
+          }
+        ],
+        [
+          "target",
+          {
+            "bytes": "01c2c85ffd29874b0a99f7def73e9e7d8c380de8bfbd44d0889bccf1f734d8ea6a",
+            "cl_type": "PublicKey"
+          }
+        ],
+        [
+          "id",
+          {
+            "bytes": "00",
+            "cl_type": {
+              "Option": "U64"
+            }
+          }
+        ]
+      ]
+    }
+  }
+}
+
