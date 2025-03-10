@@ -77,16 +77,18 @@ func NewBlockFromBlockV1(blockV1 BlockV1) Block {
 	for i := range blockV1.Body.TransferHashes {
 		blockTransactions = append(blockTransactions, BlockTransaction{
 			Category: TransactionCategoryMint,
-			Version:  TransactionDeploy,
-			Hash:     blockV1.Body.TransferHashes[i],
+			Hash: TransactionHash{
+				Deploy: &blockV1.Body.TransferHashes[i],
+			},
 		})
 	}
 
 	for i := range blockV1.Body.DeployHashes {
 		blockTransactions = append(blockTransactions, BlockTransaction{
 			Category: TransactionCategoryLarge,
-			Version:  TransactionDeploy,
-			Hash:     blockV1.Body.DeployHashes[i],
+			Hash: TransactionHash{
+				Deploy: &blockV1.Body.DeployHashes[i],
+			},
 		})
 	}
 
@@ -261,8 +263,7 @@ func (t *BlockTransactions) UnmarshalJSON(data []byte) error {
 
 type BlockTransaction struct {
 	Category TransactionCategory
-	Version  TransactionVersion
-	Hash     key.Hash
+	Hash     TransactionHash
 }
 
 type BlockBodyV2 struct {
@@ -305,15 +306,8 @@ func getBlockTransactionsFromTransactionHashes(hashes []TransactionHash, categor
 	for i := range hashes {
 		blockTransaction := BlockTransaction{
 			Category: category,
+			Hash:     hashes[i],
 		}
-		if hashes[i].TransactionV1 != nil {
-			blockTransaction.Hash = *hashes[i].TransactionV1
-			blockTransaction.Version = TransactionVersionV1
-		} else {
-			blockTransaction.Hash = *hashes[i].Deploy
-			blockTransaction.Version = TransactionDeploy
-		}
-
 		res = append(res, blockTransaction)
 	}
 
