@@ -14,8 +14,12 @@
   },
   "body": {
     "proposer": "019e7b8bdec03ba83be4f5443d9f7f9111c77fec984ce9bb5bb7eb3da1e689c02d",
-    "deploy_hashes": [],
-    "transfer_hashes": []
+    "deploy_hashes": [
+      "0c65ef9c741354d08083bc0c165df3e367407c45fcfe2f0a015270430efb0108"
+    ],
+    "transfer_hashes": [
+      "047ee37a3c364caa8291d06089a2a0770a0f93cbc6ae5e05abdb7c7b472550d1"
+    ]
   },
   "proofs": [
     {

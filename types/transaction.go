@@ -28,13 +28,6 @@ const (
 	TransactionCategorySmall
 )
 
-type TransactionVersion uint
-
-const (
-	TransactionVersionV1 TransactionVersion = iota
-	TransactionDeploy
-)
-
 type Transaction struct {
 	// Hex-encoded Transaction hash
 	Hash key.Hash `json:"hash"`
@@ -186,6 +179,16 @@ func (t *TransactionHash) String() string {
 		return t.TransactionV1.String()
 	} else {
 		return ""
+	}
+}
+
+func (t *TransactionHash) ToHash() key.Hash {
+	if t.Deploy != nil {
+		return *t.Deploy
+	} else if t.TransactionV1 != nil {
+		return *t.TransactionV1
+	} else {
+		return key.Hash{}
 	}
 }
 

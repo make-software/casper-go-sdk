@@ -1,24 +1,33 @@
 {
-  "hash": "f5d1edce2458dd89a4276b1450a49abb911de0ef57728394a294fceb776bac54",
+  "hash": "51c02daf05c3dba06727187a2238ba107483d38643d880efd49e3098c0cc75dc",
   "header": {
-    "parent_hash": "e3e3e7d93b990436b6d24f296ef47f59d309da6be6b55bbce42a723dc86d63d2",
-    "state_root_hash": "522fee0ae6d98556a475b89e7c45b6004dcf2d1ec748982120e16d1c42891871",
-    "body_hash": "460a0b13de1e8a95d3746256766d437cfea1165423a179c23a607c395e91105f",
-    "random_bit": false,
-    "accumulated_seed": "2bf24e098e15b8e597fc0f2441b0d18454ca4e84b9adcc8dee7ead15ce60c5bd",
+    "parent_hash": "9a9ec9b79a3cd0e7a69e092f1316d0253259e86a9c6940ad0cad20d0478f0012",
+    "state_root_hash": "76cad7374b34221a3e590e7d5c16c86f23a1e4386caec7faf3e6f4d80ac6bffe",
+    "body_hash": "441028f6954e985df29ab0768ae3b3eba4753ffc38b1ea3f3b7241e4910fd591",
+    "random_bit": true,
+    "accumulated_seed": "28b6bfa236e7ce8ae83afe300dc2aff23fec41040c2c55797dd66571fda2492e",
     "era_end": null,
-    "timestamp": "2024-05-15T09:46:57.067Z",
-    "era_id": 387,
-    "height": 170442,
-    "protocol_version": "2.0.0",
-    "current_gas_price": 1
+    "timestamp": "2025-03-10T11:40:04.118Z",
+    "era_id": 15283,
+    "height": 3643048,
+    "protocol_version": "2.0.4",
+    "proposer": "017536433a73f7562526f3e9fcb8d720428ae2d28788a9909f3c6f637a9d848a4b",
+    "current_gas_price": 1,
+    "last_switch_block_hash": "77f40617d0f3d018b58ec02b3d4653930893470f0b6e8f7777939d6b60452503"
   },
   "body": {
-    "proposer": "0140afe8f752e5ff100e0189c080bc207e8805b3e5e82f792ec608de2f11f39f6c",
-    "mint": [],
-    "auction": [],
-    "install_upgrade": [],
-    "standard": [],
+    "transactions": {
+      "0": [
+        {
+          "Deploy": "a9bf2d2e2c3f79da882ace9d84b09a9e4cf2b1dd4a22058b65b801706c277bec"
+        }
+      ],
+      "1": [
+        {
+          "Version1": "c884a9fe5b4f6f9922a8d809d95b3d6994d7532186ade3699f816ec0eb3d64f0"
+        }
+      ]
+    },
     "rewarded_signatures": [
       [
         240

@@ -65,3 +65,28 @@ func Test_BlockProposal_PublicKey_ShouldWorkForNormalBlock(t *testing.T) {
 	pubKey := block.Body.Proposer.PublicKeyOptional()
 	assert.Equal(t, "019e7b8bdec03ba83be4f5443d9f7f9111c77fec984ce9bb5bb7eb3da1e689c02d", pubKey.String())
 }
+
+func Test_BlockTransactionParsing_V2Block(t *testing.T) {
+	fixture, err := os.ReadFile("../data/block/block_v2_example.json")
+	assert.NoError(t, err)
+
+	var block types.BlockV2
+	err = json.Unmarshal(fixture, &block)
+	require.NoError(t, err)
+	require.True(t, len(block.Body.Transactions) > 0)
+	require.True(t, block.Body.Transactions[0].Hash.Deploy != nil)
+	require.True(t, block.Body.Transactions[1].Hash.TransactionV1 != nil)
+}
+
+func Test_BlockTransactionParsing_V2Block_FromV1(t *testing.T) {
+	fixture, err := os.ReadFile("../data/block/block_v1_example.json")
+	assert.NoError(t, err)
+
+	var blockV1 types.BlockV1
+	err = json.Unmarshal(fixture, &blockV1)
+	require.NoError(t, err)
+	assert.False(t, blockV1.Body.Proposer.IsSystem())
+
+	block := types.NewBlockFromBlockV1(blockV1)
+	assert.True(t, len(block.Transactions) > 0)
+}
