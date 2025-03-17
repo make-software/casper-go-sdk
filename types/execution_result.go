@@ -38,6 +38,7 @@ type ExecutionResult struct {
 	Limit        uint64          `json:"limit,string"`
 	Consumed     uint64          `json:"consumed,string"`
 	Cost         uint64          `json:"cost,string"`
+	Refund       uint64          `json:"refund,string"`
 	Payment      json.RawMessage `json:"payment"`
 	Transfers    []Transfer      `json:"transfers"`
 	SizeEstimate uint64          `json:"size_estimate"`
@@ -71,6 +72,7 @@ func (v *ExecutionResult) UnmarshalJSON(data []byte) error {
 			Limit:                   versioned.ExecutionResultV2.Limit,
 			Consumed:                versioned.ExecutionResultV2.Consumed,
 			Cost:                    versioned.ExecutionResultV2.Cost,
+			Refund:                  versioned.ExecutionResultV2.Refund,
 			Payment:                 versioned.ExecutionResultV2.Payment,
 			Transfers:               versioned.ExecutionResultV2.Transfers,
 			SizeEstimate:            versioned.ExecutionResultV2.SizeEstimate,
@@ -134,7 +136,8 @@ func NewExecutionResultFromV1(v1 ExecutionResultV1) ExecutionResult {
 			})
 		}
 		return ExecutionResult{
-			Limit: 0, // limit is unknown field for V1 Deploy
+			Limit:  0, // limit is unknown field for V1 Deploy
+			Refund: 0, // refund is unknown field for V1 Deploy
 			// In ExecutionResultV1, the 'v1.Success.Cost' field actually represents the amount of consumed gas.
 			// However, in version 1.X, there is no distinction between 'cost' and 'consumed_gas'.
 			//
@@ -177,6 +180,7 @@ type ExecutionResultV2 struct {
 	Limit        uint64          `json:"limit,string"`
 	Consumed     uint64          `json:"consumed,string"`
 	Cost         uint64          `json:"cost,string"`
+	Refund       uint64          `json:"refund,string"`
 	Payment      json.RawMessage `json:"payment"`
 	Transfers    []Transfer      `json:"transfers"`
 	SizeEstimate uint64          `json:"size_estimate"`
