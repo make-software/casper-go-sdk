@@ -12,7 +12,7 @@ const TopicPrefix = "topic-"
 
 // MessageAddr MessageTopicAddr
 type MessageAddr struct {
-	// The hash addr
+	// The entity addr
 	EntityAddr EntityAddr
 	// The hash of the name of the message topic
 	TopicNameHash Hash
