@@ -209,7 +209,7 @@ func Test_Transform_Message(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.True(t, transform.Kind.IsWriteMessage())
-	assert.Equal(t, string(*message), "message-checksum-4fa4135e65967751f007064a7cbf6c17d27f7189cc97b7b0f484445c72ecbd6f")
+	assert.Equal(t, string(*message), "message-checksum-987976f5ed2b2843976aaeb5b6d4a810eed7b5a1d7934ef01d167bf46c9c7a8f")
 }
 
 func Test_Transform_MessageTopic(t *testing.T) {

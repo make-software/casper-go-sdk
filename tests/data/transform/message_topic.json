@@ -1,10 +1,11 @@
 {
-  "key": "message-topic-a9987538f3cceb823d627d6e28174fd7b50022c847db44b96c36077818e322ed-5721a6d9d7a9afe5dfdb35276fb823bed0f825350e4d865a5ec0110c380de4e1",
+  "key": "message-topic-entity-contract-0ca04b99460ca7679086e79e2bf4034f1e33befb025c9a1258b25f6b7eca6673-5721a6d9d7a9afe5dfdb35276fb823bed0f825350e4d865a5ec0110c380de4e1",
   "kind": {
     "Write": {
       "MessageTopic": {
         "message_count": 1,
-        "blocktime": 1719847489116
+        "blocktime": 1742157716601,
+        "topic_name": "events"
       }
     }
   }

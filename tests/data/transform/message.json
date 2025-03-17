@@ -1,8 +1,8 @@
 {
-  "key": "message-a9987538f3cceb823d627d6e28174fd7b50022c847db44b96c36077818e322ed-5721a6d9d7a9afe5dfdb35276fb823bed0f825350e4d865a5ec0110c380de4e1-0",
+  "key": "message-entity-contract-0ca04b99460ca7679086e79e2bf4034f1e33befb025c9a1258b25f6b7eca6673-5721a6d9d7a9afe5dfdb35276fb823bed0f825350e4d865a5ec0110c380de4e1-0",
   "kind": {
     "Write": {
-      "Message": "message-checksum-4fa4135e65967751f007064a7cbf6c17d27f7189cc97b7b0f484445c72ecbd6f"
+      "Message": "message-checksum-987976f5ed2b2843976aaeb5b6d4a810eed7b5a1d7934ef01d167bf46c9c7a8f"
     }
   }
 }
