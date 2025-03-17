@@ -15,8 +15,8 @@ type Package struct {
 }
 
 type EntityVersionAndHash struct {
-	AddressableEntityHash key.AddressableEntityHash `json:"addressable_entity_hash"`
-	EntityVersionKey      EntityVersionKey          `json:"entity_version_key"`
+	AddressableEntity key.EntityAddr   `json:"entity_addr"`
+	EntityVersionKey  EntityVersionKey `json:"entity_version_key"`
 }
 
 // EntityVersionKey Major element of `ProtocolVersion` combined with `EntityVersion`.
