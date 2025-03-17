@@ -55,6 +55,7 @@
         "Version2": {
           "cost": "100000000000",
           "limit": "100000000000",
+          "refund": "658784336190",
           "effects": [
             {
               "key": "balance-hold-01ad35d73a3bfb3b460acef3092ad95e96bf0b582c05a2d8dc8a61b6c99f4077fb431d142595010000",

@@ -104,6 +104,7 @@
           "error_message": "Out of gas error",
           "limit": "100000000000",
           "consumed": "100000000000",
+          "refund": "658784336190",
           "cost": "100000000000",
           "transfers": [],
           "size_estimate": 348791,

@@ -193,6 +193,7 @@ func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 				bytes, err := transactionV1.Payload.Fields.Bytes()
 				assert.Nil(t, err)
 				assert.True(t, len(bytes) > 4)
+				assert.True(t, result.ExecutionInfo.ExecutionResult.Refund > 0)
 			}
 
 			if tt.executionResultV1 {
