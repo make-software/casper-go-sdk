@@ -1,0 +1,79 @@
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "result": {
+    "api_version": "2.0.0",
+    "transaction": {
+      "Deploy": {
+        "hash": "2ea774efaea53bbd633ae18c40683373f4a059be923a85a04f5896c064c6ff41",
+        "header": {
+          "account": "01eeeb006b7c6734b3b76720525fa4bbff38060ec2eb974d26de0d03cd1019ce29",
+          "timestamp": "2025-03-31T13:09:27.692Z",
+          "ttl": "30m",
+          "gas_price": 1,
+          "body_hash": "93f6faebc33ed8117b4ad15f3716ea88c76d911e9421de259ea67fab3e4e1a18",
+          "dependencies": [],
+          "chain_name": "casper-test"
+        },
+        "payment": {
+          "ModuleBytes": {
+            "module_bytes": "",
+            "args": [
+              [
+                "amount",
+                {
+                  "cl_type": "U512",
+                  "bytes": "0400e1f505",
+                  "parsed": "100000000"
+                }
+              ]
+            ]
+          }
+        },
+        "session": {
+          "Transfer": {
+            "args": [
+              [
+                "amount",
+                {
+                  "cl_type": "U512",
+                  "bytes": "04646816ae",
+                  "parsed": "2920704100"
+                }
+              ],
+              [
+                "target",
+                {
+                  "cl_type": "PublicKey",
+                  "bytes": "01e07ec431dc15a21e7319dd7d172cfcb152c28dfeaba32b1ccade783a804beb62",
+                  "parsed": "01e07ec431dc15a21e7319dd7d172cfcb152c28dfeaba32b1ccade783a804beb62"
+                }
+              ],
+              [
+                "id",
+                {
+                  "cl_type": {
+                    "Option": "U64"
+                  },
+                  "bytes": "010000000000000000",
+                  "parsed": 0
+                }
+              ]
+            ]
+          }
+        },
+        "approvals": [
+          {
+            "signer": "01eeeb006b7c6734b3b76720525fa4bbff38060ec2eb974d26de0d03cd1019ce29",
+            "signature": "017491055f197461cdff71ef8a1e369e449fa9022d932ea3cfa53e40d33e44e84096c72b5b119ba88f25b041c413481eb483fa3b88e2ac4531cac3b9b96946b30d"
+          }
+        ]
+      }
+    },
+    "execution_info": {
+      "block_hash": "795527df3ecc3f803f9bd9fa1d46f10bfee65b603fee0a2017fd08b7b0e9c38a",
+      "block_height": 4753861,
+      "execution_result": null
+    }
+  }
+}

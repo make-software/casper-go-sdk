@@ -212,6 +212,36 @@ func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 	}
 }
 
+func Test_DefaultClient_GetNotProcessedTransaction(t *testing.T) {
+	tests := []struct {
+		filePath string
+	}{
+		{
+			filePath: "../data/transaction/get_transaction_with_nil_execution_results.json",
+		},
+	}
+	for _, tt := range tests {
+		t.Run("GetTransaction", func(t *testing.T) {
+			server := SetupServer(t, tt.filePath)
+			defer server.Close()
+			client := casper.NewRPCClient(casper.NewRPCHandler(server.URL, http.DefaultClient))
+			result, err := client.GetTransactionByTransactionHash(context.Background(), "0009ea4441f4700325d9c38b0b6df415537596e1204abe4f6a94b6996aebf2f1")
+			require.NoError(t, err)
+			assert.NotEmpty(t, result.APIVersion)
+			assert.NotEmpty(t, result.Transaction.Hash)
+			assert.NotEmpty(t, result.Transaction)
+			assert.NotEmpty(t, result.Transaction.TTL)
+			assert.NotEmpty(t, result.Transaction.ChainName)
+			assert.NotEmpty(t, result.Transaction.PricingMode)
+			assert.NotEmpty(t, result.Transaction.InitiatorAddr)
+			assert.NotEmpty(t, result.Transaction.Target)
+			assert.NotEmpty(t, result.Transaction.Scheduling)
+			assert.NotEmpty(t, result.Transaction.EntryPoint)
+			assert.Empty(t, result.ExecutionInfo.ExecutionResult)
+		})
+	}
+}
+
 func Test_DefaultClient_GetDeploy(t *testing.T) {
 	server := SetupServer(t, "../data/deploy/get_raw_rpc_deploy.json")
 	defer server.Close()
