@@ -207,7 +207,7 @@ func (r *InfoGetDeployResult) ToInfoGetTransactionResult() InfoGetTransactionRes
 		ExecutionInfo: &types.ExecutionInfo{
 			BlockHash:       r.ExecutionResults.BlockHash,
 			BlockHeight:     r.ExecutionResults.BlockHeight,
-			ExecutionResult: r.ExecutionResults.ExecutionResult,
+			ExecutionResult: &r.ExecutionResults.ExecutionResult,
 		},
 		rawJSON: r.GetRawJSON(),
 	}

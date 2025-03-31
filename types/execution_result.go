@@ -9,9 +9,9 @@ import (
 
 // ExecutionInfo represents the result of executing a single deploy V2
 type ExecutionInfo struct {
-	BlockHash       key.Hash        `json:"block_hash"`
-	BlockHeight     uint64          `json:"block_height"`
-	ExecutionResult ExecutionResult `json:"execution_result"`
+	BlockHash       key.Hash         `json:"block_hash"`
+	BlockHeight     uint64           `json:"block_height"`
+	ExecutionResult *ExecutionResult `json:"execution_result"`
 }
 
 func ExecutionInfoFromV1(results []DeployExecutionResult, height *uint64) ExecutionInfo {
@@ -24,11 +24,15 @@ func ExecutionInfoFromV1(results []DeployExecutionResult, height *uint64) Execut
 		blockHeight = *height
 	}
 
-	result := results[0]
+	var (
+		result          = results[0]
+		executionResult = NewExecutionResultFromV1(result.Result)
+	)
+
 	return ExecutionInfo{
 		BlockHash:       result.BlockHash,
 		BlockHeight:     blockHeight,
-		ExecutionResult: NewExecutionResultFromV1(result.Result),
+		ExecutionResult: &executionResult,
 	}
 }
 
