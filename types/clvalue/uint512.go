@@ -58,6 +58,21 @@ func (v *UInt512) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
+func (v *UInt512) GobDecode(i []byte) error {
+	tmp, err := BigFromBuffer(bytes.NewBuffer(i))
+	if err != nil {
+		return err
+	}
+	*v = UInt512{
+		val: tmp,
+	}
+	return nil
+}
+
+func (v UInt512) GobEncode() ([]byte, error) {
+	return v.Bytes(), nil
+}
+
 func NewCLUInt512(val *big.Int) *CLValue {
 	res := CLValue{}
 	res.Type = cltype.UInt512
