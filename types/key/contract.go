@@ -43,6 +43,8 @@ func NewContract(source string) (ContractHash, error) {
 		originPrefix = PrefixNameContractWasm
 	} else if strings.HasPrefix(source, PrefixNameContract) {
 		originPrefix = PrefixNameContract
+	} else if strings.HasPrefix(source, PrefixNameEntityContract) {
+		originPrefix = PrefixNameEntityContract
 	}
 	hexBytes, err := NewHash(strings.TrimPrefix(source, originPrefix))
 	if err != nil {
