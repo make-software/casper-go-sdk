@@ -2,11 +2,12 @@ package key
 
 import (
 	"fmt"
-	"github.com/make-software/casper-go-sdk/v2/types/key"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/make-software/casper-go-sdk/v2/types/key"
 )
 
 func Test_NewContract_Creation(t *testing.T) {
