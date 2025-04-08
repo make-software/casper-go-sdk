@@ -20,6 +20,7 @@ const (
 	PrefixNameContractPackage        PrefixName = "contract-package-"
 	PrefixNameContractWasm           PrefixName = "contract-wasm-"
 	PrefixNameContract               PrefixName = "contract-"
+	PrefixNameEntityContract         PrefixName = "entity-contract-"
 	PrefixNameURef                   PrefixName = "uref-"
 	PrefixNameTransfer               PrefixName = "transfer-"
 	PrefixNameDeployInfo             PrefixName = "deploy-"
