@@ -183,6 +183,10 @@ func Test_RawEvent_ParseAsTransactionAcceptedEvent(t *testing.T) {
 			filePath:      "../data/sse/transaction_accepted_event.json",
 			isTransaction: true,
 		},
+		{
+			filePath:      "../data/sse/transaction_accepted_event_invalid_data.json",
+			isTransaction: true,
+		},
 	}
 
 	for _, tc := range tests {

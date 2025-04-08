@@ -111,7 +111,7 @@ func NewMessageAddrFromBuffer(buf *bytes.Buffer) (MessageAddr, error) {
 	}
 
 	var msgIdx *uint32
-	if buf.Len() > 0 {
+	if buf.Len() >= 4 {
 		idx := binary.LittleEndian.Uint32(buf.Bytes())
 		msgIdx = &idx
 	}
