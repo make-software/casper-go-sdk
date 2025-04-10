@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/json"
+	"errors"
 	"strconv"
 )
 
@@ -48,6 +49,9 @@ func NewEraFromString(source string) (res Era, err error) {
 }
 
 func NewEraFromBuffer(buf *bytes.Buffer) (*Era, error) {
+	if buf.Len() < 8 {
+		return nil, errors.New("buffer too small")
+	}
 	u := binary.LittleEndian.Uint64(buf.Bytes())
 	return NewEra(u), nil
 }
