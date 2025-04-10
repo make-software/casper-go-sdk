@@ -264,6 +264,14 @@
                   }
                 ],
                 [
+                  "key_eraid",
+                  {
+                    "cl_type" : "Key",
+                    "bytes" : "052a000000",
+                    "parsed" : null
+                  }
+                ],
+                [
                   "PublicKey",
                   {
                     "cl_type": "PublicKey",
