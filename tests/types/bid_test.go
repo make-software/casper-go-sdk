@@ -20,7 +20,11 @@ func Test_Bid_MarshalUnmarshal(t *testing.T) {
 			"../data/bid/auction_bid_example_v1.json",
 		},
 		{
-			"Auction Bid V2",
+			"Auction Bid V2 (state_get_auction_info)",
+			"../data/bid/auction_bid_example_v2_old.json",
+		},
+		{
+			"Auction Bid V2 (state_get_auction_info_v2)",
 			"../data/bid/auction_bid_example_v2.json",
 		},
 	}

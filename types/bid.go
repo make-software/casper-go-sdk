@@ -59,14 +59,41 @@ func (d *Delegators) UnmarshalJSON(data []byte) error {
 
 	publicKeyAndDelegators := make([]struct {
 		DelegatorPublicKey *keypair.PublicKey `json:"delegator_public_key"`
-		Delegator          Delegator          `json:"delegator"`
+		Delegator          struct {
+			// The purse that was used for delegating.
+			BondingPurse key.URef `json:"bonding_purse"`
+			// Amount of Casper token (in motes) delegated
+			StakedAmount clvalue.UInt512 `json:"staked_amount"`
+			// Public Key of the validator
+			Delegatee keypair.PublicKey `json:"delegatee"`
+			// Delegator Kind of the delegator
+			DelegatorKind DelegatorKind `json:"delegator_kind"`
+			// Public key of the delegator
+			DelegatorPublicKey *keypair.PublicKey `json:"delegator_public_key"`
+			// Public key of the validator
+			ValidatorPublicKey keypair.PublicKey `json:"validator_public_key"`
+			// Vesting schedule for a genesis validator. `None` if non-genesis validator.
+			VestingSchedule *VestingSchedule `json:"vesting_schedule"`
+		} `json:"delegator"`
 	}, 0)
 
 	err := json.Unmarshal(data, &publicKeyAndDelegators)
 	if err == nil && len(publicKeyAndDelegators) > 0 && publicKeyAndDelegators[0].DelegatorPublicKey != nil {
 		delegators := make(Delegators, 0, len(publicKeyAndDelegators))
 		for _, item := range publicKeyAndDelegators {
-			delegators = append(delegators, item.Delegator)
+			delegator := Delegator{
+				BondingPurse:       item.Delegator.BondingPurse,
+				StakedAmount:       item.Delegator.StakedAmount,
+				DelegatorKind:      item.Delegator.DelegatorKind,
+				ValidatorPublicKey: item.Delegator.ValidatorPublicKey,
+				VestingSchedule:    item.Delegator.VestingSchedule,
+			}
+
+			if item.Delegator.DelegatorPublicKey != nil {
+				delegator.DelegatorKind.PublicKey = item.Delegator.DelegatorPublicKey
+			}
+
+			delegators = append(delegators, delegator)
 		}
 
 		*d = delegators
