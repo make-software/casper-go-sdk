@@ -1,6 +1,6 @@
 module github.com/make-software/casper-go-sdk/v2
 
-go 1.21
+go 1.22
 
 require (
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1
