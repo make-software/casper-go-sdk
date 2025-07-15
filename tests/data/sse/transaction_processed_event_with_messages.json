@@ -1,0 +1,243 @@
+{
+  "TransactionProcessed": {
+    "transaction_hash": {
+      "Version1": "968fafb41be4d4fb1c4b3c3647bb4803de12bff05bbaa8d16d1ef3b18fc47ee1"
+    },
+    "initiator_addr": {
+      "PublicKey": "0118ea8b6ed62393f8d36cb1a96b9ee62b48e35317bd2ea3ceb533a6f7ff212ad6"
+    },
+    "timestamp": "2025-07-14T16:51:43.510Z",
+    "ttl": "30m",
+    "block_hash": "af8368436128df76e24fd1552544ebe4ddcf2301af4d42f1764e93fa2887557f",
+    "execution_result": {
+      "Version2": {
+        "initiator": {
+          "PublicKey": "0118ea8b6ed62393f8d36cb1a96b9ee62b48e35317bd2ea3ceb533a6f7ff212ad6"
+        },
+        "error_message": null,
+        "current_price": 1,
+        "limit": "10000000000",
+        "consumed": "831710358",
+        "cost": "10000000000",
+        "refund": "6876217231",
+        "transfers": [
+          {
+            "Version2": {
+              "transaction_hash": {
+                "Version1": "968fafb41be4d4fb1c4b3c3647bb4803de12bff05bbaa8d16d1ef3b18fc47ee1"
+              },
+              "from": {
+                "AccountHash": "account-hash-7c95dcbaa72f1fc533e3a9ff38816bfd658a8d9364fc214afc31aca75efc2f3a"
+              },
+              "to": null,
+              "source": "uref-b421130b5d137cb9348eeaabad2b348d0061c16340eab9536a31453fda147f26-007",
+              "target": "uref-e673a8125de4cb0e1f150cfd8806c3c0d9b5692cac0393075f07891379a80339-007",
+              "amount": "3",
+              "gas": "100000000",
+              "id": null
+            }
+          },
+          {
+            "Version2": {
+              "transaction_hash": {
+                "Version1": "968fafb41be4d4fb1c4b3c3647bb4803de12bff05bbaa8d16d1ef3b18fc47ee1"
+              },
+              "from": {
+                "AccountHash": "account-hash-7c95dcbaa72f1fc533e3a9ff38816bfd658a8d9364fc214afc31aca75efc2f3a"
+              },
+              "to": null,
+              "source": "uref-e673a8125de4cb0e1f150cfd8806c3c0d9b5692cac0393075f07891379a80339-007",
+              "target": "uref-47acc407ab36b1f4833b8a22b623d052ad9d4c63a41151c891cef08c5c50f601-007",
+              "amount": "3",
+              "gas": "100000000",
+              "id": null
+            }
+          }
+        ],
+        "size_estimate": 88328,
+        "effects": [
+          {
+            "key": "balance-hold-01b421130b5d137cb9348eeaabad2b348d0061c16340eab9536a31453fda147f261e8dd90998010000",
+            "kind": {
+              "Write": {
+                "CLValue": {
+                  "cl_type": "U512",
+                  "bytes": "0500e40b5402",
+                  "parsed": "10000000000"
+                }
+              }
+            }
+          },
+          {
+            "key": "hash-010c3fe81b7b862e50c77ef9a958a05bfa98444f26f96f23d37a13c96244cfb7",
+            "kind": "Identity"
+          },
+          {
+            "key": "hash-9824d60dc3a5c44a20b9fd260a412437933835b52fc683d8ae36e4ec2114843e",
+            "kind": "Identity"
+          },
+          {
+            "key": "balance-hold-01b421130b5d137cb9348eeaabad2b348d0061c16340eab9536a31453fda147f261e8dd90998010000",
+            "kind": "Identity"
+          },
+          {
+            "key": "balance-b421130b5d137cb9348eeaabad2b348d0061c16340eab9536a31453fda147f26",
+            "kind": {
+              "Write": {
+                "CLValue": {
+                  "cl_type": "U512",
+                  "bytes": "060207f1114001",
+                  "parsed": "1374690543362"
+                }
+              }
+            }
+          },
+          {
+            "key": "balance-e673a8125de4cb0e1f150cfd8806c3c0d9b5692cac0393075f07891379a80339",
+            "kind": {
+              "AddUInt512": "3"
+            }
+          },
+          {
+            "key": "hash-0c3ed6cb3ad89799d30ec6f00846c815b3ebecc28149f40dc874f64adbb460c3",
+            "kind": "Identity"
+          },
+          {
+            "key": "hash-f061caa2c371bcef431adb37a47272e2511d77ff374439218e81acec2c65d07b",
+            "kind": "Identity"
+          },
+          {
+            "key": "hash-8c2e964470f3b060a81a75c1acbe3d931335a7898c506b881d43cde6f90e743b",
+            "kind": "Identity"
+          },
+          {
+            "key": "uref-35c3ce39552ce63d1a46234ddab08961ab88da705b84c31ed50885b2402b87e3-000",
+            "kind": "Identity"
+          },
+          {
+            "key": "uref-35c3ce39552ce63d1a46234ddab08961ab88da705b84c31ed50885b2402b87e3-000",
+            "kind": {
+              "Write": {
+                "CLValue": {
+                  "cl_type": "U64",
+                  "bytes": "1d00000000000000",
+                  "parsed": 29
+                }
+              }
+            }
+          },
+          {
+            "key": "hash-010c3fe81b7b862e50c77ef9a958a05bfa98444f26f96f23d37a13c96244cfb7",
+            "kind": "Identity"
+          },
+          {
+            "key": "hash-9824d60dc3a5c44a20b9fd260a412437933835b52fc683d8ae36e4ec2114843e",
+            "kind": "Identity"
+          },
+          {
+            "key": "balance-e673a8125de4cb0e1f150cfd8806c3c0d9b5692cac0393075f07891379a80339",
+            "kind": {
+              "Write": {
+                "CLValue": {
+                  "cl_type": "U512",
+                  "bytes": "00",
+                  "parsed": "0"
+                }
+              }
+            }
+          },
+          {
+            "key": "balance-47acc407ab36b1f4833b8a22b623d052ad9d4c63a41151c891cef08c5c50f601",
+            "kind": {
+              "AddUInt512": "3"
+            }
+          },
+          {
+            "key": "message-topic-entity-contract-0c3ed6cb3ad89799d30ec6f00846c815b3ebecc28149f40dc874f64adbb460c3-26b7b3ee6f48f5a5a43d2d43b3f08afe315b9b0497fde92366fbdd750a20c80d",
+            "kind": "Identity"
+          },
+          {
+            "key": "block-message-count-00000000000000000000000000000000000000000000000000000000000000",
+            "kind": "Identity"
+          },
+          {
+            "key": "message-entity-contract-0c3ed6cb3ad89799d30ec6f00846c815b3ebecc28149f40dc874f64adbb460c3-26b7b3ee6f48f5a5a43d2d43b3f08afe315b9b0497fde92366fbdd750a20c80d-0",
+            "kind": {
+              "Write": {
+                "Message": "message-checksum-ebfd040360f150891848ea9ccf62ed1b75b7a521498b5bee83fc59bcb16bb022"
+              }
+            }
+          },
+          {
+            "key": "message-topic-entity-contract-0c3ed6cb3ad89799d30ec6f00846c815b3ebecc28149f40dc874f64adbb460c3-26b7b3ee6f48f5a5a43d2d43b3f08afe315b9b0497fde92366fbdd750a20c80d",
+            "kind": {
+              "Write": {
+                "MessageTopic": {
+                  "message_count": 1,
+                  "blocktime": 1752511909150,
+                  "topic_name": "Locked"
+                }
+              }
+            }
+          },
+          {
+            "key": "block-message-count-00000000000000000000000000000000000000000000000000000000000000",
+            "kind": {
+              "Write": {
+                "CLValue": {
+                  "cl_type": {
+                    "Tuple2": [
+                      "U64",
+                      "U64"
+                    ]
+                  },
+                  "bytes": "1e8dd909980100000100000000000000",
+                  "parsed": [
+                    1752511909150,
+                    1
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "key": "balance-hold-01b421130b5d137cb9348eeaabad2b348d0061c16340eab9536a31453fda147f261e8dd90998010000",
+            "kind": {
+              "Prune": "balance-hold-01b421130b5d137cb9348eeaabad2b348d0061c16340eab9536a31453fda147f261e8dd90998010000"
+            }
+          },
+          {
+            "key": "balance-b421130b5d137cb9348eeaabad2b348d0061c16340eab9536a31453fda147f26",
+            "kind": {
+              "Write": {
+                "CLValue": {
+                  "cl_type": "U512",
+                  "bytes": "0691e2bf573f01",
+                  "parsed": "1371566760593"
+                }
+              }
+            }
+          },
+          {
+            "key": "balance-bb9f47c30ddbe192438fad10b7db8200247529d6592af7159d92c5f3aa7716a1",
+            "kind": {
+              "AddUInt512": "3123782769"
+            }
+          }
+        ]
+      }
+    },
+    "messages": [
+      {
+        "entity_addr": "entity-contract-0c3ed6cb3ad89799d30ec6f00846c815b3ebecc28149f40dc874f64adbb460c3",
+        "message": {
+          "Bytes": "0118ea8b6ed62393f8d36cb1a96b9ee62b48e35317bd2ea3ceb533a6f7ff212ad601031c000000000000007c95dcbaa72f1fc533e3a9ff38816bfd658a8d9364fc214afc31aca75efc2f3a1e8dd90998010000"
+        },
+        "topic_name": "Locked",
+        "topic_name_hash": "26b7b3ee6f48f5a5a43d2d43b3f08afe315b9b0497fde92366fbdd750a20c80d",
+        "topic_index": 0,
+        "block_index": 0
+      }
+    ]
+  }
+}

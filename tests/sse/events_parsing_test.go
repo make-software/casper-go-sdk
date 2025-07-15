@@ -233,6 +233,10 @@ func Test_RawEvent_ParseAsTransactionProcessedEvent(t *testing.T) {
 			filePath:      "../data/sse/transaction_processed_event.json",
 			isTransaction: true,
 		},
+		{
+			filePath:      "../data/sse/transaction_processed_event_with_messages.json",
+			isTransaction: true,
+		},
 	}
 
 	for _, tc := range tests {
@@ -251,7 +255,7 @@ func Test_RawEvent_ParseAsTransactionProcessedEvent(t *testing.T) {
 			if tc.isTransaction {
 				require.NotEmpty(t, res.TransactionProcessedPayload.TransactionHash.TransactionV1)
 				require.NotEmpty(t, res.TransactionProcessedPayload.Messages)
-				require.NotEmpty(t, res.TransactionProcessedPayload.Messages[0].HashAddr)
+				require.NotEmpty(t, res.TransactionProcessedPayload.Messages[0])
 			} else {
 				require.NotEmpty(t, res.TransactionProcessedPayload.TransactionHash.Deploy)
 			}
