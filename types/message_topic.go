@@ -22,8 +22,8 @@ type MessageTopic struct {
 
 // MessagePayload The payload of the message.
 type MessagePayload struct {
-	String *string      `json:"String"`
-	Bytes  *ModuleBytes `json:"Bytes"`
+	String *string `json:"String"`
+	Bytes  *string `json:"Bytes"`
 }
 
 // Message that was emitted by an addressable entity during execution.
