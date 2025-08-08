@@ -143,7 +143,7 @@ func Test_TransactionSerialization_StoredTarget(t *testing.T) {
 		{
 			Stored: &types.StoredTarget{
 				ID: types.TransactionInvocationTarget{
-					ByPackageHash: &types.ByPackageHashInvocationTarget{Addr: hash, Version: &[]uint32{1}[0]},
+					ByPackageHash: &types.ByPackageHashInvocationTarget{Addr: hash, Version: &[]uint32{1}[0], ProtocolVersionMajor: &[]uint32{1}[0]},
 				},
 				Runtime: types.NewVmCasperV1TransactionRuntime(),
 			},
