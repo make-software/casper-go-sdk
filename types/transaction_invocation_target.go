@@ -160,10 +160,16 @@ func (t *TransactionInvocationTarget) serializedFieldLengths() []int {
 			versionSerializedLength = encoding.U32SerializedLength
 		}
 
+		var protocolMajorSerializedLength int
+		if t.ByPackageHash.ProtocolVersionMajor != nil {
+			protocolMajorSerializedLength = encoding.U32SerializedLength
+		}
+
 		return []int{
 			encoding.U8SerializedLength,
 			key.ByteHashLen,
 			encoding.U8SerializedLength + versionSerializedLength,
+			encoding.U8SerializedLength + protocolMajorSerializedLength,
 		}
 	case t.ByPackageName != nil:
 		var versionSerializedLength int
