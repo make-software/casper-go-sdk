@@ -15,9 +15,10 @@ const (
 	ByNameVariant   uint8  = 1
 	ByNameNameIndex uint16 = 1
 
-	ByPackageHashVariant      uint8  = 2
-	ByPackageHashAddrIndex    uint16 = 1
-	ByPackageHashVersionIndex uint16 = 2
+	ByPackageHashVariant                   uint8  = 2
+	ByPackageHashAddrIndex                 uint16 = 1
+	ByPackageHashVersionIndex              uint16 = 2
+	ByPackageHashProtocolVersionMajorIndex uint16 = 3
 
 	ByPackageNameVariant      uint8  = 3
 	ByPackageNameNameIndex    uint16 = 1
@@ -37,8 +38,9 @@ type TransactionInvocationTarget struct {
 
 // ByPackageHashInvocationTarget The address and optional version identifying the package.
 type ByPackageHashInvocationTarget struct {
-	Addr    key.Hash `json:"addr"`
-	Version *uint32  `json:"version"`
+	Addr                 key.Hash `json:"addr"`
+	Version              *uint32  `json:"version"`
+	ProtocolVersionMajor *uint32  `json:"protocol_version_major"`
 }
 
 // ByPackageNameInvocationTarget The alias and optional version identifying the package.
@@ -94,6 +96,18 @@ func (t *TransactionInvocationTarget) Bytes() ([]byte, error) {
 			return nil, err
 		}
 
+		var protocolMajorBytes []byte
+		if t.ByPackageHash.ProtocolVersionMajor != nil {
+			versionBytes = []byte{1} // Option Some tag
+			bytes, _ := encoding.NewU32ToBytesEncoder(*t.ByPackageHash.ProtocolVersionMajor).Bytes()
+			protocolMajorBytes = append(versionBytes, bytes...)
+		} else {
+			protocolMajorBytes = []byte{0} // Option none tag
+		}
+
+		if err = builder.AddField(ByPackageHashProtocolVersionMajorIndex, protocolMajorBytes); err != nil {
+			return nil, err
+		}
 	case t.ByPackageName != nil:
 		if err = builder.AddField(TagFieldIndex, []byte{ByPackageNameVariant}); err != nil {
 			return nil, err
@@ -146,10 +160,16 @@ func (t *TransactionInvocationTarget) serializedFieldLengths() []int {
 			versionSerializedLength = encoding.U32SerializedLength
 		}
 
+		var protocolMajorSerializedLength int
+		if t.ByPackageHash.ProtocolVersionMajor != nil {
+			protocolMajorSerializedLength = encoding.U32SerializedLength
+		}
+
 		return []int{
 			encoding.U8SerializedLength,
 			key.ByteHashLen,
 			encoding.U8SerializedLength + versionSerializedLength,
+			encoding.U8SerializedLength + protocolMajorSerializedLength,
 		}
 	case t.ByPackageName != nil:
 		var versionSerializedLength int
