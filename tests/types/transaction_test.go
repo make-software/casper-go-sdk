@@ -151,6 +151,14 @@ func Test_TransactionSerialization_StoredTarget(t *testing.T) {
 		{
 			Stored: &types.StoredTarget{
 				ID: types.TransactionInvocationTarget{
+					ByPackageName: &types.ByPackageNameInvocationTarget{Name: entryPoint, Version: &[]uint32{1}[0], ProtocolVersionMajor: &[]uint32{1}[0]},
+				},
+				Runtime: types.NewVmCasperV1TransactionRuntime(),
+			},
+		},
+		{
+			Stored: &types.StoredTarget{
+				ID: types.TransactionInvocationTarget{
 					ByPackageName: &types.ByPackageNameInvocationTarget{Name: entryPoint},
 				},
 				Runtime: types.NewVmCasperV1TransactionRuntime(),

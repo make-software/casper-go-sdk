@@ -20,9 +20,10 @@ const (
 	ByPackageHashVersionIndex              uint16 = 2
 	ByPackageHashProtocolVersionMajorIndex uint16 = 3
 
-	ByPackageNameVariant      uint8  = 3
-	ByPackageNameNameIndex    uint16 = 1
-	ByPackageNameVersionIndex uint16 = 2
+	ByPackageNameVariant                   uint8  = 3
+	ByPackageNameNameIndex                 uint16 = 1
+	ByPackageNameVersionIndex              uint16 = 2
+	ByPackageNameProtocolVersionMajorIndex uint16 = 3
 )
 
 type TransactionInvocationTarget struct {
@@ -45,8 +46,9 @@ type ByPackageHashInvocationTarget struct {
 
 // ByPackageNameInvocationTarget The alias and optional version identifying the package.
 type ByPackageNameInvocationTarget struct {
-	Name    string  `json:"name"`
-	Version *uint32 `json:"version"`
+	Name                 string  `json:"name"`
+	Version              *uint32 `json:"version"`
+	ProtocolVersionMajor *uint32 `json:"protocol_version_major"`
 }
 
 func (t *TransactionInvocationTarget) Bytes() ([]byte, error) {
@@ -130,6 +132,19 @@ func (t *TransactionInvocationTarget) Bytes() ([]byte, error) {
 		if err = builder.AddField(ByPackageNameVersionIndex, versionBytes); err != nil {
 			return nil, err
 		}
+
+		var protocolMajorBytes []byte
+		if t.ByPackageName.ProtocolVersionMajor != nil {
+			versionBytes = []byte{1} // Option Some tag
+			bytes, _ := encoding.NewU32ToBytesEncoder(*t.ByPackageName.ProtocolVersionMajor).Bytes()
+			protocolMajorBytes = append(versionBytes, bytes...)
+		} else {
+			protocolMajorBytes = []byte{0} // Option none tag
+		}
+
+		if err = builder.AddField(ByPackageNameProtocolVersionMajorIndex, protocolMajorBytes); err != nil {
+			return nil, err
+		}
 	default:
 		return nil, errors.New("unknown transaction invocation target")
 	}
@@ -176,10 +191,17 @@ func (t *TransactionInvocationTarget) serializedFieldLengths() []int {
 		if t.ByPackageName.Version != nil {
 			versionSerializedLength = encoding.U32SerializedLength
 		}
+
+		var protocolMajorSerializedLength int
+		if t.ByPackageName.ProtocolVersionMajor != nil {
+			protocolMajorSerializedLength = encoding.U32SerializedLength
+		}
+
 		return []int{
 			encoding.U8SerializedLength,
 			encoding.StringSerializedLength(t.ByPackageName.Name),
 			encoding.U8SerializedLength + versionSerializedLength,
+			encoding.U8SerializedLength + protocolMajorSerializedLength,
 		}
 	default:
 		return []int{}
