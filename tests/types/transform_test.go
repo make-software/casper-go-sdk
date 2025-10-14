@@ -197,6 +197,23 @@ func Test_Transform_NamedKey(t *testing.T) {
 	assert.True(t, nameKeyCLValue.Key != nil)
 }
 
+func Test_Transform_AddKeys(t *testing.T) {
+	fixture, err := os.ReadFile("../data/transform/add_keys.json")
+	require.NoError(t, err)
+	var transform types.TransformKey
+
+	err = json.Unmarshal(fixture, &transform)
+	require.NoError(t, err)
+
+	addKeys, err := transform.Transform.ParseAsAddKeys()
+	require.NoError(t, err)
+
+	require.Len(t, addKeys, 1)
+
+	require.Equal(t, addKeys[0].Name, "value_voting_id_seq__contract")
+	require.Equal(t, addKeys[0].Key.String(), "uref-c5cf46c6aaf0dcc5eafaa4b9a0c370d9c6399153dbeeb9c5a78ead4c382ca22c-007")
+}
+
 func Test_Transform_Message(t *testing.T) {
 	fixture, err := os.ReadFile("../data/transform/message.json")
 	require.NoError(t, err)

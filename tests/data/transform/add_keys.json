@@ -1,0 +1,11 @@
+{
+  "key": "hash-46b197e3f9fdfa23304351cd2a3b1ae9d76ee9e72a57ca973c73326989d66421",
+  "transform": {
+    "AddKeys": [
+      {
+        "name": "value_voting_id_seq__contract",
+        "key": "uref-c5cf46c6aaf0dcc5eafaa4b9a0c370d9c6399153dbeeb9c5a78ead4c382ca22c-007"
+      }
+    ]
+  }
+}
