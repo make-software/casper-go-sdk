@@ -27,6 +27,11 @@ type NamedKeyKind struct {
 	Name     Argument `json:"name"`
 }
 
+type AddKey struct {
+	Name string  `json:"name"`
+	Key  key.Key `json:"key"`
+}
+
 type WriteTransfer struct {
 	ID         *uint64          `json:"id"`
 	To         *key.AccountHash `json:"to"`
@@ -176,6 +181,10 @@ func (t *TransformKind) IsWriteNamedKey() bool {
 	return bytes.Contains(*t, []byte("\"NamedKey\""))
 }
 
+func (t *TransformKind) IsAddKeys() bool {
+	return bytes.Contains(*t, []byte("\"AddKeys\""))
+}
+
 func (t *TransformKind) IsWriteMessage() bool {
 	return bytes.Contains(*t, []byte("\"Message\""))
 }
@@ -321,6 +330,19 @@ func (t *TransformKind) ParseAsWriteNamedKey() (*NamedKeyKind, error) {
 	}
 
 	return jsonRes.Write.NamedKey, nil
+}
+
+func (t *TransformKind) ParseAsAddKeys() ([]AddKey, error) {
+	type rawData struct {
+		AddKeys []AddKey `json:"AddKeys"`
+	}
+
+	jsonRes := rawData{}
+	if err := json.Unmarshal(*t, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	return jsonRes.AddKeys, nil
 }
 
 func (t *TransformKind) ParseAsWriteMessage() (*MessageChecksum, error) {
