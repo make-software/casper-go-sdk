@@ -236,15 +236,16 @@ func (v *InfoGetDeployResult) UnmarshalJSON(data []byte) error {
 
 	if !strings.HasPrefix(version.ApiVersion, "2") {
 		var v1Compatible infoGetDeployResultV1Compatible
-		if err := json.Unmarshal(data, &v1Compatible); err == nil {
-			*v = InfoGetDeployResult{
-				ApiVersion:       v1Compatible.ApiVersion,
-				Deploy:           v1Compatible.Deploy,
-				ExecutionResults: types.DeployExecutionInfoFromV1(v1Compatible.ExecutionResults, v1Compatible.BlockHeight),
-				rawJSON:          data,
-			}
-			return nil
+		if err := json.Unmarshal(data, &v1Compatible); err != nil {
+			return err
 		}
+		*v = InfoGetDeployResult{
+			ApiVersion:       v1Compatible.ApiVersion,
+			Deploy:           v1Compatible.Deploy,
+			ExecutionResults: types.DeployExecutionInfoFromV1(v1Compatible.ExecutionResults, v1Compatible.BlockHeight),
+			rawJSON:          data,
+		}
+		return nil
 	}
 
 	var resp struct {
