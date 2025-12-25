@@ -31,6 +31,20 @@
                   }
                 ],
                 [
+                  "signatures",
+                  {
+                    "cl_type": {
+                      "List": {
+                        "List": {
+                          "ByteArray": 65
+                        }
+                      }
+                    },
+                    "bytes": "010000009274b158535c9120f32ec97f95f62a10d52130c4807b1c049c102a57786dbbff78497b135f621b37d0e327e57430854b441abbd643cdb5c2fff94592211fff2b1b",
+                    "parsed": null
+                  }
+                ],
+                [
                   "symbol",
                   {
                     "cl_type": "String",
