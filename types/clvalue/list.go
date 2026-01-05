@@ -56,6 +56,20 @@ func NewListFromBytes(source []byte, clType *cltype.List) (*List, error) {
 }
 
 func NewListFromBuffer(buf *bytes.Buffer, clType *cltype.List) (*List, error) {
+	if simpleType, isSimple := clType.ElementsType.(cltype.SimpleType); isSimple && simpleType.Name() == "Any" {
+		elements := []CLValue{}
+
+		if buf.Len() > 0 {
+			data := buf.Next(buf.Len())
+			anyVal := Any(data)
+			elements = append(elements, CLValue{
+				Type: clType.ElementsType,
+				Any:  &anyVal,
+			})
+		}
+		return &List{Type: clType, Elements: elements}, nil
+	}
+
 	size, err := TrimByteSize(buf)
 	if err != nil {
 		return nil, err
