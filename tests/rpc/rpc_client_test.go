@@ -154,39 +154,39 @@ func Test_DefaultClient_GetTransaction_Example(t *testing.T) {
 		withTransfers     bool
 		executionResultV1 bool
 	}{
-		//{
-		//	filePath:          "../data/deploy/get_raw_rpc_deploy.json",
-		//	isDeploy:          true,
-		//	executionResultV1: true,
-		//},
-		//{
-		//	filePath: "../data/deploy/get_raw_rpc_deploy_v2.json",
-		//	isDeploy: true,
-		//},
-		//{
-		//	filePath:          "../data/deploy/get_raw_rpc_deploy_with_transfer.json",
-		//	isDeploy:          true,
-		//	withTransfers:     true,
-		//	executionResultV1: true,
-		//},
+		{
+			filePath:          "../data/deploy/get_raw_rpc_deploy.json",
+			isDeploy:          true,
+			executionResultV1: true,
+		},
+		{
+			filePath: "../data/deploy/get_raw_rpc_deploy_v2.json",
+			isDeploy: true,
+		},
+		{
+			filePath:          "../data/deploy/get_raw_rpc_deploy_with_transfer.json",
+			isDeploy:          true,
+			withTransfers:     true,
+			executionResultV1: true,
+		},
 		{
 			filePath: "../data/transaction/get_transaction.json",
 		},
-		//{
-		//	filePath: "../data/transaction/get_transaction_install_contract.json",
-		//},
-		//{
-		//	filePath: "../data/transaction/get_transaction_with_invalid_args.json",
-		//},
-		//{
-		//	filePath: "../data/transaction/get_transaction_native_target.json",
-		//},
-		//{
-		//	filePath: "../data/transaction/get_transaction_native_entry_point.json",
-		//},
-		//{
-		//	filePath: "../data/transaction/get_transaction_with_delegator_kind.json",
-		//},
+		{
+			filePath: "../data/transaction/get_transaction_install_contract.json",
+		},
+		{
+			filePath: "../data/transaction/get_transaction_with_invalid_args.json",
+		},
+		{
+			filePath: "../data/transaction/get_transaction_native_target.json",
+		},
+		{
+			filePath: "../data/transaction/get_transaction_native_entry_point.json",
+		},
+		{
+			filePath: "../data/transaction/get_transaction_with_delegator_kind.json",
+		},
 	}
 	for _, tt := range tests {
 		t.Run("GetTransaction", func(t *testing.T) {
