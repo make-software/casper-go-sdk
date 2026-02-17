@@ -28,6 +28,7 @@ const (
 	ReservedDelegationPurseTag
 	UnbondAccountTag
 	UnbondPurseTag
+	ValidatorRevPurseTag
 )
 
 var allowedBidAddrTags = map[BidAddrTag]struct{}{
@@ -40,6 +41,7 @@ var allowedBidAddrTags = map[BidAddrTag]struct{}{
 	ReservedDelegationPurseTag:   {},
 	UnbondAccountTag:             {},
 	UnbondPurseTag:               {},
+	ValidatorRevPurseTag:         {},
 }
 
 func NewBidAddrTagFromByte(tag uint8) (BidAddrTag, error) {
@@ -100,6 +102,9 @@ type BidAddr struct {
 		Validator Hash
 		Delegator URef
 	}
+	/// Validator BidAddr for reverse look up.
+	/// For instance, in the case of a changed public key.
+	ValidatorRev *Hash
 }
 
 func NewBidAddr(source string) (BidAddr, error) {
@@ -198,6 +203,12 @@ func NewBidAddrFromBuffer(buf *bytes.Buffer) (BidAddr, error) {
 			Validator Hash
 			Delegator URef
 		}{Validator: validator, Delegator: delegator}}, nil
+	case ValidatorRevPurseTag:
+		hash, err := NewHashFromBytes(buf.Next(ByteHashLen))
+		if err != nil {
+			return BidAddr{}, err
+		}
+		return BidAddr{Validator: &hash}, nil
 	default:
 		return BidAddr{}, ErrUnexpectedBidAddrTagInBidAddr
 	}
@@ -272,6 +283,10 @@ func (h BidAddr) Bytes() []byte {
 		res = append(res, byte(UnbondPurseTag))
 		res = append(res, h.UnbondPurse.Validator.Bytes()...)
 		return append(res, h.UnbondPurse.Delegator.DataBytes()...)
+	case h.ValidatorRev != nil:
+		res := make([]byte, 0, UnifiedOrValidatorAddrLen)
+		res = append(res, byte(ValidatorRevPurseTag))
+		return append(res, h.ValidatorRev.Bytes()...)
 	default:
 		panic("Unexpected BidAddr type")
 	}
