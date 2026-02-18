@@ -2,6 +2,7 @@ package clvalue
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 
 	"github.com/make-software/casper-go-sdk/v2/types/clvalue/cltype"
@@ -74,7 +75,12 @@ func NewListFromBuffer(buf *bytes.Buffer, clType *cltype.List) (*List, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	listSize := int(size)
+	if listSize > buf.Len() {
+		return nil, errors.New("list size exceeds buffer size")
+	}
+
 	elements := make([]CLValue, 0, listSize)
 
 	innerList, isInnerList := clType.ElementsType.(*cltype.List)
