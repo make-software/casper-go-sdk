@@ -20,9 +20,10 @@ const (
 	ByPackageHashVersionIndex              uint16 = 2
 	ByPackageHashProtocolVersionMajorIndex uint16 = 3
 
-	ByPackageNameVariant      uint8  = 3
-	ByPackageNameNameIndex    uint16 = 1
-	ByPackageNameVersionIndex uint16 = 2
+	ByPackageNameVariant                   uint8  = 3
+	ByPackageNameNameIndex                 uint16 = 1
+	ByPackageNameVersionIndex              uint16 = 2
+	ByPackageNameProtocolVersionMajorIndex uint16 = 3
 )
 
 type TransactionInvocationTarget struct {
@@ -144,7 +145,7 @@ func (t *TransactionInvocationTarget) Bytes() ([]byte, error) {
 				protocolMajorBytes = []byte{0} // Option none tag
 			}
 
-			if err = builder.AddField(ByPackageHashProtocolVersionMajorIndex, protocolMajorBytes); err != nil {
+			if err = builder.AddField(ByPackageNameProtocolVersionMajorIndex, protocolMajorBytes); err != nil {
 				return nil, err
 			}
 		}
