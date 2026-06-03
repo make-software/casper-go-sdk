@@ -962,6 +962,10 @@ func Test_DefaultClient_GetStatus(t *testing.T) {
 	result, err := client.GetStatus(context.Background())
 	require.NoError(t, err)
 	assert.NotEmpty(t, result.ChainSpecName)
+	assert.False(t, result.LastAddedBlockInfo.Creator.IsSystem())
+	creator, err := result.LastAddedBlockInfo.Creator.PublicKey()
+	require.NoError(t, err)
+	assert.Equal(t, "0140afe8f752e5ff100e0189c080bc207e8805b3e5e82f792ec608de2f11f39f6c", creator.ToHex())
 	assert.NotEmpty(t, result.LatestSwitchBlockHash)
 	assert.NotNil(t, result.BlockSync.Forward)
 	assert.NotEmpty(t, result.BlockSync.Forward.BlockHash)
@@ -971,6 +975,23 @@ func Test_DefaultClient_GetStatus(t *testing.T) {
 	assert.NotEmpty(t, result.BlockSync.Historical.BlockHash)
 	assert.NotEmpty(t, result.BlockSync.Historical.AcquisitionState)
 	assert.NotNil(t, result.BlockSync.Historical.BlockHeight)
+}
+
+func Test_InfoGetStatusResult_SystemCreator(t *testing.T) {
+	fixture, err := os.ReadFile("../data/rpc_response/get_status_system_creator.json")
+	require.NoError(t, err)
+
+	var response rpc.RpcResponse
+	err = json.Unmarshal(fixture, &response)
+	require.NoError(t, err)
+
+	var result rpc.InfoGetStatusResult
+	err = json.Unmarshal(response.Result, &result)
+	require.NoError(t, err)
+
+	assert.True(t, result.LastAddedBlockInfo.Creator.IsSystem())
+	assert.Equal(t, uint64(386), result.LastAddedBlockInfo.EraID)
+	assert.Equal(t, uint32(170022), result.LastAddedBlockInfo.Height)
 }
 
 func Test_DefaultClient_GetPeers(t *testing.T) {
