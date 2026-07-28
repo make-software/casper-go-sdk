@@ -2,6 +2,7 @@ package types
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/make-software/casper-go-sdk/v2/types/key"
 )
@@ -71,25 +72,26 @@ type ContractVersion struct {
 type ContractVersionKey [2]int
 
 func (c *ContractVersionKey) UnmarshalJSON(data []byte) error {
-	key := make([]int, 0, 2)
-	if err := json.Unmarshal(data, &key); err != nil {
-		var temp struct {
-			Version              int `json:"contract_version"`
-			ProtocolVersionMajor int `json:"protocol_version_major"`
+	var key []int
+	if err := json.Unmarshal(data, &key); err == nil {
+		if len(key) != 2 {
+			return fmt.Errorf("contract version key must contain exactly 2 elements")
 		}
-		if err = json.Unmarshal(data, &temp); err != nil {
-			return err
-		}
-
-		if temp.Version != 0 && temp.ProtocolVersionMajor != 0 {
-			*c = [2]int{temp.Version, temp.ProtocolVersionMajor}
-			return nil
-		}
-	}
-	if len(key) == 2 {
-		*c = [2]int{key[0], key[1]}
+		*c = ContractVersionKey{key[0], key[1]}
 		return nil
 	}
 
+	var value struct {
+		Version              *int `json:"contract_version"`
+		ProtocolVersionMajor *int `json:"protocol_version_major"`
+	}
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	if value.Version == nil || value.ProtocolVersionMajor == nil {
+		return fmt.Errorf("contract version key must contain contract_version and protocol_version_major")
+	}
+
+	*c = ContractVersionKey{*value.ProtocolVersionMajor, *value.Version}
 	return nil
 }
