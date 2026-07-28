@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"testing"
 
-	sdk_types "github.com/make-software/casper-go-sdk/v2/types"
 	"github.com/stretchr/testify/require"
+
+	sdk_types "github.com/make-software/casper-go-sdk/v2/types"
 )
 
 func TestContractVersionKeyUnmarshalJSON(t *testing.T) {
