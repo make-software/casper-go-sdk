@@ -1,0 +1,43 @@
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "result": {
+    "api_version": "2.0.0",
+    "protocol_version": "5.4.3",
+    "peers": [],
+    "build_version": "2.0.0",
+    "chainspec_name": "dev-net",
+    "starting_state_root_hash": "b275db1f79912c7b2507a8e48f5ef15e6ae3236bed542c7710ce15321622d1cb",
+    "last_added_block_info": {
+      "hash": "e8637cdc918e901c6e10a050cc7d3be949b892dc8842580088f5aa592a342d39",
+      "timestamp": "2024-05-15T07:52:31.214Z",
+      "era_id": 386,
+      "height": 170022,
+      "state_root_hash": "18502c7912b294d65cadbaaf6a60b9d04b376224d540e31fca184606b16c706c",
+      "creator": "00"
+    },
+    "our_public_signing_key": "01032146b0b9de01e26aaec7b0d1769920de94681dbd432c3530bfe591752ded6c",
+    "round_length": "16s 384ms",
+    "next_upgrade": null,
+    "uptime": "1month 1day 17h 40m 43s",
+    "reactor_state": "Validate",
+    "last_progress": "2024-04-13T03:38:19.626Z",
+    "available_block_range": {
+      "low": 0,
+      "high": 170022
+    },
+    "block_sync": {
+      "historical": {
+        "block_hash": "16ddf28e2b3d2e17f4cef36f8b58827eca917af225d139b0c77df3b4a67dc55e",
+        "block_height": 40,
+        "acquisition_state": "have strict finality(40) for: block hash 16dd..c55e"
+      },
+      "forward": {
+        "block_hash": "59907b1e32a9158169c4d89d9ce5ac9164fc31240bfcfb0969227ece06d74983",
+        "block_height": 6701,
+        "acquisition_state": "have block body(6701) for: block hash 5990..4983"
+      }
+    },
+    "latest_switch_block_hash": "099cc3232b04ebb556c73328597c0b8c518fa4565c7d1f7981bc251414ce8c2f"
+  }
+}
