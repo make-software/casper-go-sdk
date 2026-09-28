@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/make-software/casper-go-sdk/v2/casper"
@@ -41,6 +42,9 @@ func Test_SpeculativeExecResult_UnmarshalJSON_V2(t *testing.T) {
 	assert.Equal(t, uint64(395091618), result.ExecutionResult.Consumed)
 	assert.Equal(t, 2, len(result.ExecutionResult.Effects))
 	assert.Equal(t, 1, len(result.Messages))
+	assert.Equal(t, "entity-contract-eece73f6a210f5d08f8a9da3348ab3c6f65d42eb0df9938f324940fb5422c360", result.Messages[0].EntityAddr.ToPrefixedString())
+	assert.NotNil(t, result.Messages[0].Message.String)
+	assert.True(t, strings.Contains(*result.Messages[0].Message.String, "recipient"))
 	assert.Nil(t, result.ExecutionResult.ErrorMessage)
 }
 
