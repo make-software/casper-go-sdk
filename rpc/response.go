@@ -566,12 +566,61 @@ type SpeculativeExecResult struct {
 	ApiVersion      string                `json:"api_version"`
 	BlockHash       key.Hash              `json:"block_hash"`
 	ExecutionResult types.ExecutionResult `json:"execution_result"`
+	Messages        []types.Message       `json:"messages"`
 
 	rawJSON json.RawMessage
 }
 
 func (b SpeculativeExecResult) GetRawJSON() json.RawMessage {
 	return b.rawJSON
+}
+
+// UnmarshalJSON decodes both the Casper 1.x and Casper 2.x shapes of the
+// speculative_exec RPC result onto a stable public struct.
+func (s *SpeculativeExecResult) UnmarshalJSON(data []byte) error {
+	var probe struct {
+		ExecutionResult struct {
+			Success json.RawMessage `json:"Success"`
+			Failure json.RawMessage `json:"Failure"`
+		} `json:"execution_result"`
+	}
+	if err := json.Unmarshal(data, &probe); err != nil {
+		return err
+	}
+
+	if probe.ExecutionResult.Success != nil || probe.ExecutionResult.Failure != nil {
+		var v1 struct {
+			ApiVersion      string                  `json:"api_version"`
+			BlockHash       key.Hash                `json:"block_hash"`
+			ExecutionResult types.ExecutionResultV1 `json:"execution_result"`
+		}
+		if err := json.Unmarshal(data, &v1); err != nil {
+			return err
+		}
+		*s = SpeculativeExecResult{
+			ApiVersion:      v1.ApiVersion,
+			BlockHash:       v1.BlockHash,
+			ExecutionResult: types.NewExecutionResultFromV1(v1.ExecutionResult),
+			rawJSON:         data,
+		}
+		return nil
+	}
+
+	var v2 struct {
+		ApiVersion      string                           `json:"api_version"`
+		ExecutionResult types.SpeculativeExecutionResult `json:"execution_result"`
+	}
+	if err := json.Unmarshal(data, &v2); err != nil {
+		return err
+	}
+	*s = SpeculativeExecResult{
+		ApiVersion:      v2.ApiVersion,
+		BlockHash:       v2.ExecutionResult.BlockHash,
+		ExecutionResult: types.NewExecutionResultFromSpeculativeV2(v2.ExecutionResult),
+		Messages:        v2.ExecutionResult.Messages,
+		rawJSON:         data,
+	}
+	return nil
 }
 
 type QueryBalanceResult struct {
