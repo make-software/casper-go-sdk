@@ -193,6 +193,31 @@ type ExecutionResultV2 struct {
 	Effects      []Transform     `json:"effects"`
 }
 
+// SpeculativeExecutionResult represents the `execution_result` field returned
+// by the speculative_exec RPC in Casper 2.x.
+type SpeculativeExecutionResult struct {
+	BlockHash key.Hash    `json:"block_hash"`
+	Limit     uint64      `json:"limit,string"`
+	Consumed  uint64      `json:"consumed,string"`
+	Transfers []Transfer  `json:"transfers"`
+	Effects   []Transform `json:"effects"`
+	Messages  []Message   `json:"messages"`
+	Error     *string     `json:"error"`
+}
+
+// NewExecutionResultFromSpeculativeV2 converts a Casper 2.x speculative
+// execution result into the SDK's unified ExecutionResult shape, mapping the
+// `error` field onto `ErrorMessage` and leaving fields unknown in 2.x as zero.
+func NewExecutionResultFromSpeculativeV2(v2 SpeculativeExecutionResult) ExecutionResult {
+	return ExecutionResult{
+		Limit:        v2.Limit,
+		Consumed:     v2.Consumed,
+		Transfers:    v2.Transfers,
+		Effects:      v2.Effects,
+		ErrorMessage: v2.Error,
+	}
+}
+
 type ExecutionResultV1 struct {
 	Success *ExecutionResultStatusData `json:"Success,omitempty"`
 	Failure *ExecutionResultStatusData `json:"Failure,omitempty"`
