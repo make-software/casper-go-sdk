@@ -143,3 +143,30 @@ func NewPrivateKeyFromHex(key string, algorithm keyAlgorithm) (PrivateKey, error
 		priv: priv,
 	}, nil
 }
+
+func NewPrivateKeyFromSeedHex(key string, algorithm keyAlgorithm) (PrivateKey, error) {
+	var priv PrivateKeyInternal
+	var err error
+
+	switch algorithm {
+	case ED25519:
+		priv, err = ed25519.NewPrivateKeyFromSeedHex(key)
+	default:
+		return PrivateKey{}, fmt.Errorf("unsupported key algorithm: %v", algorithm)
+	}
+
+	if err != nil {
+		return PrivateKey{}, fmt.Errorf("failed to create private key: %w", err)
+	}
+
+	publicKey, err := NewPublicKeyFromBytes(append([]byte{byte(algorithm)}, priv.PublicKeyBytes()...))
+	if err != nil {
+		return PrivateKey{}, fmt.Errorf("failed to create public key: %w", err)
+	}
+
+	return PrivateKey{
+		alg:  algorithm,
+		pub:  publicKey,
+		priv: priv,
+	}, nil
+}
