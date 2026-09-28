@@ -1,6 +1,7 @@
 package keypair
 
 import (
+	"encoding/hex"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -8,6 +9,7 @@ import (
 
 	"github.com/make-software/casper-go-sdk/v2/casper"
 	"github.com/make-software/casper-go-sdk/v2/types/keypair"
+	ed25519kp "github.com/make-software/casper-go-sdk/v2/types/keypair/ed25519"
 )
 
 func Test_ED25519_PrivateKey_Parsing(t *testing.T) {
@@ -117,5 +119,89 @@ func Test_NewPrivateKeyFromHex(t *testing.T) {
 
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "failed to create private key")
+	})
+}
+
+func Test_NewPrivateKeyFromSeedHex(t *testing.T) {
+	t.Run("Valid ED25519 seed", func(t *testing.T) {
+		seedHex := "dda433e404770ebbe9cec28cd7623770ce4222c4961dc4508b076145126c200e"
+		privateKey, err := keypair.NewPrivateKeyFromSeedHex(seedHex, keypair.ED25519)
+
+		require.NoError(t, err)
+		require.NotNil(t, privateKey)
+		assert.Equal(t, "01ce69876ad8154b3c4ec5c2a6ca250e88efda5008cef9ca5ec6767045ee006b53", privateKey.PublicKey().ToHex())
+	})
+
+	t.Run("Seed matches full private key public key", func(t *testing.T) {
+		fullHexKey := "dda433e404770ebbe9cec28cd7623770ce4222c4961dc4508b076145126c200ece69876ad8154b3c4ec5c2a6ca250e88efda5008cef9ca5ec6767045ee006b53"
+		fullKey, err := keypair.NewPrivateKeyFromHex(fullHexKey, keypair.ED25519)
+		require.NoError(t, err)
+
+		seedHex := "dda433e404770ebbe9cec28cd7623770ce4222c4961dc4508b076145126c200e"
+		seedKey, err := keypair.NewPrivateKeyFromSeedHex(seedHex, keypair.ED25519)
+		require.NoError(t, err)
+
+		assert.Equal(t, fullKey.PublicKey().ToHex(), seedKey.PublicKey().ToHex())
+	})
+
+	t.Run("Seed-derived key can sign and verify", func(t *testing.T) {
+		seedHex := "dda433e404770ebbe9cec28cd7623770ce4222c4961dc4508b076145126c200e"
+		privateKey, err := keypair.NewPrivateKeyFromSeedHex(seedHex, keypair.ED25519)
+		require.NoError(t, err)
+
+		message := []byte("Enigmatic Shadows Concealing Ancient Whispers")
+		signature, err := privateKey.Sign(message)
+		require.NoError(t, err)
+		assert.NoError(t, privateKey.PublicKey().VerifySignature(message, signature))
+	})
+
+	t.Run("Invalid hex characters", func(t *testing.T) {
+		seedHex := "invalid_hex_string_with_wrong_characters_and_length_to_match_seed_xxxxx"
+		_, err := keypair.NewPrivateKeyFromSeedHex(seedHex, keypair.ED25519)
+
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "failed to create private key")
+	})
+
+	t.Run("Unsupported SECP256K1 algorithm", func(t *testing.T) {
+		seedHex := "dda433e404770ebbe9cec28cd7623770ce4222c4961dc4508b076145126c200e"
+		_, err := keypair.NewPrivateKeyFromSeedHex(seedHex, keypair.SECP256K1)
+
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "unsupported key algorithm")
+	})
+}
+
+func Test_NewPrivateKeyFromSeedBytes(t *testing.T) {
+	t.Run("Valid seed bytes", func(t *testing.T) {
+		seedHex := "dda433e404770ebbe9cec28cd7623770ce4222c4961dc4508b076145126c200e"
+		seed, err := hex.DecodeString(seedHex)
+		require.NoError(t, err)
+
+		privateKey, err := ed25519kp.NewPrivateKeyFromSeedBytes(seed)
+		require.NoError(t, err)
+		require.NotNil(t, privateKey)
+	})
+
+	t.Run("Empty seed", func(t *testing.T) {
+		_, err := ed25519kp.NewPrivateKeyFromSeedBytes([]byte{})
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "wrong seed size")
+	})
+}
+
+func Test_Ed25519_NewPrivateKeyFromSeedHex(t *testing.T) {
+	t.Run("Invalid hex characters", func(t *testing.T) {
+		seedHex := "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+		_, err := ed25519kp.NewPrivateKeyFromSeedHex(seedHex)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "failed to decode hex string")
+	})
+
+	t.Run("Wrong hex length", func(t *testing.T) {
+		seedHex := "abcd"
+		_, err := ed25519kp.NewPrivateKeyFromSeedHex(seedHex)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "invalid hex string length")
 	})
 }
