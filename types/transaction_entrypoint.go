@@ -21,6 +21,7 @@ const (
 	TransactionEntryPointChangeBidPublicKey = "ChangeBidPublicKey"
 	TransactionEntryPointAddReservations    = "AddReservations"
 	TransactionEntryPointCancelReservations = "CancelReservations"
+	TransactionEntryPointBurn               = "Burn"
 	TransactionEntryPointCall               = "Call"
 )
 
@@ -37,6 +38,7 @@ const (
 	TransactionEntryPointChangeBidPublicKeyTag
 	TransactionEntryPointAddReservationsTag
 	TransactionEntryCancelReservationsTag
+	TransactionEntryPointBurnTag
 )
 
 const CustomCustomIndex uint16 = 1
@@ -64,6 +66,8 @@ type TransactionEntryPoint struct {
 	AddReservations *struct{}
 	// The `cancel_reservations` native entry point, used to remove delegator from validator's reserve list.
 	CancelReservations *struct{}
+	// The `burn` native entry point, used to burn native tokens.
+	Burn *struct{}
 	// Used to call entry point call() in session transactions
 	Call *struct{}
 }
@@ -99,6 +103,8 @@ func (t *TransactionEntryPoint) Tag() byte {
 		return TransactionEntryPointAddReservationsTag
 	case t.CancelReservations != nil:
 		return TransactionEntryCancelReservationsTag
+	case t.Burn != nil:
+		return TransactionEntryPointBurnTag
 	default:
 		return 0
 	}
@@ -142,6 +148,8 @@ func (t *TransactionEntryPoint) UnmarshalJSON(data []byte) error {
 		entryPoint.AddReservations = &struct{}{}
 	case TransactionEntryPointCancelReservations:
 		entryPoint.CancelReservations = &struct{}{}
+	case TransactionEntryPointBurn:
+		entryPoint.Burn = &struct{}{}
 	case TransactionEntryPointCall:
 		entryPoint.Call = &struct{}{}
 	}
@@ -180,6 +188,8 @@ func (t TransactionEntryPoint) MarshalJSON() ([]byte, error) {
 		return json.Marshal(TransactionEntryPointAddReservations)
 	case t.CancelReservations != nil:
 		return json.Marshal(TransactionEntryPointCancelReservations)
+	case t.Burn != nil:
+		return json.Marshal(TransactionEntryPointBurn)
 	case t.Call != nil:
 		return json.Marshal(TransactionEntryPointCall)
 	default:
@@ -246,6 +256,10 @@ func (t *TransactionEntryPoint) Bytes() ([]byte, error) {
 		}
 	case t.CancelReservations != nil:
 		if err = builder.AddField(TagFieldIndex, []byte{TransactionEntryCancelReservationsTag}); err != nil {
+			return nil, err
+		}
+	case t.Burn != nil:
+		if err = builder.AddField(TagFieldIndex, []byte{TransactionEntryPointBurnTag}); err != nil {
 			return nil, err
 		}
 	default:
