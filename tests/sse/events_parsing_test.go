@@ -1,6 +1,7 @@
 package sse
 
 import (
+	"bytes"
 	"encoding/json"
 	"os"
 	"testing"
@@ -10,6 +11,18 @@ import (
 
 	"github.com/make-software/casper-go-sdk/v2/sse"
 )
+
+func Test_RawEvent_ParseAsTransactionAcceptedEventWithBurnEntryPoint(t *testing.T) {
+	data, err := os.ReadFile("../data/sse/transaction_accepted_event.json")
+	require.NoError(t, err)
+	data = bytes.Replace(data, []byte(`"Transfer"`), []byte(`"Burn"`), 1)
+
+	rawEvent := sse.RawEvent{Data: data}
+	res, err := rawEvent.ParseAsTransactionAcceptedEvent()
+	require.NoError(t, err)
+	require.NotNil(t, res.TransactionAcceptedPayload.Transaction.GetTransactionV1())
+	require.NotNil(t, res.TransactionAcceptedPayload.Transaction.EntryPoint.Burn)
+}
 
 func Test_RawEvent_ParseAsDeployAcceptedEvent(t *testing.T) {
 	data, err := os.ReadFile("../data/sse/deploy_accepted_event.json")

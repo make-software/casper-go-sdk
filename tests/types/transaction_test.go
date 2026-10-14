@@ -1,6 +1,7 @@
 package types
 
 import (
+	"encoding/json"
 	"math/big"
 	"os"
 	"testing"
@@ -13,6 +14,23 @@ import (
 	"github.com/make-software/casper-go-sdk/v2/types/clvalue"
 	"github.com/make-software/casper-go-sdk/v2/types/key"
 )
+
+func Test_TransactionEntryPointBurn(t *testing.T) {
+	entryPoint := types.TransactionEntryPoint{Burn: &struct{}{}}
+
+	encoded, err := json.Marshal(entryPoint)
+	require.NoError(t, err)
+	require.JSONEq(t, `"Burn"`, string(encoded))
+
+	var decoded types.TransactionEntryPoint
+	require.NoError(t, json.Unmarshal(encoded, &decoded))
+	require.NotNil(t, decoded.Burn)
+	require.Equal(t, uint8(types.TransactionEntryPointBurnTag), decoded.Tag())
+
+	bytes, err := decoded.Bytes()
+	require.NoError(t, err)
+	require.NotEmpty(t, bytes)
+}
 
 func Test_TransactionSerialization_ModuleBytesSession(t *testing.T) {
 	keys, err := casper.NewED25519PrivateKeyFromPEMFile("../data/keys/docker-nctl-rc3-secret.pem")
