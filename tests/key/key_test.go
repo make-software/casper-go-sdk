@@ -1,12 +1,37 @@
 package key
 
 import (
+	"encoding/json"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
 	"github.com/make-software/casper-go-sdk/v2/casper"
+	"github.com/make-software/casper-go-sdk/v2/types/key"
 )
+
+func Test_Key_Constructor_InvalidNamedKey(t *testing.T) {
+	source := "named-key-" + strings.Repeat("a", 64)
+	t.Run("constructor", func(t *testing.T) {
+		_, err := casper.NewKey(source)
+		assert.ErrorIs(t, err, key.ErrInvalidNamedKeyAddrFormat)
+	})
+	t.Run("JSON", func(t *testing.T) {
+		var result casper.Key
+		err := json.Unmarshal([]byte(`"`+source+`"`), &result)
+		assert.ErrorIs(t, err, key.ErrInvalidNamedKeyAddrFormat)
+	})
+}
+
+func Test_NewNamedKeyAddr_MissingSeparator(t *testing.T) {
+	for _, source := range []string{"", strings.Repeat("a", 64)} {
+		t.Run(source, func(t *testing.T) {
+			_, err := key.NewNamedKeyAddr(source)
+			assert.ErrorIs(t, err, key.ErrInvalidNamedKeyAddrFormat)
+		})
+	}
+}
 
 func Test_Key_Constructor_fromString(t *testing.T) {
 	tests := []struct {

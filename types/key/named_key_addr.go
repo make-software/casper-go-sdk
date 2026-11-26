@@ -4,8 +4,11 @@ import (
 	"bytes"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"strings"
 )
+
+var ErrInvalidNamedKeyAddrFormat = errors.New("invalid NamedKeyAddr format")
 
 // NamedKeyAddr NamedKey address
 type NamedKeyAddr struct {
@@ -16,8 +19,12 @@ type NamedKeyAddr struct {
 }
 
 func NewNamedKeyAddr(source string) (NamedKeyAddr, error) {
-	nameBytesData := source[strings.LastIndex(source, "-")+1:]
-	source = source[:strings.LastIndex(source, "-")]
+	separator := strings.LastIndex(source, "-")
+	if separator < 0 {
+		return NamedKeyAddr{}, ErrInvalidNamedKeyAddrFormat
+	}
+	nameBytesData := source[separator+1:]
+	source = source[:separator]
 
 	rawBytes, err := hex.DecodeString(nameBytesData)
 	if err != nil {
